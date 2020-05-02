@@ -28,14 +28,38 @@ resource "aws_iam_role" "lambda_exec" {
   ]
 }
 EOF
+}
 
+resource "aws_iam_policy" "policy" {
+  name = "faastestbed-terraform-example"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:List*"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_exec" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.policy.arn
 }
 
 resource "aws_lambda_function" "fn" {
   function_name = "faastestbed-terraform-example"
 
-  s3_bucket = "faastestbed-terraform-example"
-  s3_key    = "fn/fn.zip"
+  s3_bucket        = "faastestbed-terraform-example"
+  s3_key           = "fn/fn.zip"
+  source_code_hash = filebase64sha256("fn.zip")
 
   handler = "handler.handler"
   runtime = "nodejs12.x"
@@ -96,7 +120,7 @@ resource "aws_api_gateway_deployment" "fn" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name  = "test"
+  stage_name  = "dev"
 }
 
 resource "aws_lambda_permission" "apigw" {
@@ -107,4 +131,8 @@ resource "aws_lambda_permission" "apigw" {
 
 
   source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
+}
+
+output "invoke_url" {
+  value = aws_api_gateway_deployment.fn.invoke_url
 }
