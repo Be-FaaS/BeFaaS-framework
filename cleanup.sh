@@ -2,7 +2,7 @@
 
 set -e
 
-bucket_name="faastestbed-terraform-example"
+bucket_name=$(cat NAME)
 
 terraform destroy
 gsutil rm -r gs://${bucket_name}/fn

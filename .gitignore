@@ -3,3 +3,5 @@ terraform.tfstate
 node_modules/
 *-fn.zip
 deploy.sum
+terraform.tfstate.backup
+NAME

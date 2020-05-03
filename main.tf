@@ -2,15 +2,8 @@ provider "aws" {
   version = "~> 2.0"
 }
 
-terraform {
-  backend "s3" {
-    bucket = "faastestbed-terraform-example"
-    key    = "tfconfig"
-    region = "us-east-1"
-  }
-}
-
 locals {
+  name      = file("NAME")
   deploysum = csvdecode(file("deploy.sum"))
 }
 
@@ -20,7 +13,6 @@ locals {
 }
 
 locals {
-  name        = "faastestbed-terraform-example"
   fn_aws_file = "fn/${element(local.aws_sum, 0)}/fn.zip"
   fn_gcf_file = "fn/${element(local.google_sum, 0)}/fn.zip"
 }

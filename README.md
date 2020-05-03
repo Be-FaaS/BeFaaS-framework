@@ -4,6 +4,17 @@ This example shows how to deploy a simple [Koa](https://koajs.com) application t
 
 ## Setup
 
+### Prerequisites
+
+| Tool      | Min. version |
+|-----------|--------------|
+| terraform | v0.12        |
+| node      | v12          |
+| npm       | v6           |
+| aws-cli   | v2           |
+| gsutil    | v4           |
+
+
 ### Configure your AWS and Google Cloud credentials
 
 ```
@@ -18,10 +29,10 @@ export GOOGLE_REGION=us-east1
 
 ```
 
-### Initlialize terraform
+### Set function name
 
 ```
-terraform init
+echo -n "my-very-cool-unique-function-name" > NAME
 ```
 
 ### Configure storage buckets
@@ -31,6 +42,13 @@ cd buckets
 terraform init
 terraform apply
 ```
+
+### Initlialize terraform
+
+```
+terraform init
+```
+
 
 ## Deploy
 
@@ -47,5 +65,5 @@ terraform apply
 ## Cleanup
 
 ```
-terraform destroy
+./cleanup
 ```

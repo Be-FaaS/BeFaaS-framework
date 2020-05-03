@@ -1,5 +1,9 @@
+locals {
+  name = file("../NAME")
+}
+
 resource "aws_s3_bucket" "bucket" {
-  bucket = "faastestbed-terraform-example"
+  bucket = local.name
   acl    = "private"
   versioning {
     enabled = true
@@ -7,7 +11,7 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 resource "google_storage_bucket" "bucket" {
-  name = "faastestbed-terraform-example"
+  name = local.name
   versioning {
     enabled = true
   }

@@ -2,7 +2,7 @@
 
 set -e
 
-bucket_name="faastestbed-terraform-example"
+bucket_name=$(cat NAME)
 rm -f *-fn.zip
 
 npm install --production
