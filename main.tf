@@ -10,11 +10,24 @@ terraform {
   }
 }
 
+locals {
+  name = "faastestbed-terraform-example"
+}
+
 module "lambda" {
   source           = "./lambda"
-  name             = "faastestbed-terraform-example"
-  s3_bucket        = "faastestbed-terraform-example"
+  name             = local.name
+  s3_bucket        = local.name
   s3_key           = "fn/fn.zip"
-  source_code_hash = filebase64sha256("fn.zip")
+  source_code_hash = filebase64sha256("aws-fn.zip")
   handler          = "handler.handler"
+}
+
+
+module "google" {
+  source      = "./google"
+  name        = local.name
+  entry_point = "googleHandler"
+  gcs_bucket  = local.name
+  gcs_object  = "fn/${filesha256("gcf-fn.zip")}/fn.zip"
 }

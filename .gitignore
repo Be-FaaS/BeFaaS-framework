@@ -1,4 +1,4 @@
 .terraform
 terraform.tfstate
 node_modules/
-fn.zip
+*-fn.zip
