@@ -3,8 +3,10 @@
 set -e
 
 bucket_name="faastestbed-terraform-example"
-
 rm -f *-fn.zip
+
+npm install --production
+
 cp index.aws.js index.js
 zip -r aws-fn.zip index.js src/ node_modules
 AWS_SHASUM=$(sha256sum aws-fn.zip | awk '{print $1}')

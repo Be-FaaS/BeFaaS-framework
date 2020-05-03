@@ -6,7 +6,7 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
-resource "google_storage_bucket" "static-site" {
+resource "google_storage_bucket" "bucket" {
   name = "faastestbed-terraform-example"
   versioning {
     enabled = true
