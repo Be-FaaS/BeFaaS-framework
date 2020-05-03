@@ -1,3 +1,3 @@
 const app = require('./src/')
 
-module.exports.handler = app
+module.exports.handler = app.callback()
