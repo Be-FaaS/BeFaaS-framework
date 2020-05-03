@@ -21,14 +21,21 @@ module "lambda" {
   name             = local.name
   s3_bucket        = local.name
   s3_key           = local.fn_aws_file
-  handler          = "handler.handler"
+  handler          = "index.handler"
 }
-
 
 module "google" {
   source      = "./google"
   name        = local.name
   gcs_bucket  = local.name
   gcs_object  = local.fn_gcf_file
-  entry_point = "googleHandler"
+  entry_point = "handler"
+}
+
+output "aws_invoke_url" {
+  value = module.lambda.invoke_url
+}
+
+output "google_invoke_url" {
+  value = module.google.invoke_url
 }
