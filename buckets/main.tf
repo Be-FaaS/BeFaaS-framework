@@ -5,3 +5,10 @@ resource "aws_s3_bucket" "bucket" {
     enabled = true
   }
 }
+
+resource "google_storage_bucket" "static-site" {
+  name = "faastestbed-terraform-example"
+  versioning {
+    enabled = true
+  }
+}
