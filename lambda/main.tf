@@ -45,9 +45,8 @@ resource "aws_iam_role_policy_attachment" "lambda_exec" {
 resource "aws_lambda_function" "fn" {
   function_name = var.name
 
-  s3_bucket        = var.s3_bucket
-  s3_key           = var.s3_key
-  source_code_hash = var.source_code_hash
+  s3_bucket = var.s3_bucket
+  s3_key    = var.s3_key
 
   handler = var.handler
   runtime = "nodejs12.x"

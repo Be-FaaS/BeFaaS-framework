@@ -4,7 +4,8 @@ set -e
 
 rm -f *-fn.zip
 zip -r aws-fn.zip handler.js node_modules
-aws s3 cp aws-fn.zip s3://faastestbed-terraform-example/fn/fn.zip
+AWS_SHASUM=$(sha256sum aws-fn.zip | awk '{print $1}')
+aws s3 cp aws-fn.zip s3://faastestbed-terraform-example/fn/${AWS_SHASUM}/fn.zip
 
 zip -r gcf-fn.zip handler.js package*.json
 GCF_SHASUM=$(sha256sum gcf-fn.zip | awk '{print $1}')
