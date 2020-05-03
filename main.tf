@@ -11,17 +11,26 @@ terraform {
 }
 
 locals {
-  name = "faastestbed-terraform-example"
-  fn_aws_file = "fn/${filesha256("aws-fn.zip")}/fn.zip"
-  fn_gcf_file = "fn/${filesha256("gcf-fn.zip")}/fn.zip"
+  deploysum = csvdecode(file("deploy.sum"))
+}
+
+locals {
+  aws_sum    = [for x in local.deploysum : x.sum if x.file == "aws-fn.zip"]
+  google_sum = [for x in local.deploysum : x.sum if x.file == "gcf-fn.zip"]
+}
+
+locals {
+  name        = "faastestbed-terraform-example"
+  fn_aws_file = "fn/${element(local.aws_sum, 0)}/fn.zip"
+  fn_gcf_file = "fn/${element(local.google_sum, 0)}/fn.zip"
 }
 
 module "lambda" {
-  source           = "./lambda"
-  name             = local.name
-  s3_bucket        = local.name
-  s3_key           = local.fn_aws_file
-  handler          = "index.handler"
+  source    = "./lambda"
+  name      = local.name
+  s3_bucket = local.name
+  s3_key    = local.fn_aws_file
+  handler   = "index.handler"
 }
 
 module "google" {
