@@ -31,6 +31,15 @@ resource "aws_iam_policy" "policy" {
       ],
       "Effect": "Allow",
       "Resource": "arn:aws:s3:::*"
+    },
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*",
+      "Effect": "Allow"
     }
   ]
 }
