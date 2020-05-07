@@ -1,4 +1,4 @@
-const AWS = require('aws-sdk')
+// const AWS = require('aws-sdk')
 const Router = require('@koa/router')
 const router = new Router()
 
@@ -8,9 +8,12 @@ router.get('/', (ctx, next) => {
   ctx.body = { message: 'Hello World!' }
 })
 
-router.get('/buckets', async (ctx, next) => {
-  const s3 = new AWS.S3()
-  ctx.body = await s3.listObjects({
-    Bucket: 'faastestbed-terraform-example'
-  }).promise()
+router.get('/logs', async (ctx, next) => {
+  for(var i = 0; i < 10000; i++) {
+    console.log(JSON.stringify({
+      id: i,
+      ts: (new Date()).getTime()
+    }))
+  }
+  ctx.body = {done: true}
 })
