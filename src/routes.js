@@ -9,11 +9,11 @@ router.get('/', (ctx, next) => {
 })
 
 router.get('/logs', async (ctx, next) => {
-  for(var i = 0; i < 10000; i++) {
+  for (var i = 0; i < 10000; i++) {
     console.log(JSON.stringify({
       id: i,
       ts: (new Date()).getTime()
     }))
   }
-  ctx.body = {done: true}
+  ctx.body = { done: true }
 })
