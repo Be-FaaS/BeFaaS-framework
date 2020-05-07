@@ -57,8 +57,10 @@ resource "aws_lambda_function" "fn" {
   s3_bucket = var.s3_bucket
   s3_key    = var.s3_key
 
-  handler = var.handler
-  runtime = "nodejs12.x"
+  handler     = var.handler
+  runtime     = "nodejs12.x"
+  timeout     = var.timeout
+  memory_size = var.memory_size
 
   role = aws_iam_role.lambda_exec.arn
 }

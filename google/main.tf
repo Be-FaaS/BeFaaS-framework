@@ -1,6 +1,8 @@
 resource "google_cloudfunctions_function" "fn" {
-  name    = var.name
-  runtime = "nodejs10"
+  name                = var.name
+  runtime             = "nodejs10"
+  timeout             = var.timeout
+  available_memory_mb = var.memory_size
 
   source_archive_bucket = var.gcs_bucket
   source_archive_object = var.gcs_object
