@@ -22,7 +22,7 @@ module "lambda" {
   name      = local.name
   s3_bucket = local.name
   s3_key    = local.fn_aws_file
-  handler   = "index.handler"
+  handler   = "index.lambdaHandler"
 }
 
 module "google" {
@@ -30,7 +30,7 @@ module "google" {
   name        = local.name
   gcs_bucket  = local.name
   gcs_object  = local.fn_gcf_file
-  entry_point = "handler"
+  entry_point = "googleHandler"
 }
 
 output "aws_invoke_url" {
