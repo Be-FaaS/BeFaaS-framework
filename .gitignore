@@ -1,7 +1,8 @@
 .terraform
 terraform.tfstate
 node_modules/
-*-fn.zip
 deploy.sum
 terraform.tfstate.backup
 NAME
+pkg/fn.zip
+pkg/index.js
