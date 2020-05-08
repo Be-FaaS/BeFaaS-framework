@@ -7,6 +7,10 @@ locals {
   fn_file = "fn/${file("deploy.sum")}/fn.zip"
 }
 
+locals {
+  fns = map(local.name, local.fn_file)
+}
+
 module "aws" {
   source    = "./aws"
   name      = local.name
@@ -16,9 +20,8 @@ module "aws" {
 
 module "google" {
   source     = "./google"
-  name       = local.name
   gcs_bucket = local.name
-  gcs_object = local.fn_file
+  fns        = local.fns
 }
 
 output "aws_invoke_url" {
