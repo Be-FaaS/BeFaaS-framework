@@ -8,6 +8,7 @@ variable "gcs_object" {
 }
 
 variable "entry_point" {
+  default = "googleHandler"
 }
 
 variable "memory_size" {

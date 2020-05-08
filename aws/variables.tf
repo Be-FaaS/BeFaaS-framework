@@ -8,6 +8,7 @@ variable "s3_key" {
 }
 
 variable "handler" {
+  default = "index.lambdaHandler"
 }
 
 variable "memory_size" {
