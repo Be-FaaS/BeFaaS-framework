@@ -53,7 +53,7 @@ resource "aws_iam_role_policy_attachment" "lambda_exec" {
 
 resource "aws_lambda_function" "fn" {
   for_each      = var.fns
-  function_name = each.key
+  function_name = "${var.project_name}-${each.key}"
 
   s3_bucket = var.s3_bucket
   s3_key    = each.value

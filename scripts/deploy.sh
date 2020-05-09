@@ -27,8 +27,8 @@ done
 
 bucket_name=$(cat NAME)
 aws s3 cp functions/_build/ s3://${bucket_name}/${ts}/ --recursive
-gsutil cp -r functions/_build/ gs://${bucket_name}/${ts}/
+gsutil cp -r functions/_build/* gs://${bucket_name}/${ts}/
 rm -rf functions/_build
 
 cd infrastructure
-echo terraform apply -var "bucket_name=${bucket_name}" -var "build_id=${ts}" -var "fn_names=${fname_list}" -auto-approve
+terraform apply -var "bucket_name=${bucket_name}" -var "build_id=${ts}" -var "fn_names=${fname_list}" -auto-approve

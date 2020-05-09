@@ -60,6 +60,10 @@ resource "aws_api_gateway_deployment" "fn" {
     aws_api_gateway_integration.proxy
   ]
 
+  variables = {
+    deployed_at = timestamp()
+  }
+
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = "dev"
 }
