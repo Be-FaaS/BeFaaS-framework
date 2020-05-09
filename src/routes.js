@@ -1,6 +1,8 @@
 // const AWS = require('aws-sdk')
 const Router = require('@koa/router')
-const router = new Router()
+const router = new Router({
+  prefix: process.env.AWS_LAMBDA_FUNCTION_NAME && '/:fn'
+})
 
 module.exports = router
 
