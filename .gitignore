@@ -3,5 +3,3 @@ terraform.tfstate
 node_modules/
 terraform.tfstate.backup
 NAME
-pkg/fn.zip
-pkg/index.js

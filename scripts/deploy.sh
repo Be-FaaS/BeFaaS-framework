@@ -2,13 +2,33 @@
 
 set -e
 
-name=$(cat NAME)
-
 ts=$(date -u +%FT%H:%M:%S)
-npm run build
-cd pkg && zip -r fn.zip * && cd -
 
-aws s3 cp pkg/fn.zip s3://${name}/fn/${ts}/fn.zip
-gsutil cp pkg/fn.zip gs://${name}/fn/${ts}/fn.zip
+echo "running build '${ts}'..."
 
-cd infrastructure && terraform apply -var "name=${name}" -var "build_id=${ts}" -auto-approve
+rm -rf functions/_build
+mkdir functions/_build
+
+fname_list=""
+
+for d in functions/*; do
+  fname=`basename $d`
+  if [[ "$fname" == '_build' ]]; then
+    continue
+  fi
+  echo "building ${fname}..."
+  cp pkg/_index.js $d
+  npx ncc build $d/_index.js -o $d/build
+  cp pkg/package.json $d/build/
+  cd $d/build && zip -r ../../_build/${fname}.zip * && cd -
+  rm -rf $d/_index.js $d/build
+  fname_list="${fname_list},${fname}"
+done
+
+bucket_name=$(cat NAME)
+aws s3 cp functions/_build/ s3://${bucket_name}/${ts}/ --recursive
+gsutil cp -r functions/_build/ gs://${bucket_name}/${ts}/
+rm -rf functions/_build
+
+cd infrastructure
+echo terraform apply -var "bucket_name=${bucket_name}" -var "build_id=${ts}" -var "fn_names=${fname_list}" -auto-approve

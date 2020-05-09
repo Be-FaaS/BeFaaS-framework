@@ -7,7 +7,7 @@ const router = new Router({
 module.exports = router
 
 router.get('/', (ctx, next) => {
-  ctx.body = { message: 'Hello World!' }
+  ctx.body = { message: 'Hello World from test!' }
 })
 
 router.get('/logs', async (ctx, next) => {

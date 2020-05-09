@@ -6,7 +6,6 @@
   "scripts": {
     "test": "standard",
     "fix": "standard --fix",
-    "build": "ncc build index.js -o pkg",
     "local": "node -e \"require('./src').listen(3000)\""
   },
   "author": "",

@@ -2,30 +2,37 @@ provider "aws" {
   version = "~> 2.0"
 }
 
-variable "name" {
+variable "bucket_name" {
 }
 
 variable "build_id" {
 }
 
-locals {
-  fn_file = "fn/${var.build_id}/fn.zip"
+variable "fn_names" {
 }
 
 locals {
-  fns = map(var.name, local.fn_file)
+  pfn_names = compact(split(",", var.fn_names))
+}
+
+locals {
+  pfn_files = [for fn in local.pfn_names : "${var.build_id}/${fn}.zip"]
+}
+
+locals {
+  fns = zipmap(local.pfn_names, local.pfn_files)
 }
 
 module "aws" {
   source       = "./aws"
-  project_name = var.name
-  s3_bucket    = var.name
+  project_name = var.bucket_name
+  s3_bucket    = var.bucket_name
   fns          = local.fns
 }
 
 module "google" {
   source     = "./google"
-  gcs_bucket = var.name
+  gcs_bucket = var.bucket_name
   fns        = local.fns
 }
 
