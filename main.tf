@@ -2,25 +2,30 @@ provider "aws" {
   version = "~> 2.0"
 }
 
-locals {
-  name    = file("NAME")
-  fn_file = "fn/${file("BUILD_ID")}/fn.zip"
+variable "name" {
+}
+
+variable "build_id" {
 }
 
 locals {
-  fns = map(local.name, local.fn_file)
+  fn_file = "fn/${var.build_id}/fn.zip"
+}
+
+locals {
+  fns = map(var.name, local.fn_file)
 }
 
 module "aws" {
   source       = "./aws"
-  project_name = local.name
-  s3_bucket    = local.name
+  project_name = var.name
+  s3_bucket    = var.name
   fns          = local.fns
 }
 
 module "google" {
   source     = "./google"
-  gcs_bucket = local.name
+  gcs_bucket = var.name
   fns        = local.fns
 }
 

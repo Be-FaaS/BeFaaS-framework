@@ -12,4 +12,4 @@ echo -n "$ts" > BUILD_ID
 aws s3 cp pkg/fn.zip s3://${bucket_name}/fn/${ts}/fn.zip
 gsutil cp pkg/fn.zip gs://${bucket_name}/fn/${ts}/fn.zip
 
-terraform apply -auto-approve
+terraform apply -var "name=${bucket_name}" -var "build_id=${ts}" -auto-approve
