@@ -12,10 +12,10 @@ locals {
 }
 
 module "aws" {
-  source    = "./aws"
-  name      = local.name
-  s3_bucket = local.name
-  s3_key    = local.fn_file
+  source       = "./aws"
+  project_name = local.name
+  s3_bucket    = local.name
+  fns          = local.fns
 }
 
 module "google" {

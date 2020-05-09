@@ -1,12 +1,3 @@
-variable "name" {
-}
-
-variable "s3_bucket" {
-}
-
-variable "s3_key" {
-}
-
 variable "handler" {
   default = "index.lambdaHandler"
 }
@@ -17,4 +8,15 @@ variable "memory_size" {
 
 variable "timeout" {
   default = 60
+}
+
+variable "s3_bucket" {
+}
+
+variable "project_name" {
+  default = "lambda-project"
+}
+
+variable "fns" {
+  type = map(string)
 }
