@@ -1,3 +1,6 @@
+data "google_client_config" "current" {
+}
+
 output "invoke_url" {
-  value = [for value in google_cloudfunctions_function.fn : value.https_trigger_url]
+  value = "https://${data.google_client_config.current.region}-${data.google_client_config.current.project}.cloudfunctions.net"
 }
