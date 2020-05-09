@@ -1,9 +1,7 @@
 .terraform
 terraform.tfstate
 node_modules/
-deploy.sum
 terraform.tfstate.backup
 NAME
 pkg/fn.zip
 pkg/index.js
-BUILD_ID
