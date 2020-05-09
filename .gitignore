@@ -6,3 +6,4 @@ terraform.tfstate.backup
 NAME
 pkg/fn.zip
 pkg/index.js
+BUILD_ID

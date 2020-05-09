@@ -4,7 +4,7 @@ provider "aws" {
 
 locals {
   name    = file("NAME")
-  fn_file = "fn/${file("deploy.sum")}/fn.zip"
+  fn_file = "fn/${file("BUILD_ID")}/fn.zip"
 }
 
 locals {
