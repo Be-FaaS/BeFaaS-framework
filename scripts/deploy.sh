@@ -17,11 +17,10 @@ for d in functions/*; do
     continue
   fi
   echo "building ${fname}..."
-  cp pkg/_index.js $d
-  npx ncc build $d/_index.js -o $d/build
+  npx ncc build $d/index.js -o $d/build
   cp pkg/package.json $d/build/
   cd $d/build && zip -r ../../_build/${fname}.zip * && cd -
-  rm -rf $d/_index.js $d/build
+  rm -rf $d/build
   fname_list="${fname_list},${fname}"
 done
 

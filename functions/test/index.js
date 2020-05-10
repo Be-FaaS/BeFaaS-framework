@@ -1,19 +1,11 @@
-// const AWS = require('aws-sdk')
-const Router = require('@koa/router')
-const router = new Router()
+const lib = require('../../lib/')
 
-module.exports = router
+module.exports = lib.serverless(router => {
+  router.get('/', (ctx, next) => {
+    ctx.body = { message: 'Hello World from test!' }
+  })
 
-router.get('/', (ctx, next) => {
-  ctx.body = { message: 'Hello World from test!' }
-})
-
-router.get('/logs', async (ctx, next) => {
-  for (var i = 0; i < 10000; i++) {
-    console.log(JSON.stringify({
-      id: i,
-      ts: (new Date()).getTime()
-    }))
-  }
-  ctx.body = { done: true }
+  router.get('/call', async (ctx, next) => {
+    ctx.body = lib.call('test')
+  })
 })

@@ -1,8 +1,7 @@
-const Router = require('@koa/router')
-const router = new Router()
+const lib = require('../../lib/')
 
-module.exports = router
-
-router.get('/', (ctx, next) => {
-  ctx.body = { message: 'Hello World from test2!' }
+module.exports = lib.serverless(router => {
+  router.get('/', (ctx, next) => {
+    ctx.body = { message: 'Hello World from test2!' }
+  })
 })
