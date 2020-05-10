@@ -1,9 +1,8 @@
-const Koa = require('koa')
+const Router = require('@koa/router')
+const router = new Router()
 
-const app = new Koa()
-const router = require('./routes')
+module.exports = router
 
-app.use(router.routes())
-app.use(router.allowedMethods())
-
-module.exports = app
+router.get('/', (ctx, next) => {
+  ctx.body = { message: 'Hello World from test2!' }
+})

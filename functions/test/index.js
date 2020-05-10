@@ -1,9 +1,19 @@
-const Koa = require('koa')
+// const AWS = require('aws-sdk')
+const Router = require('@koa/router')
+const router = new Router()
 
-const app = new Koa()
-const router = require('./routes')
+module.exports = router
 
-app.use(router.routes())
-app.use(router.allowedMethods())
+router.get('/', (ctx, next) => {
+  ctx.body = { message: 'Hello World from test!' }
+})
 
-module.exports = app
+router.get('/logs', async (ctx, next) => {
+  for (var i = 0; i < 10000; i++) {
+    console.log(JSON.stringify({
+      id: i,
+      ts: (new Date()).getTime()
+    }))
+  }
+  ctx.body = { done: true }
+})

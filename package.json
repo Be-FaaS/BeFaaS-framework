@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "standard",
-    "fix": "standard --fix",
-    "local": "node -e \"require('./src').listen(3000)\""
+    "fix": "standard --fix"
   },
   "author": "",
   "license": "ISC",
