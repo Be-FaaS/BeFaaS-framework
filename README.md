@@ -38,7 +38,7 @@ echo -n "my-very-cool-unique-function-name" > NAME
 ### Configure storage buckets
 
 ```
-cd buckets
+cd infrastructure/buckets
 terraform init
 terraform apply
 ```
@@ -46,6 +46,7 @@ terraform apply
 ### Initlialize terraform
 
 ```
+cd infrastructure
 terraform init
 ```
 
@@ -53,17 +54,17 @@ terraform init
 ## Deploy
 
 ```
-./deploy.sh
+./scripts/deploy.sh
 ```
 
 ## Test
 
 ```
-./test.sh
+./scripts/test.sh
 ```
 
 ## Cleanup
 
 ```
-./cleanup
+./scripts/cleanup
 ```
