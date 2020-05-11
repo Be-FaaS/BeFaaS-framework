@@ -2,6 +2,7 @@ const lib = require('../../lib/')
 
 module.exports = lib.serverless(router => {
   router.get('/', (ctx, next) => {
+    lib.log(ctx.request)
     ctx.body = { message: 'Hello World from test2!' }
   })
 
@@ -10,7 +11,7 @@ module.exports = lib.serverless(router => {
   })
 
   router.post('/call', async (ctx, next) => {
-    console.log(ctx.request.body)
+    lib.log(ctx.request.body)
     ctx.body = { ok: true, from: 'test2' }
   })
 })
