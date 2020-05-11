@@ -11,6 +11,8 @@ mkdir functions/_build
 
 fname_list=""
 
+cd infrastructure && (terraform output -json > ../tfoutput.json  || echo -n "{}") > ../tfoutput.json && cd -
+
 for d in functions/*; do
   fname=`basename $d`
   if [[ "$fname" == '_build' ]]; then

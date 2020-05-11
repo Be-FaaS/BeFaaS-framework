@@ -3,3 +3,4 @@ terraform.tfstate
 node_modules/
 terraform.tfstate.backup
 NAME
+tfoutput.json
