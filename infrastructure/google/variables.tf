@@ -10,7 +10,12 @@ variable "timeout" {
   default = 60
 }
 
-variable "gcs_bucket" {
+variable "project_name" {
+  type = string
+}
+
+variable "build_id" {
+  type = string
 }
 
 variable "fns" {

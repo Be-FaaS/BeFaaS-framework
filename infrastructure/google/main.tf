@@ -6,8 +6,8 @@ resource "google_cloudfunctions_function" "fn" {
   timeout             = var.timeout
   available_memory_mb = var.memory_size
 
-  source_archive_bucket = var.gcs_bucket
-  source_archive_object = each.value
+  source_archive_bucket = google_storage_bucket.bucket.name
+  source_archive_object = google_storage_bucket_object.source[each.key].name
 
   trigger_http = true
 }

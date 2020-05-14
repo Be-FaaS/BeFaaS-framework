@@ -55,8 +55,8 @@ resource "aws_lambda_function" "fn" {
   for_each      = var.fns
   function_name = "${var.project_name}-${each.key}"
 
-  s3_bucket = var.s3_bucket
-  s3_key    = each.value
+  s3_bucket = aws_s3_bucket_object.source[each.key].bucket
+  s3_key    = aws_s3_bucket_object.source[each.key].key
 
   handler     = var.handler
   runtime     = "nodejs12.x"

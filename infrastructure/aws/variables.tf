@@ -10,11 +10,12 @@ variable "timeout" {
   default = 60
 }
 
-variable "s3_bucket" {
+variable "project_name" {
+  type = string
 }
 
-variable "project_name" {
-  default = "lambda-project"
+variable "build_id" {
+  type = string
 }
 
 variable "fns" {
