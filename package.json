@@ -6,20 +6,13 @@
   "scripts": {
     "test": "standard",
     "fix": "standard --fix",
-    "local": "node -e \"http.createServer(require('./functions/'+process.argv[1]).googleHandler).listen(3000)\""
+    "local": "node -e \"http.createServer(require('./functions/'+process.argv[1]).googleHandler).listen(3000)\"",
+    "build": "./scripts/build.sh"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
-    "@koa/router": "^8.0.8",
-    "aws-sdk": "^2.668.0",
-    "koa": "^2.11.0",
-    "koa-bodyparser": "^4.3.0",
-    "koa-logger": "^3.2.1",
-    "lodash": "^4.17.15",
-    "node-fetch": "^2.6.0",
-    "serverless-http": "^2.3.2",
-    "strip-ansi": "^6.0.0"
+    "@faastermetrics/lib": "1.0.0"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.22.1",
