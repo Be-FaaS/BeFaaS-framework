@@ -1,0 +1,20 @@
+{
+  "workload": {},
+  "program": {
+    "aws": {
+      "test": {
+        "calls": [
+          "test"
+        ]
+      },
+      "test2": {
+        "calls": [
+          "test"
+        ],
+        "overwrites": {
+          "memory": 256
+        }
+      }
+    }
+  }
+}
