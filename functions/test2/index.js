@@ -1,5 +1,7 @@
 const lib = require('../../lib/')
 
+lib.log({ coldstart: true })
+
 module.exports = lib.serverless(router => {
   router.get('/', (ctx, next) => {
     lib.log(ctx.request)
