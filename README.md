@@ -1,6 +1,6 @@
-# terraform-hybrid-cloud-example
+# experiments
 
-This example shows how to deploy a simple [Koa](https://koajs.com) application to Google Cloud Functions and AWS Lambda.
+TODO
 
 ## Setup
 
@@ -66,5 +66,5 @@ terraform init
 ## Cleanup
 
 ```
-./scripts/cleanup
+./scripts/cleanup.sh
 ```
