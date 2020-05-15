@@ -31,11 +31,6 @@ for d in $exp_dir/*; do
   echo $PKG_JSON > $d/build/package.json
   cd $d/build && zip -r ../../_build/${fname}.zip * && cd -
   rm -rf $d/build
-  fname_list="${fname_list},${fname}"
 done
 
 echo "build done."
-
-ls -alF $exp_dir/_build
-echo $fname_list
-
