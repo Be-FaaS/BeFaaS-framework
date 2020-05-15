@@ -2,34 +2,19 @@
 
 set -e
 
-ts=$(date -u +%FT%H:%M:%S)
+if [ -z "$1" ]; then
+    echo "usage: $0 <experiment name>"
+    exit 1
+fi
 
-echo "running build '${ts}'..."
+exp_dir="experiments/$1/functions"
 
-rm -rf functions/_build
-mkdir functions/_build
+if [[ ! -d $exp_dir ]]; then
+    echo "invalid experiment name"
+    exit 1
+fi
 
-fname_list=""
-
-cd infrastructure && (terraform output -json > ../tfoutput.json  || echo -n "{}") > ../tfoutput.json && cd -
-
-for d in functions/*; do
-  fname=`basename $d`
-  if [[ "$fname" == '_build' ]]; then
-    continue
-  fi
-  echo "building ${fname}..."
-  npx ncc build $d/index.js -o $d/build
-  cp pkg/package.json $d/build/
-  cd $d/build && zip -r ../../_build/${fname}.zip * && cd -
-  rm -rf $d/build
-  fname_list="${fname_list},${fname}"
-done
-
-bucket_name=$(cat NAME)
-aws s3 cp functions/_build/ s3://${bucket_name}/${ts}/ --recursive
-gsutil cp -r functions/_build/* gs://${bucket_name}/${ts}/
-rm -rf functions/_build
+echo "running deploy for $1..."
 
 cd infrastructure
-terraform apply -var "bucket_name=${bucket_name}" -var "build_id=${ts}" -var "fn_names=${fname_list}" -auto-approve
+terraform apply -var "experiment=${1}"

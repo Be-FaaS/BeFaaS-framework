@@ -38,23 +38,28 @@ locals {
   google_fn_files = [for fn in local.google_fn_names : "../experiments/${var.experiment}/functions/_build/${fn}.zip"]
 }
 
+data "google_client_config" "current" {
+}
 locals {
-  aws_fns    = zipmap(local.aws_fn_names, local.aws_fn_files)
-  google_fns = zipmap(local.google_fn_names, local.google_fn_files)
+  aws_fns           = zipmap(local.aws_fn_names, local.aws_fn_files)
+  google_fns        = zipmap(local.google_fn_names, local.google_fn_files)
+  google_invoke_url = "https://${data.google_client_config.current.region}-${data.google_client_config.current.project}.cloudfunctions.net"
 }
 
 module "aws" {
-  source       = "./aws"
-  project_name = var.project_name
-  build_id     = random_string.build_id.result
-  fns          = local.aws_fns
+  source            = "./aws"
+  project_name      = var.project_name
+  build_id          = random_string.build_id.result
+  fns               = local.aws_fns
+  google_invoke_url = local.google_invoke_url
 }
 
 module "google" {
-  source       = "./google"
-  project_name = var.project_name
-  build_id     = random_string.build_id.result
-  fns          = local.google_fns
+  source         = "./google"
+  project_name   = var.project_name
+  build_id       = random_string.build_id.result
+  fns            = local.google_fns
+  aws_invoke_url = module.aws.invoke_url
 }
 
 output "aws_invoke_url" {

@@ -18,6 +18,10 @@ variable "build_id" {
   type = string
 }
 
+variable "google_invoke_url" {
+  type = string
+}
+
 variable "fns" {
   type = map(string)
 }

@@ -1,3 +1,10 @@
+data "google_client_config" "current" {
+}
+
+locals {
+  invoke_url = "https://${data.google_client_config.current.region}-${data.google_client_config.current.project}.cloudfunctions.net"
+}
+
 resource "google_cloudfunctions_function" "fn" {
   for_each            = var.fns
   name                = each.key
@@ -10,6 +17,11 @@ resource "google_cloudfunctions_function" "fn" {
   source_archive_object = google_storage_bucket_object.source[each.key].name
 
   trigger_http = true
+
+  environment_variables = {
+    AWS_LAMBDA_ENDPOINT           = var.aws_invoke_url
+    GOOGLE_CLOUDFUNCTION_ENDPOINT = local.invoke_url
+  }
 }
 
 resource "google_cloudfunctions_function_iam_member" "invoker" {

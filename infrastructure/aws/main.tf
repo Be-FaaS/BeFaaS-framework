@@ -51,6 +51,12 @@ resource "aws_iam_role_policy_attachment" "lambda_exec" {
   policy_arn = aws_iam_policy.policy.arn
 }
 
+data "aws_region" "current" {}
+
+locals {
+  invoke_url = "https://${aws_api_gateway_rest_api.api.id}.execute-api.${data.aws_region.current.name}.amazonaws.com/dev"
+}
+
 resource "aws_lambda_function" "fn" {
   for_each      = var.fns
   function_name = "${var.project_name}-${each.key}"
@@ -64,6 +70,13 @@ resource "aws_lambda_function" "fn" {
   memory_size = var.memory_size
 
   role = aws_iam_role.lambda_exec.arn
+
+  environment {
+    variables = {
+      AWS_LAMBDA_ENDPOINT           = local.invoke_url
+      GOOGLE_CLOUDFUNCTION_ENDPOINT = var.google_invoke_url
+    }
+  }
 }
 
 resource "aws_lambda_permission" "apigw" {
