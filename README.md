@@ -1,8 +1,13 @@
 # experiments
 
-TODO
+[![CI](https://github.com/FaaSterMetrics/experiments/workflows/CI/badge.svg)](https://github.com/FaaSterMetrics/experiments/actions?query=workflow%3ACI+branch%3Amaster)
 
 ## Setup
+
+WIP
+
+<details>
+  <summary>outdated setup guide</summary>
 
 ### Prerequisites
 
@@ -68,3 +73,5 @@ terraform init
 ```
 ./scripts/cleanup.sh
 ```
+
+</details>
