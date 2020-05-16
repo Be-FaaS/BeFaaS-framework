@@ -14,11 +14,13 @@
         "overwrites": {
           "memory": 256
         }
-      }
+      },
+      "add": {}
     },
     "google": {
       "test": {},
-      "test2": {}
+      "test2": {},
+      "add": {}
     }
   }
 }
