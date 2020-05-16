@@ -10,7 +10,7 @@ module.exports = lib.serverless.router(router => {
   })
 
   router.attachEventHandler(event => {
-    lib.log(event)
+    lib.log({ event })
     return { ok: true, from: 'test' }
   })
 })

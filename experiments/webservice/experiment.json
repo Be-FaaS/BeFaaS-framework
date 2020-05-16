@@ -15,7 +15,7 @@
           "memory": 256
         }
       },
-      "add": {}
+      "frontend": {}
     },
     "google": {
       "test": {},
