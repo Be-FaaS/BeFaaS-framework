@@ -1,10 +1,7 @@
 const lib = require('@faastermetrics/lib')
 
-lib.log({ coldstart: true })
-
-module.exports = lib.serverless(router => {
+module.exports = lib.serverless.router(router => {
   router.get('/', (ctx, next) => {
-    lib.log(ctx.request)
     ctx.body = { message: 'Hello World from test!' }
   })
 
@@ -12,8 +9,8 @@ module.exports = lib.serverless(router => {
     ctx.body = await lib.call(ctx.params.provider, 'test2')
   })
 
-  router.post('/call', async (ctx, next) => {
-    lib.log(ctx.request.body)
-    ctx.body = { ok: true, from: 'test' }
+  router.attachEventHandler(event => {
+    lib.log(event)
+    return { ok: true, from: 'test' }
   })
 })

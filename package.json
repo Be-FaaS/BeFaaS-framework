@@ -1,19 +1,19 @@
 {
-  "name": "terraform-hybrid-cloud-example",
+  "name": "experiments",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "standard",
     "fix": "standard --fix",
-    "local": "node -e \"http.createServer(require('./functions/'+process.argv[1]).googleHandler).listen(3000)\"",
+    "local": "node -e \"http.createServer(require(process.argv[1]).googleHandler).listen(3000)\"",
     "build": "./scripts/build.sh",
     "deploy": "./scripts/deploy.sh"
   },
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@faastermetrics/lib": "^1.1.0"
+    "@faastermetrics/lib": "^2.2.0"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.22.1",
