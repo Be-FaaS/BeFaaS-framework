@@ -44,8 +44,8 @@ function calculateShippingCost (cart) {
  * }
  *
  * Response for shipment quote: {
- *   'costEur': {
- *     'currencyCode': 'EUR',
+ *   'costUsd': {
+ *     'currencyCode': 'USD',
  *     'units': <shipment cost>,
  *     'nanos': 0
  *   }
@@ -55,11 +55,16 @@ function calculateShippingCost (cart) {
 module.exports = lib.serverless.router(router => {
   // calculates shipping cost
   router.post('/shipmentquote', (ctx, next) => {
-    const cart = ctx.request.body.cart
+    const cart = ctx.request.body.items
+    let shippingCost = 0
+    if (cart !== undefined) {
+      shippingCost = calculateShippingCost(cart)
+    }
+
     ctx.body = {
-      costEur: {
-        currencyCode: 'EUR',
-        units: calculateShippingCost(cart),
+      costUsd: {
+        currencyCode: 'USD',
+        units: shippingCost,
         nanos: 0
       }
     }
