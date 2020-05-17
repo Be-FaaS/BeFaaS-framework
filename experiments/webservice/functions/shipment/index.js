@@ -11,8 +11,8 @@ function calculateShippingCost (cart) {
   for (var i = 0; i < cart.length; i++) {
     count += cart[i].quantity
   }
-  // Yes, overall item quantity increases quadratically in relation to shipping cost. 
-  if(count < 0) {
+  // Yes, overall item quantity increases quadratically in relation to shipping cost.
+  if (count < 0) {
     return 0
   }
   return Math.ceil(Math.sqrt(count))
@@ -59,7 +59,7 @@ module.exports = lib.serverless.router(router => {
     ctx.body = {
       costEur: {
         currencyCode: 'EUR',
- 	      units: calculateShippingCost(cart),
+        units: calculateShippingCost(cart),
         nanos: 0
       }
     }
@@ -67,8 +67,8 @@ module.exports = lib.serverless.router(router => {
 
   // ships items and provides tracking number
   router.post('/shipping', (ctx, next) => {
-    const { address, cart} = ctx.request.body
-    ctx.body = { 'id': generateTrackingID() }
+    const { address, cart } = ctx.request.body
+    ctx.body = { id: generateTrackingID() }
   })
 
   router.attachEventHandler(request => {
@@ -76,4 +76,3 @@ module.exports = lib.serverless.router(router => {
     return { ok: true, from: 'shipment' }
   })
 })
-
