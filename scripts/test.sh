@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 cd infrastructure
 tfoutput=$(terraform output -json)
@@ -10,11 +10,11 @@ google_url=$(echo $tfoutput | jq -r '.google_invoke_url.value')
 
 
 for fn in $(cat experiments/webservice/experiment.json | jq -r '.program.aws | keys[]'); do
-  echo "testing ${fn}..."
+  echo "Testing function: ${fn}"
   curl -s $aws_url/${fn}/call/google | jq
 done
 
 for fn in $(cat experiments/webservice/experiment.json | jq -r '.program.google | keys[]'); do
-  echo "testing ${fn}..."
+  echo "Testing function: ${fn}"
   curl -s $google_url/${fn}/call/aws | jq
 done
