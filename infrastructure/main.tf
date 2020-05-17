@@ -81,6 +81,6 @@ output "google_invoke_url" {
 }
 
 output "frontend_url"{
-  value = format("%s/frontend",module.aws.invoke_url)
+  value = "${module.aws.invoke_url}/frontend"
   description = "Call this frontend URL to access the service."
 }
