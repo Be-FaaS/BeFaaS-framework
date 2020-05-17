@@ -56,7 +56,7 @@ function calculateShippingCost (cart) {
 module.exports = lib.serverless.router(router => {
   // calculates shipping cost
   router.post('/shipmentquote', (ctx, next) => {
-    let { const address, const cart } = ctx.request.body
+    const { address, cart } = ctx.request.body
     ctx.body = { 
       'costEur': {
         'currencyCode': 'EUR',
@@ -68,7 +68,7 @@ module.exports = lib.serverless.router(router => {
 
   // ships items and provides tracking number
   router.post('/shipping', (ctx, next) => {
-    let { const address, const cart} = ctx.request.body
+    const { address, cart} = ctx.request.body
     ctx.body = { 'id': generateTrackingID() }
   })
 
