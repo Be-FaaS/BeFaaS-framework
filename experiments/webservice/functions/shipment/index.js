@@ -6,9 +6,9 @@ function generateTrackingID () {
 }
 
 // Iterates over given cart and calculates shipping cost in EUR
-function calculateShippingCost (cart){
+function calculateShippingCost (cart) {
   var count = 0;
-  for (var i = 0; i < cart.length; i++){
+  for (var i = 0; i < cart.length; i++) {
     count += cart[i].quantity
   }
   
@@ -28,27 +28,27 @@ function calculateShippingCost (cart){
  *
  *
  * Ex Payload Body: {
- *  "address":[
- *    "streetAddress": "Schillerstrasse 9",
- *    "city": "Munich",
- *    "state": "Bavaria",
- *    "country": "Germany"
- *  ],
- *  "items":[
- *    {"id":1,"quantity":6},
- *    {"id":4,"quantity":-1}
+ *  'address':{
+ *    'streetAddress': 'Schillerstrasse 9',
+ *    'city': 'Munich',
+ *    'state': 'Bavaria',
+ *    'country': 'Germany'
+ *  },
+ *  'items':[
+ *    {'id':1,'quantity':6},
+ *    {'id':4,'quantity':-1}
  *  ]
  * }
  *
  * Response for shipment: {
- *   "id": <some tracking number>
+ *   'id': <some tracking number>
  * }
  *
  * Response for shipment quote: {
- * 	 "costEur": {
- *	   "currencyCode": "EUR",
- *		 "units": <shipment cost>,
- *	   "nanos": 0
+ * 	 'costEur': {
+ *	   'currencyCode': 'EUR',
+ *		 'units': <shipment cost>,
+ *	   'nanos': 0
  *	 }
  * }
  */
@@ -56,20 +56,20 @@ function calculateShippingCost (cart){
 module.exports = lib.serverless.router(router => {
   // calculates shipping cost
   router.post('/shipmentquote', (ctx, next) => {
-    let {address, cart} = ctx.request.body
+    let { const address, const cart } = ctx.request.body
     ctx.body = { 
-      "costEur": {
-        "currencyCode": "EUR",
- 	      "units": calculateShippingCost(cart),
-        "nanos": 0
+      'costEur': {
+        'currencyCode': 'EUR',
+ 	      'units': calculateShippingCost(cart),
+        'nanos': 0
       }
     }
   })
 
   // ships items and provides tracking number
   router.post('/shipping', (ctx, next) => {
-    let {address, cart} = ctx.request.body
-    ctx.body = { "id": generateTrackingID() }
+    let { const address, const cart} = ctx.request.body
+    ctx.body = { 'id': generateTrackingID() }
   })
 
   router.attachEventHandler(request => {
