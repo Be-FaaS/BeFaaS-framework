@@ -44,18 +44,18 @@ function calculateShippingCost (cart) {
  * }
  *
  * Response for shipment quote: {
- * 	 'costEur': {
- *	   'currencyCode': 'EUR',
- *		 'units': <shipment cost>,
- *	   'nanos': 0
- *	 }
+ *   'costEur': {
+ *     'currencyCode': 'EUR',
+ *     'units': <shipment cost>,
+ *     'nanos': 0
+ *   }
  * }
  */
 
 module.exports = lib.serverless.router(router => {
   // calculates shipping cost
   router.post('/shipmentquote', (ctx, next) => {
-    const { address, cart } = ctx.request.body
+    const cart = ctx.request.body.cart
     ctx.body = {
       costEur: {
         currencyCode: 'EUR',
@@ -67,7 +67,7 @@ module.exports = lib.serverless.router(router => {
 
   // ships items and provides tracking number
   router.post('/shipping', (ctx, next) => {
-    const { address, cart } = ctx.request.body
+    //const { address, cart } = ctx.request.body
     ctx.body = { id: generateTrackingID() }
   })
 
