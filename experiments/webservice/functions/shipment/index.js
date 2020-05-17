@@ -67,7 +67,7 @@ module.exports = lib.serverless.router(router => {
 
   // ships items and provides tracking number
   router.post('/shipping', (ctx, next) => {
-    //const { address, cart } = ctx.request.body
+    // const { address, cart } = ctx.request.body
     ctx.body = { id: generateTrackingID() }
   })
 
