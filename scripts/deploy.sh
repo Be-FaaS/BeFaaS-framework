@@ -9,30 +9,31 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
+
 # Check for propper project name
-[ -s "${TF_VAR_project_name:-}" ] || {
+[ -z "${TF_VAR_project_name:-}" ] && {
     echo "Environment variable TF_VAR_project_name should be set"
     exit 1
 }
 
 # Check for regiosn
-[ -s "${AWS_REGION:-}" ] || {
+[ -z "${AWS_REGION:-}" ] && {
     echo "Environment variable AWS_REGION should be set"
     exit 1
 }
 
-[ -s "${GOOGLE_REGION:-}" ] || {
+[ -z "${GOOGLE_REGION:-}" ] && {
     echo "Environment variable GOOGLE_REGION should be set"
     exit 1
 }
 
 # Check for credentials
-[ -s "${GOOGLE_APPLICATION_CREDENTIALS:-}" ] || {
+[ -z "${GOOGLE_APPLICATION_CREDENTIALS:-}" ] && {
     echo "Environment variable GOOGLE_APPLICATION_CREDENTIALS should be set"
     exit 1
 }
 
-[ -s "${GOOGLE_PROJECT:-}" ] || {
+[ -z "${GOOGLE_PROJECT:-}" ] && {
     echo "Environment variable GOOGLE_PROJECT should be set"
     exit 1
 }
