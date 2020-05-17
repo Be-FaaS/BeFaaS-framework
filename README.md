@@ -65,8 +65,6 @@ In order to deploy we need to build the source first. Do: `npm run build`
 
 ### Cloud setup
 
-0. Choose a name that is unique for projects and buckets globally on each cloud platform `project_name`.
-
 #### Google
 
 1. Create a new Google Cloud project with `<project_name>`.
@@ -74,7 +72,7 @@ In order to deploy we need to build the source first. Do: `npm run build`
 3. Click `Create Service account`.
 4. Add the `Project > Owner` permission.
 5. Click `Generate Private Key` and download it as `json` we need the absolute path to the file later.
-6. Visit `https://console.developers.google.com/apis/api/cloudfunctions.googleapis.com/overview?project=faas-benchmark-intercloud` and enable the API.
+6. Visit `https://console.developers.google.com/apis/api/cloudfunctions.googleapis.com/overview?project=<project_name>` and enable the API.
 
 #### AWS
 
@@ -97,8 +95,6 @@ export GOOGLE_PROJECT=<project_name>
 
 export AWS_REGION=<ie us-east-1>
 export GOOGLE_REGION=<ie us-east1>
-
-export TF_VAR_project_name=<project_name>
 ```
 
 ### Initlialize terraform
