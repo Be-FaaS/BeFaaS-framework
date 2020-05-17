@@ -44,26 +44,26 @@ function calculateShippingCost (cart){
  *   "id": <some tracking number>
  * }
  *
- * Response for shipment quote: [
+ * Response for shipment quote: {
  * 	 "costEur": {
  *	   "currencyCode": "EUR",
  *		 "units": <shipment cost>,
  *	   "nanos": 0
  *	 }
- * ]
+ * }
  */
 
 module.exports = lib.serverless.router(router => {
   // calculates shipping cost
   router.post('/shipmentquote', (ctx, next) => {
     let {address, cart} = ctx.request.body
-    ctx.body = [ 
+    ctx.body = { 
       "costEur": {
         "currencyCode": "EUR",
  	      "units": calculateShippingCost(cart),
         "nanos": 0
       }
-    ]
+    }
   })
 
   // ships items and provides tracking number
