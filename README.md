@@ -4,7 +4,22 @@
 
 ## Setup
 
-WIP
+
+### NPM-Dependencies
+
+Setup NPM to work with our private GitHub package [registry](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages).
+
+Run:
+
+```bash
+npm install
+```
+
+to verify that the GitHub registry works.
+
+---
+
+## WIP
 
 <details>
   <summary>outdated setup guide</summary>
@@ -13,7 +28,7 @@ WIP
 
 | Tool      | Min. version |
 |-----------|--------------|
-| terraform | v0.12        |
+| terraform | v0.12.25        |
 | node      | v12          |
 | npm       | v6           |
 | aws-cli   | v2           |
