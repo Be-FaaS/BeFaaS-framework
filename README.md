@@ -2,29 +2,44 @@
 
 [![CI](https://github.com/FaaSterMetrics/experiments/workflows/CI/badge.svg)](https://github.com/FaaSterMetrics/experiments/actions?query=workflow%3ACI+branch%3Amaster)
 
-## Setup
+- [experiments](#experiments)
+  * [Build & Deploy](#build---deploy)
+  * [Setup](#setup)
+    + [NPM-Dependencies](#npm-dependencies)
+    + [Build](#build)
+    + [Cloud setup](#cloud-setup)
+      - [Google](#google)
+      - [AWS](#aws)
+    + [Environment Setup](#environment-setup)
+    + [Initlialize terraform](#initlialize-terraform)
 
 
-### NPM-Dependencies
+## Build & Deploy
 
-Setup NPM to work with our private GitHub package [registry](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages).
+Please complete the [Setup](#setup) first.
+The standard workflow for this experiment is straight forward.
 
-Run:
 
-```bash
-npm install
+```shell
+# List possible experiments
+npm run build
+[...]
+Usage: ./scripts/build.sh <experiment name>
+Choose one of:
+> iot webservice
+[...]
+
+# Build the webservice experiment
+npm run build webservice
+
+# Deploy to the Cloud
+npm run deploy webservice
 ```
 
-to verify that the GitHub registry works.
 
----
+## Setup
 
-## WIP
-
-<details>
-  <summary>outdated setup guide</summary>
-
-### Prerequisites
+Before you start please make sure you have following tools installed.
 
 | Tool      | Min. version |
 |-----------|--------------|
@@ -34,59 +49,63 @@ to verify that the GitHub registry works.
 | aws-cli   | v2           |
 | gsutil    | v4           |
 
+### NPM-Dependencies
 
-### Configure your AWS and Google Cloud credentials
+Setup NPM to work with our private GitHub package [registry](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages).
 
+Run:
+
+```shell
+npm install
 ```
-export AWS_ACCESS_KEY_ID=xxx
-export AWS_SECRET_ACCESS_KEY=xxx
 
-export GOOGLE_APPLICATION_CREDENTIALS=xxx
-export GOOGLE_PROJECT=xxx
+to verify that the GitHub registry works.
+
+### Build 
+
+In order to deploy we need to build the source first. Do: `npm run build` 
+
+### Cloud setup
+
+0. Choose a name that is unique for projects and buckets globally on each cloud platform `project_name`.
+
+#### Google
+
+1. Create a new Google Cloud project with `<project_name>`.
+2. Go to `IAM > Service account` or `https://console.cloud.google.com/iam-admin/serviceaccounts?project=<project_name>`.
+3. Click `Create Service account`.
+4. Add the `Project > Owner` permission.
+5. Click `Generate Private Key` and download it as `json` we need the absolute path to the file later.
+6. Visit `https://console.developers.google.com/apis/api/cloudfunctions.googleapis.com/overview?project=faas-benchmark-intercloud` and enable the API.
+
+#### AWS
+
+1. Go to IAM or `https://console.aws.amazon.com/iam/home?#/users`
+2. Create a new user
+3. Choose "Programmatic access"
+4. Got to "Attach existing policies directly" and chose "AdministratorAccess"
+5. Go to the last step and save the `Key ID` and `Access Key`.
+
+### Environment Setup
+
+Get the `project_name` from the cloud provider setup.
+
+```shell
+export AWS_ACCESS_KEY_ID=<From the web interface>
+export AWS_SECRET_ACCESS_KEY=<From the web interface>
+
+export GOOGLE_APPLICATION_CREDENTIALS=<Path to the key file ".json">
+export GOOGLE_PROJECT=<project_name>
 
 export AWS_REGION=us-east-1
 export GOOGLE_REGION=us-east1
 
-```
-
-### Set function name
-
-```
-echo -n "my-very-cool-unique-function-name" > NAME
-```
-
-### Configure storage buckets
-
-```
-cd infrastructure/buckets
-terraform init
-terraform apply
+export TF_VAR_project_name=<project_name>
 ```
 
 ### Initlialize terraform
 
-```
+```shell
 cd infrastructure
 terraform init
 ```
-
-
-## Deploy
-
-```
-./scripts/deploy.sh
-```
-
-## Test
-
-```
-./scripts/test.sh
-```
-
-## Cleanup
-
-```
-./scripts/cleanup.sh
-```
-
-</details>
