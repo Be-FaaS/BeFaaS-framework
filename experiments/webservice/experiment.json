@@ -2,7 +2,8 @@
   "workload": {},
   "program": {
     "aws": {
-      "frontend": {}
+      "frontend": {},
+      "currency": {}
     },
     "google": {
       "add": {}
