@@ -8,8 +8,8 @@ terraform {
   }
 }
 
-variable "project_name" {
-  default = "terraform-hybrid-cloud-example"
+variable "project_prefix" {
+  default = "faaster"
 }
 
 variable "experiment" {
@@ -24,8 +24,18 @@ resource "random_string" "build_id" {
   }
 }
 
+resource "random_string" "project_id" {
+  length  = 16
+  special = false
+  upper   = false
+  keepers = {
+    prefix = var.project_prefix
+  }
+}
+
 locals {
-  expconfig = jsondecode(file("../experiments/${var.experiment}/experiment.json"))
+  project_name = "${var.project_prefix}-${random_string.project_id.result}"
+  expconfig    = jsondecode(file("../experiments/${var.experiment}/experiment.json"))
 }
 
 locals {
@@ -48,7 +58,7 @@ locals {
 
 module "aws" {
   source            = "./aws"
-  project_name      = var.project_name
+  project_name      = local.project_name
   build_id          = random_string.build_id.result
   fns               = local.aws_fns
   google_invoke_url = local.google_invoke_url
@@ -56,7 +66,7 @@ module "aws" {
 
 module "google" {
   source         = "./google"
-  project_name   = var.project_name
+  project_name   = local.project_name
   build_id       = random_string.build_id.result
   fns            = local.google_fns
   aws_invoke_url = module.aws.invoke_url

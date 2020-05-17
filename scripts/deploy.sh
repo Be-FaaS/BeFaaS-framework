@@ -9,13 +9,6 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
-
-# Check for propper project name
-[ -z "${TF_VAR_project_name:-}" ] && {
-    echo "Environment variable TF_VAR_project_name should be set"
-    exit 1
-}
-
 # Check for regiosn
 [ -z "${AWS_REGION:-}" ] && {
     echo "Environment variable AWS_REGION should be set"
