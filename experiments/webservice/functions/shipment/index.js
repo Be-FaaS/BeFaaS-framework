@@ -2,18 +2,17 @@ const lib = require('@faastermetrics/lib')
 
 // Returns a new TrackingID for the shipment
 function generateTrackingID () {
-  return Math.floor(Math.random() * 999999999999 )
+  return Math.floor(Math.random() * 999999999999)
 }
 
 // Iterates over given cart and calculates shipping cost in EUR
 function calculateShippingCost (cart) {
-  var count = 0;
+  var count = 0
   for (var i = 0; i < cart.length; i++) {
     count += cart[i].quantity
   }
-  
   // Yes, overall item quantity increases quadratically in relation to shipping cost. 
-  if (count < 0){
+  if(count < 0) {
     return 0
   }
   return Math.ceil(Math.sqrt(count))
@@ -57,11 +56,11 @@ module.exports = lib.serverless.router(router => {
   // calculates shipping cost
   router.post('/shipmentquote', (ctx, next) => {
     const { address, cart } = ctx.request.body
-    ctx.body = { 
-      'costEur': {
-        'currencyCode': 'EUR',
- 	      'units': calculateShippingCost(cart),
-        'nanos': 0
+    ctx.body = {
+      costEur: {
+        currencyCode: 'EUR',
+ 	      units: calculateShippingCost(cart),
+        nanos: 0
       }
     }
   })
