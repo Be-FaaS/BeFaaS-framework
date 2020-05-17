@@ -9,6 +9,11 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
+[ -s "${TF_VAR_project_name:-}" ] || {
+    echo "Environment variable TF_VAR_project_name should be set"
+    exit 1
+}
+
 exp_dir="experiments/$1/functions"
 
 if [[ ! -d $exp_dir ]]; then
