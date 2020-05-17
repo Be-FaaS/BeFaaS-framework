@@ -3,7 +3,7 @@
 [![CI](https://github.com/FaaSterMetrics/experiments/workflows/CI/badge.svg)](https://github.com/FaaSterMetrics/experiments/actions?query=workflow%3ACI+branch%3Amaster)
 
 - [experiments](#experiments)
-  * [Build & Deploy](#build---deploy)
+  * [Build & Deploy](#build-and-deploy)
   * [Setup](#setup)
     + [NPM-Dependencies](#npm-dependencies)
     + [Build](#build)
@@ -14,7 +14,7 @@
     + [Initlialize terraform](#initlialize-terraform)
 
 
-## Build & Deploy
+## Build and Deploy
 
 Please complete the [Setup](#setup) first.
 The standard workflow for this experiment is straight forward.
@@ -43,11 +43,9 @@ Before you start please make sure you have following tools installed.
 
 | Tool      | Min. version |
 |-----------|--------------|
-| terraform | v0.12.25        |
+| terraform | v0.12.25     |
 | node      | v12          |
 | npm       | v6           |
-| aws-cli   | v2           |
-| gsutil    | v4           |
 
 ### NPM-Dependencies
 
@@ -97,8 +95,8 @@ export AWS_SECRET_ACCESS_KEY=<From the web interface>
 export GOOGLE_APPLICATION_CREDENTIALS=<Path to the key file ".json">
 export GOOGLE_PROJECT=<project_name>
 
-export AWS_REGION=us-east-1
-export GOOGLE_REGION=us-east1
+export AWS_REGION=<ie us-east-1>
+export GOOGLE_REGION=<ie us-east1>
 
 export TF_VAR_project_name=<project_name>
 ```
