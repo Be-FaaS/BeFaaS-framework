@@ -12,7 +12,7 @@ function calculateShippingCost (cart){
     count += cart[i].quantity
   }
   
-  // Yes, overall item quantity increases quadratically in comparison to shipping cost. 
+  // Yes, overall item quantity increases quadratically in relation to shipping cost. 
   if (count < 0){
     return 0
   }
@@ -28,13 +28,13 @@ function calculateShippingCost (cart){
  *
  *
  * Ex Payload Body: {
- *  "Address":[
- *    "StreetAddress": "Schillerstrasse 9",
- *    "City": "Munich",
- *    "State": "Bavaria",
- *    "Country": "Germany"
+ *  "address":[
+ *    "streetAddress": "Schillerstrasse 9",
+ *    "city": "Munich",
+ *    "state": "Bavaria",
+ *    "country": "Germany"
  *  ],
- *  "Items":[
+ *  "items":[
  *    {"id":1,"quantity":6},
  *    {"id":4,"quantity":-1}
  *  ]
@@ -45,10 +45,10 @@ function calculateShippingCost (cart){
  * }
  *
  * Response for shipment quote: {
- * 	 "CostEur": [
- *	   "CurrencyCode": "EUR",
- *		 "Units": <shipment cost>,
- *	   "Nanos": 0
+ * 	 "costEur": [
+ *	   "currencyCode": "EUR",
+ *		 "units": <shipment cost>,
+ *	   "nanos": 0
  *	 ]
  * }
  */
@@ -58,10 +58,10 @@ module.exports = lib.serverless.router(router => {
   router.post('/shipmentquote', (ctx, next) => {
     let {address, cart} = ctx.request.body
     ctx.body = { 
-      "CostEur": [
-        "CurrencyCode": "EUR",
- 	      "Units": calculateShippingCost(cart),
-        "Nanos": 0
+      "costEur": [
+        "currencyCode": "EUR",
+ 	      "units": calculateShippingCost(cart),
+        "nanos": 0
       ]
     }
   })
