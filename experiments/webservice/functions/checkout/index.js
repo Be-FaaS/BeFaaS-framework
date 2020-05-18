@@ -62,7 +62,7 @@ const lib = require('@faastermetrics/lib')
  * }
  *
  */
-module.exports = lib.serverless.rpcHandler(async (request) => {
+module.exports = lib.serverless.rpcHandler(async request => {
   // TODO(lbb): Use right function method
   const cart = await lib.call('google', 'cart/get', {
     userId: request.userId
@@ -73,22 +73,24 @@ module.exports = lib.serverless.rpcHandler(async (request) => {
     nanos: 0
   }
   const cartItems = []
-  await Promise.all(cart.items.map(async (item) => {
-    const product = await lib.call('google', 'product_catalog', {
-      id: item.productId
+  await Promise.all(
+    cart.items.map(async item => {
+      const product = await lib.call('google', 'product_catalog', {
+        id: item.productId
+      })
+      const productPrice = await lib.call('google', 'currency', {
+        from: product.priceUsd,
+        toCode: request.userCurrency
+      })
+      cartItems.push({
+        item: item,
+        cost: productPrice
+      })
+      totalOrderPrice.units = productPrice.currencyCode
+      totalOrderPrice.units += productPrice.units * item.quantity
+      totalOrderPrice.nanos += productPrice.nanos * item.quantity
     })
-    const productPrice = await lib.call('google', 'currency', {
-      from: product.priceUsd,
-      toCode: request.userCurrency
-    })
-    cartItems.push({
-      item: item,
-      cost: productPrice
-    })
-    totalOrderPrice.units = productPrice.currencyCode
-    totalOrderPrice.units += productPrice.units * item.quantity
-    totalOrderPrice.nanos += productPrice.nanos * item.quantity
-  }))
+  )
 
   const costUsd = await lib.call('google', 'ship/quote', {
     address: request.address,
