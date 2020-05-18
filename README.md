@@ -3,22 +3,20 @@
 [![CI](https://github.com/FaaSterMetrics/experiments/workflows/CI/badge.svg)](https://github.com/FaaSterMetrics/experiments/actions?query=workflow%3ACI+branch%3Amaster)
 
 - [experiments](#experiments)
-  * [Build & Deploy](#build-and-deploy)
-  * [Setup](#setup)
-    + [NPM-Dependencies](#npm-dependencies)
-    + [Build](#build)
-    + [Cloud setup](#cloud-setup)
+  - [Build & Deploy](#build-and-deploy)
+  - [Setup](#setup)
+    - [NPM-Dependencies](#npm-dependencies)
+    - [Build](#build)
+    - [Cloud setup](#cloud-setup)
       - [Google](#google)
       - [AWS](#aws)
-    + [Environment Setup](#environment-setup)
-    + [Initlialize terraform](#initlialize-terraform)
-
+    - [Environment Setup](#environment-setup)
+    - [Initlialize terraform](#initlialize-terraform)
 
 ## Build and Deploy
 
 Please complete the [Setup](#setup) first.
 The standard workflow for this experiment is straight forward.
-
 
 ```shell
 # List possible experiments
@@ -36,13 +34,12 @@ npm run build webservice
 npm run deploy webservice
 ```
 
-
 ## Setup
 
 Before you start please make sure you have following tools installed.
 
 | Tool      | Min. version |
-|-----------|--------------|
+| --------- | ------------ |
 | terraform | v0.12.25     |
 | node      | v12          |
 | npm       | v6           |
@@ -59,9 +56,9 @@ npm install
 
 to verify that the GitHub registry works.
 
-### Build 
+### Build
 
-In order to deploy we need to build the source first. Do: `npm run build` 
+In order to deploy we need to build the source first. Do: `npm run build`
 
 ### Cloud setup
 

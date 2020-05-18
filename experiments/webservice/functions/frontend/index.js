@@ -5,7 +5,9 @@ const fs = require('fs')
 const path = require('path')
 
 const indexHTML = fs.readFileSync(path.join(__dirname, 'index.html'))
-const resultHTML = _.template(fs.readFileSync(path.join(__dirname, 'result.html')))
+const resultHTML = _.template(
+  fs.readFileSync(path.join(__dirname, 'result.html'))
+)
 
 module.exports = lib.serverless.router(router => {
   router.get('/', (ctx, next) => {
