@@ -3,6 +3,7 @@
   "program": {
     "aws": {
       "frontend": {},
+      "email": {},
       "currency": {}
     },
     "google": {
