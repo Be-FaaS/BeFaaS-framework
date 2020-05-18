@@ -64,7 +64,7 @@ const lib = require('@faastermetrics/lib')
  */
 module.exports = lib.serverless.rpcHandler(async (request) => {
   // TODO(lbb): Use right function method
-  const cart = await lib.call('google', 'cart', {
+  const cart = await lib.call('google', 'cart/get', {
     userId: request.userId
   })
   const totalOrderPrice = {
@@ -125,6 +125,9 @@ module.exports = lib.serverless.rpcHandler(async (request) => {
   await lib.call('google', 'email', {
     email: request.email,
     order: orderResult
+  })
+  await lib.call('google', 'cart/clear', {
+    userId: request.userId
   })
   return orderResult
 })
