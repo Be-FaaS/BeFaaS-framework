@@ -16,10 +16,8 @@
     }
   },
   "lint-staged": {
-    "**/*": [
-      "prettier-standard --lint",
-      "git add"
-    ]
+    "**/*": "prettier-standard --lint",
+    "infrastructure/**/*.tf": "./scripts/terraform-fmt.sh"
   },
   "author": "",
   "license": "Apache-2.0",

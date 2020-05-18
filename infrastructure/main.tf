@@ -80,7 +80,7 @@ output "google_invoke_url" {
   value = module.google.invoke_url
 }
 
-output "frontend_url"{
-  value = "${module.aws.invoke_url}/frontend"
+output "frontend_url" {
+  value       = "${module.aws.invoke_url}/frontend"
   description = "Call this frontend URL to access the service."
 }
