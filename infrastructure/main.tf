@@ -42,7 +42,6 @@ locals {
 locals {
   aws_fn_names    = keys(lookup(local.expconfig.program, "aws", {}))
   google_fn_names = keys(lookup(local.expconfig.program, "google", {}))
-  azure_fn_names  = keys(lookup(local.expconfig.program, "azure", {}))
 }
 
 locals {
@@ -53,6 +52,7 @@ locals {
 
 data "google_client_config" "current" {
 }
+
 locals {
   aws_fns           = zipmap(local.aws_fn_names, local.aws_fn_files)
   google_fns        = zipmap(local.google_fn_names, local.google_fn_files)
