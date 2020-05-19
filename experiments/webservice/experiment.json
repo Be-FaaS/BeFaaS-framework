@@ -11,7 +11,7 @@
       "shipmentquote": {}
     },
     "azure": {
-      "testazure": {}
+      "frontend": {}
     }
   }
 }
