@@ -1,10 +1,5 @@
 const lib = require('@faastermetrics/lib')
 
-// Returns a new TrackingID for the shipment
-function generateTrackingID () {
-  return Math.floor(Math.random() * 999999999999)
-}
-
 // Iterates over given cart and calculates shipping cost in EUR
 function calculateShippingCost (cart) {
   var count = 0
@@ -15,15 +10,12 @@ function calculateShippingCost (cart) {
   if (count < 0) {
     return 0
   }
-  return Math.ceil(Math.sqrt(count))
+  return 4 + Math.ceil(Math.sqrt(count) / 2)
 }
 
 /**
  *
- * Can either
- *
- * ship out a package ( /shipment ) and provide a tracking ID or
- * calculate shipping cost of a given cart ( /shipmentquote ).
+ * Calculates shipping cost for the given shipment request.
  *
  *
  * Ex Payload Body: {
@@ -39,11 +31,7 @@ function calculateShippingCost (cart) {
  *  ]
  * }
  *
- * Response for shipment: {
- *   'id': <some tracking number>
- * }
- *
- * Response for shipment quote: {
+ * Response: {
  *   'costUsd': {
  *     'currencyCode': 'USD',
  *     'units': <shipment cost>,
@@ -51,33 +39,21 @@ function calculateShippingCost (cart) {
  *   }
  * }
  */
-
-module.exports = lib.serverless.router(router => {
+module.exports = lib.serverless.rpcHandler(event => {
   // calculates shipping cost
-  router.post('/shipmentquote', (ctx, next) => {
-    const cart = ctx.request.body.items
-    let shippingCost = 0
-    if (cart !== undefined) {
-      shippingCost = calculateShippingCost(cart)
+  lib.log({ event })
+  const cart = event.items
+  console.log(cart)
+  let shippingCost = 0
+  if (cart !== undefined) {
+    shippingCost = calculateShippingCost(cart)
+  }
+
+  return {
+    costUsd: {
+      currencyCode: 'USD',
+      units: shippingCost,
+      nanos: 0
     }
-
-    ctx.body = {
-      costUsd: {
-        currencyCode: 'USD',
-        units: shippingCost,
-        nanos: 0
-      }
-    }
-  })
-
-  // ships items and provides tracking number
-  router.post('/shipping', (ctx, next) => {
-    // const { address, cart } = ctx.request.body
-    ctx.body = { id: generateTrackingID() }
-  })
-
-  router.attachEventHandler(request => {
-    lib.log({ request })
-    return { ok: true, from: 'shipment' }
-  })
+  }
 })
