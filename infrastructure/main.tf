@@ -50,13 +50,9 @@ locals {
   azure_fn_file   = "../experiments/${var.experiment}/functions/_build/azure_dist.zip"
 }
 
-data "google_client_config" "current" {
-}
-
 locals {
-  aws_fns           = zipmap(local.aws_fn_names, local.aws_fn_files)
-  google_fns        = zipmap(local.google_fn_names, local.google_fn_files)
-  google_invoke_url = "https://${data.google_client_config.current.region}-${data.google_client_config.current.project}.cloudfunctions.net"
+  aws_fns    = zipmap(local.aws_fn_names, local.aws_fn_files)
+  google_fns = zipmap(local.google_fn_names, local.google_fn_files)
 }
 
 module "aws" {
@@ -64,7 +60,7 @@ module "aws" {
   project_name      = local.project_name
   build_id          = random_string.build_id.result
   fns               = local.aws_fns
-  google_invoke_url = local.google_invoke_url
+  google_invoke_url = module.google.invoke_url
   azure_invoke_url  = module.azure.invoke_url
 }
 
@@ -83,7 +79,7 @@ module "azure" {
   build_id          = random_string.build_id.result
   fn_file           = local.azure_fn_file
   aws_invoke_url    = module.aws.invoke_url
-  google_invoke_url = local.google_invoke_url
+  google_invoke_url = module.google.invoke_url
 }
 
 output "aws_invoke_url" {
