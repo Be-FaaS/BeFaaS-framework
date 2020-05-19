@@ -1,8 +1,5 @@
-module.exports = async function (context, req) {
-  context.log('Hello experiment!')
-  context.res = {
-    // status: 200, /* Defaults to 200 */
-    body: JSON.stringify('yay')
-  }
-  context.done()
-}
+const lib = require('@faastermetrics/lib')
+
+module.exports = lib.serverless.rpcHandler(event => {
+  return { result: 'test new azure' }
+})
