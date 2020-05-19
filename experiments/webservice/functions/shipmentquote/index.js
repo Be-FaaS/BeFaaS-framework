@@ -41,7 +41,6 @@ function calculateShippingCost (cart) {
  */
 module.exports = lib.serverless.rpcHandler(event => {
   // calculates shipping cost
-  lib.log({ event })
   const cart = event.items
   let shippingCost = 0
   if (cart !== undefined) {

@@ -29,7 +29,6 @@ function generateTrackingID () {
 
 module.exports = lib.serverless.rpcHandler(event => {
   // Ships order and provides tracking ID.
-  lib.log({ event })
   // const { address, cart } = event
   return { id: generateTrackingID() }
 })
