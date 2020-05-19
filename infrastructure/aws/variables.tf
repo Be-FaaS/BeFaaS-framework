@@ -26,7 +26,6 @@ variable "azure_invoke_url" {
   type = string
 }
 
-
 variable "fns" {
   type = map(string)
 }

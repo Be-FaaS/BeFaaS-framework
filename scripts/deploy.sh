@@ -43,5 +43,4 @@ fi
 chalk -t "{green Running deploy for} {green.bold $1}"
 
 cd infrastructure
-
 terraform apply -var "experiment=${1}"
