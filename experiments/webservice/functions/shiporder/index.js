@@ -1,29 +1,12 @@
 const lib = require('@faastermetrics/lib')
 
-// Returns a new TrackingID for the shipment
+// Returns a new TrackingID for the shipment.
 function generateTrackingID () {
   return Math.floor(Math.random() * 999999999999)
 }
-
-// Iterates over given cart and calculates shipping cost in EUR
-function calculateShippingCost (cart) {
-  var count = 0
-  for (var i = 0; i < cart.length; i++) {
-    count += cart[i].quantity
-  }
-  // Yes, overall item quantity increases quadratically in relation to shipping cost.
-  if (count < 0) {
-    return 0
-  }
-  return Math.ceil(Math.sqrt(count))
-}
-
 /**
  *
- * Can either
- *
- * ship out a package ( /shipment ) and provide a tracking ID or
- * calculate shipping cost of a given cart ( /shipmentquote ).
+ * Ships out a package and provides respective tracking ID.
  *
  *
  * Ex Payload Body: {
@@ -39,45 +22,15 @@ function calculateShippingCost (cart) {
  *  ]
  * }
  *
- * Response for shipment: {
+ * Response: {
  *   'id': <some tracking number>
  * }
  *
- * Response for shipment quote: {
- *   'costUsd': {
- *     'currencyCode': 'USD',
- *     'units': <shipment cost>,
- *     'nanos': 0
- *   }
- * }
  */
 
-module.exports = lib.serverless.router(router => {
-  // calculates shipping cost
-  router.post('/shipmentquote', (ctx, next) => {
-    const cart = ctx.request.body.items
-    let shippingCost = 0
-    if (cart !== undefined) {
-      shippingCost = calculateShippingCost(cart)
-    }
-
-    ctx.body = {
-      costUsd: {
-        currencyCode: 'USD',
-        units: shippingCost,
-        nanos: 0
-      }
-    }
-  })
-
-  // ships items and provides tracking number
-  router.post('/shipping', (ctx, next) => {
-    // const { address, cart } = ctx.request.body
-    ctx.body = { id: generateTrackingID() }
-  })
-
-  router.attachEventHandler(request => {
-    lib.log({ request })
-    return { ok: true, from: 'shipment' }
-  })
+module.exports = lib.serverless.rpcHandler(event => {
+  // Ships order and provides tracking ID.
+  lib.log({ event })
+  // const { address, cart } = event
+  return { id: generateTrackingID() }
 })
