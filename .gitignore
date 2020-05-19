@@ -6,3 +6,4 @@ NAME
 tfoutput.json
 _build
 .envrc
+.eslintrc.json
