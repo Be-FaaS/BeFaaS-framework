@@ -2,14 +2,6 @@ variable "handler" {
   default = "index.azureHandler"
 }
 
-variable "memory_size" {
-  default = 256
-}
-
-variable "timeout" {
-  default = 60
-}
-
 variable "project_name" {
   type = string
 }
