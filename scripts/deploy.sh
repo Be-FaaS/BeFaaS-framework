@@ -43,4 +43,5 @@ fi
 chalk -t "{cyan Running deploy for} {cyan.bold $1}"
 
 cd infrastructure
+terraform taint module.azure.azurerm_storage_blob.appcode 2>/dev/null # workaround for https://github.com/terraform-providers/terraform-provider-azurerm/issues/1990
 terraform apply -var "experiment=${1}"
