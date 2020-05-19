@@ -22,6 +22,10 @@ variable "aws_invoke_url" {
   type = string
 }
 
+variable "azure_invoke_url" {
+  type = string
+}
+
 variable "fns" {
   type = map(string)
 }

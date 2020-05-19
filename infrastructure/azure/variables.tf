@@ -1,5 +1,5 @@
 variable "handler" {
-  default = "index.lambdaHandler"
+  default = "index.azureHandler"
 }
 
 variable "memory_size" {
@@ -22,11 +22,10 @@ variable "google_invoke_url" {
   type = string
 }
 
-variable "azure_invoke_url" {
+variable "aws_invoke_url" {
   type = string
 }
 
-
-variable "fns" {
-  type = map(string)
+variable "fn_file" {
+  type = string
 }

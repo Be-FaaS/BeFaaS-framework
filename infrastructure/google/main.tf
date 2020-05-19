@@ -21,6 +21,7 @@ resource "google_cloudfunctions_function" "fn" {
   environment_variables = {
     AWS_LAMBDA_ENDPOINT           = var.aws_invoke_url
     GOOGLE_CLOUDFUNCTION_ENDPOINT = local.invoke_url
+    AZURE_FUNCTIONS_ENDPOINT      = var.azure_invoke_url
   }
 }
 

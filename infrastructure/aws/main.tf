@@ -75,6 +75,7 @@ resource "aws_lambda_function" "fn" {
     variables = {
       AWS_LAMBDA_ENDPOINT           = local.invoke_url
       GOOGLE_CLOUDFUNCTION_ENDPOINT = var.google_invoke_url
+      AZURE_FUNCTIONS_ENDPOINT      = var.azure_invoke_url
     }
   }
 }
