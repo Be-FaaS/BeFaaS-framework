@@ -9,6 +9,9 @@
       "add": {},
       "shiporder": {},
       "shipmentquote": {}
+    },
+    "azure": {
+      "testazure": {}
     }
   }
 }

@@ -36,4 +36,17 @@ for d in $exp_dir/*; do
   rm -rf $d/build
 done
 
+mkdir $exp_dir/_build/azure
+cp misc/azure/host.json $exp_dir/_build/azure
+for exp in $(jq '.program.azure | keys[]' $exp_dir/../experiment.json | xargs); do
+  d=$exp_dir/$exp
+  mkdir $exp_dir/_build/azure/$exp
+  cp misc/azure/function.json $exp_dir/_build/azure/$exp
+  npx ncc build $d/index.js -o $exp_dir/_build/azure/$exp
+
+done
+cd $exp_dir/_build/azure && zip -r ../azure_dist.zip * && cd -
+rm -rf $exp_dir/_build/azure
+
+
 echo "Build done" | chalk cyan bold
