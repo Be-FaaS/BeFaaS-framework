@@ -6,7 +6,9 @@
       "currency": {}
     },
     "google": {
-      "add": {}
+      "add": {},
+      "shiporder": {},
+      "shipmentquote": {}
     }
   }
 }
