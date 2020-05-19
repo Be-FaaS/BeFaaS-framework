@@ -33,7 +33,7 @@ function calculateShippingCost (cart) {
  * }
  *
  * Response: {
- *   "costUsd': {
+ *   "costUsd": {
  *     "currencyCode": "USD",
  *     "units": <shipment cost>,
  *     "nanos": 0
