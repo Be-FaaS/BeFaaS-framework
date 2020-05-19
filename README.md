@@ -73,11 +73,18 @@ In order to deploy we need to build the source first. Do: `npm run build`
 
 #### AWS
 
-1. Go to IAM or `https://console.aws.amazon.com/iam/home?#/users`
-2. Create a new user
-3. Choose "Programmatic access"
-4. Got to "Attach existing policies directly" and chose "AdministratorAccess"
+1. Go to IAM or `https://console.aws.amazon.com/iam/home?#/users`.
+2. Create a new user.
+3. Choose "Programmatic access".
+4. Got to "Attach existing policies directly" and chose "AdministratorAccess".
 5. Go to the last step and save the `Key ID` and `Access Key`.
+
+#### Azure
+
+1. Install the [azure-cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
+2. Run `az login`.
+3. Run `az account list`.
+4. Choose your subscription you want to use for the deployment.
 
 ### Environment Setup
 
@@ -92,6 +99,9 @@ export GOOGLE_PROJECT=<project_name>
 
 export AWS_REGION=<ie us-east-1>
 export GOOGLE_REGION=<ie us-east1>
+
+export ARM_TENANT_ID=<tenantId from az account list>
+export ARM_SUBSCRIPTION_ID=<id from az account list>
 ```
 
 ### Initlialize terraform
