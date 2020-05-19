@@ -4,6 +4,7 @@ const lib = require('@faastermetrics/lib')
 function calculateShippingCost (cart) {
   var count = 0
   for (var i = 0; i < cart.length; i++) {
+    // Yes, an item may have negative quantity as far as this function is concerned.
     count += cart[i].quantity
   }
   // Yes, overall item quantity increases quadratically in relation to shipping cost.
