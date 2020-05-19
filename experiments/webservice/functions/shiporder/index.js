@@ -8,22 +8,21 @@ function generateTrackingID () {
  *
  * Ships out a package and provides respective tracking ID.
  *
- *
  * Ex Payload Body: {
- *  'address':{
- *    'streetAddress': 'Schillerstrasse 9',
- *    'city': 'Munich',
- *    'state': 'Bavaria',
- *    'country': 'Germany'
+ *  "address":{
+ *    "streetAddress": "Schillerstrasse 9",
+ *    "city": "Munich",
+ *    "state": "Bavaria",
+ *    "country": "Germany"
  *  },
- *  'items':[
- *    {'id':1,'quantity':6},
- *    {'id':4,'quantity':-1}
+ *  "items":[
+ *    {"id":1,"quantity":6},
+ *    {"id":4,"quantity":-1}
  *  ]
  * }
  *
  * Response: {
- *   'id': <some tracking number>
+ *   "id": <some tracking number>
  * }
  *
  */

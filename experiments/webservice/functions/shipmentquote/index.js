@@ -19,23 +19,23 @@ function calculateShippingCost (cart) {
  *
  *
  * Ex Payload Body: {
- *  'address':{
- *    'streetAddress': 'Schillerstrasse 9',
- *    'city': 'Munich',
- *    'state': 'Bavaria',
- *    'country': 'Germany'
+ *  "address":{
+ *    "streetAddress": "Schillerstrasse 9",
+ *    "city": "Munich",
+ *    "state": "Bavaria",
+ *    "country": "Germany"
  *  },
- *  'items':[
- *    {'id':1,'quantity':6},
- *    {'id':4,'quantity':-1}
+ *  "items":[
+ *    {"id":1,"quantity":6},
+ *    {"id":4,"quantity":-1}
  *  ]
  * }
  *
  * Response: {
- *   'costUsd': {
- *     'currencyCode': 'USD',
- *     'units': <shipment cost>,
- *     'nanos': 0
+ *   "costUsd': {
+ *     "currencyCode": "USD",
+ *     "units": <shipment cost>,
+ *     "nanos": 0
  *   }
  * }
  */
@@ -43,7 +43,6 @@ module.exports = lib.serverless.rpcHandler(event => {
   // calculates shipping cost
   lib.log({ event })
   const cart = event.items
-  console.log(cart)
   let shippingCost = 0
   if (cart !== undefined) {
     shippingCost = calculateShippingCost(cart)
