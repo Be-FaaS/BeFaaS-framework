@@ -36,14 +36,19 @@ for d in $exp_dir/*; do
   rm -rf $d/build
 done
 
-mkdir $exp_dir/_build/azure
-cp misc/azure/host.json $exp_dir/_build/azure
-for exp in $(jq '.program.azure | keys[]' $exp_dir/../experiment.json | xargs); do
-  d=$exp_dir/$exp
-  mkdir $exp_dir/_build/azure/$exp
-  cp misc/azure/function.json $exp_dir/_build/azure/$exp
-  npx ncc build $d/index.js -o $exp_dir/_build/azure/$exp
+echo "Building azure functions" | chalk cyan
 
+rm -rf $exp_dir/_build/azure
+mkdir $exp_dir/_build/azure
+
+cp misc/azure/host.json $exp_dir/_build/azure
+
+for fname in $(jq -r '.program.azure | keys[]' $exp_dir/../experiment.json); do
+  echo "Going to build azure function: $fname" | chalk cyan
+  d=$exp_dir/$fname
+  mkdir $exp_dir/_build/azure/$fname
+  cat misc/azure/function.json | jq --argjson fn "\"${fname}/{*path}\"" '.bindings[0].route = $fn' > $exp_dir/_build/azure/$fname/function.json
+  npx ncc build $d/index.js -o $exp_dir/_build/azure/$fname
 done
 cd $exp_dir/_build/azure && zip -r ../azure_dist.zip * && cd -
 rm -rf $exp_dir/_build/azure
