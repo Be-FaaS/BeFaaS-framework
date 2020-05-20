@@ -3,7 +3,8 @@
   "program": {
     "functions": {
       "frontend": {
-        "provider": "azure"
+        "provider": "azure",
+        "calls": ["add"]
       },
       "email": {
         "provider": "aws"

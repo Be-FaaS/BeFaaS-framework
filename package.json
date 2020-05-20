@@ -23,7 +23,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@faastermetrics/lib": "^3.2.2",
+    "@faastermetrics/lib": "^4.1.0",
     "card-validator": "^6.2.0",
     "lodash": "^4.17.15"
   },

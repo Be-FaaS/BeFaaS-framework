@@ -22,7 +22,7 @@ module.exports = lib.serverless.router(router => {
       ctx.body = resultHTML({ result: 'invalid calculation' })
       return
     }
-    const res = await lib.call('google', 'add', _.pick(calc, ['a', 'b']))
+    const res = await lib.call('add', _.pick(calc, ['a', 'b']))
     ctx.body = resultHTML({ result: `${calc.a} + ${calc.b} = ${res.result}` })
   })
 })
