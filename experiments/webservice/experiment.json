@@ -2,6 +2,7 @@
   "workload": {},
   "program": {
     "aws": {
+      "payment": {},
       "frontend": {},
       "email": {},
       "currency": {}
