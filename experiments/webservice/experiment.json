@@ -23,6 +23,15 @@
       },
       "payment": {
         "provider": "aws"
+      },
+      "listproducts": {
+        "provider": "google"
+      },
+      "getproduct": {
+        "provider": "google"
+      },
+      "searchproducts": {
+        "provider": "google"
       }
     }
   }
