@@ -41,6 +41,8 @@ if [[ ! -d $exp_dir ]]; then
 fi
 
 chalk -t "{green Running deploy for} {green.bold $1}"
+build_timestamp=$(cat .build_timestamp || true)
+echo "Last build: $build_timestamp" | chalk green
 
 cd infrastructure
-terraform apply -var "experiment=${1}"
+terraform apply -var "experiment=${1}" -var "build_timestamp=${build_timestamp}"

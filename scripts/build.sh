@@ -19,6 +19,9 @@ if [[ ! -d $exp_dir ]]; then
     exit 1
 fi
 
+# Ensure updated dependencies
+npm install
+
 chalk -t "{cyan Building experiment} {cyan.bold $1}"
 
 rm -rf $exp_dir/_build
@@ -53,5 +56,5 @@ done
 cd $exp_dir/_build/azure && zip -r ../azure_dist.zip * && cd -
 rm -rf $exp_dir/_build/azure
 
-
+echo -n $(date) > .build_timestamp
 echo "Build done" | chalk cyan bold

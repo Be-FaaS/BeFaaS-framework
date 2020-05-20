@@ -8,3 +8,4 @@ _build
 .envrc
 .eslintrc.json
 logs/
+.build_timestamp
