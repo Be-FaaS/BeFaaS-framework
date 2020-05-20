@@ -10,7 +10,9 @@
       "add": {},
       "shiporder": {},
       "shipmentquote": {},
-      "listproducts": {}
+      "listproducts": {},
+      "searchproducts": {},
+      "getproduct": {}
     },
     "azure": {
       "frontend": {}
