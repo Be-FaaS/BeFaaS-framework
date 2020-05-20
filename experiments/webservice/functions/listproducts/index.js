@@ -28,8 +28,8 @@ const { products } = require('../../productcatalog/products')
 
 module.exports = lib.serverless.rpcHandler(event => {
   // const { address, cart } = event
-  var productArray = []
-  for (var key in products) {
+  const productArray = []
+  for (const key in products) {
     productArray.push(products[key])
   }
   return { products: productArray }
