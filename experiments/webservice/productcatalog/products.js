@@ -3,7 +3,7 @@ const products = {
     id: 'QWERTY',
     name: 'Bathing Suit',
     description: 'You will never want to take this off!',
-    picture: 'bathing_suit.jpg',
+    picture: 'https://source.unsplash.com/Ifh0UOYe9Gk/720x1080',
     priceUsd: {
       currencyCode: 'USD',
       units: 64,
@@ -15,7 +15,7 @@ const products = {
     id: 'REFLECTXXX',
     name: 'Shiny Mirror',
     description: 'You will definitely see yourself as a treasure by just looking at it.',
-    picture: 'shiny_mirror.jpg',
+    picture: 'https://source.unsplash.com/JR1ChBgzJvQ/1080x720',
     priceUsd: {
       currencyCode: 'USD',
       units: 149,
