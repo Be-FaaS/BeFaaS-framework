@@ -5,6 +5,10 @@ function sanitizeCreditCard (card) {
   return card.replace(/[^0-9]/g, '')
 }
 
+function getTransactionId () {
+  return (Math.random() * 99999999999999999).toString(36)
+}
+
 /**
  * The Payment Service accepts a payment value and a credit card. The service
  * checks the credit card number for plausible validity.
@@ -36,7 +40,9 @@ module.exports = lib.serverless.rpcHandler(request => {
   ).isPotentiallyValid
   return ok
     ? {
-        transactionId: (Math.random() * 99999999999999999).toString(36)
+        transactionId: getTransactionId()
       }
-    : { error: 'credit card is invalid' }
+    : {
+        error: 'credit card is invalid'
+      }
 })
