@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 locals {
-  invoke_url = "http://${var.project_name}.azurewebsites.net/api"
+  invoke_url = "https://${var.project_name}.azurewebsites.net/api"
 }
 
 resource "azurerm_resource_group" "rg" {
