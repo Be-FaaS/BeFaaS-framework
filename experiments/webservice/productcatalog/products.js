@@ -21,7 +21,7 @@ const products = {
       units: 149,
       nanos: 990000000
     },
-    categories: ['clothing', 'bath']
+    categories: ['accessories', 'bath']
   }
 }
 module.exports = { products }
