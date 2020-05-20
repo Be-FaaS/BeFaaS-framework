@@ -30,5 +30,5 @@ module.exports = lib.serverless.rpcHandler(event => {
   for (var key in products) {
     productArray.push(products[key])
   }
-  return productArray
+  return { products: productArray }
 })
