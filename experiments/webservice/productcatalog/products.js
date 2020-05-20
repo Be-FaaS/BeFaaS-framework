@@ -1,5 +1,5 @@
 const products = {
-  bathing_suit: {
+  QWERTY: {
     id: 'QWERTY',
     name: 'Bathing Suit',
     description: 'You will never want to take this off!',
@@ -11,7 +11,7 @@ const products = {
     },
     categories: ['clothing', 'bath']
   },
-  shiny_mirror: {
+  REFLECTXXX: {
     id: 'REFLECTXXX',
     name: 'Shiny Mirror',
     description: 'You will definitely see yourself as a treasure by just looking at it.',
