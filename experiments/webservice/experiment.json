@@ -10,7 +10,8 @@
     "google": {
       "add": {},
       "shiporder": {},
-      "shipmentquote": {}
+      "shipmentquote": {},
+      "listproducts": {}
     },
     "azure": {
       "frontend": {}
