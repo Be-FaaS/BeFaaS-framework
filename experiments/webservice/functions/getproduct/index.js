@@ -26,8 +26,8 @@ const { products } = require('../../productcatalog/products')
 
 module.exports = lib.serverless.rpcHandler(event => {
   const id = event.id
-  var product
-  for (var key in products) {
+  let product
+  for (const key in products) {
     if (products[key].id === id) {
       product = products[key]
     }
