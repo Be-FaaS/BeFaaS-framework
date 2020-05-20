@@ -1,19 +1,28 @@
 {
   "workload": {},
   "program": {
-    "aws": {
-      "payment": {},
-      "frontend": {},
-      "email": {},
-      "currency": {}
-    },
-    "google": {
-      "add": {},
-      "shiporder": {},
-      "shipmentquote": {}
-    },
-    "azure": {
-      "frontend": {}
+    "functions": {
+      "frontend": {
+        "provider": "azure"
+      },
+      "email": {
+        "provider": "aws"
+      },
+      "currency": {
+        "provider": "aws"
+      },
+      "add": {
+        "provider": "google"
+      },
+      "shiporder": {
+        "provider": "google"
+      },
+      "shipmentquote": {
+        "provider": "google"
+      },
+      "payment": {
+        "provider": "aws"
+      }
     }
   }
 }

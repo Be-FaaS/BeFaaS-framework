@@ -44,8 +44,8 @@ locals {
 }
 
 locals {
-  aws_fn_names    = keys(lookup(local.expconfig.program, "aws", {}))
-  google_fn_names = keys(lookup(local.expconfig.program, "google", {}))
+  aws_fn_names    = [for i, z in local.expconfig.program.functions : i if z.provider == "aws"]
+  google_fn_names = [for i, z in local.expconfig.program.functions : i if z.provider == "google"]
 }
 
 locals {
