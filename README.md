@@ -10,6 +10,7 @@
     - [Cloud setup](#cloud-setup)
       - [Google](#google)
       - [AWS](#aws)
+      - [Azure](#azure)
     - [Environment Setup](#environment-setup)
     - [Initlialize terraform](#initlialize-terraform)
 
