@@ -24,3 +24,4 @@ const products = {
     categories: ['clothing', 'bath']
   }
 }
+module.exports = { products }
