@@ -8,7 +8,8 @@
     "format": "prettier-standard --format",
     "local": "node -e \"http.createServer(require(process.argv[1]).googleHandler).listen(3000)\"",
     "build": "./scripts/build.sh",
-    "deploy": "./scripts/deploy.sh"
+    "deploy": "./scripts/deploy.sh",
+    "logs": "./scripts/logs.sh"
   },
   "husky": {
     "hooks": {
