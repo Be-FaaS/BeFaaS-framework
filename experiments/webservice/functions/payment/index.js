@@ -39,10 +39,6 @@ module.exports = lib.serverless.rpcHandler(request => {
     sanitizeCreditCard(request.creditCard.creditCardNumber)
   ).isPotentiallyValid
   return ok
-    ? {
-        transactionId: getTransactionId()
-      }
-    : {
-        error: 'credit card is invalid'
-      }
+    ? { transactionId: getTransactionId() }
+    : { error: 'credit card is invalid' }
 })
