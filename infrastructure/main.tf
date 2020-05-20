@@ -13,6 +13,10 @@ variable "project_prefix" {
   default = "faaster"
 }
 
+variable "build_timestamp" {
+  default = ""
+}
+
 variable "experiment" {
 }
 
@@ -21,7 +25,7 @@ resource "random_string" "build_id" {
   special = false
   upper   = false
   keepers = {
-    ts = timestamp()
+    ts = var.build_timestamp != "" ? var.build_timestamp : timestamp()
   }
 }
 
@@ -97,4 +101,8 @@ output "azure_invoke_url" {
 output "frontend_url" {
   value       = "${module.aws.invoke_url}/frontend"
   description = "Call this frontend URL to access the service."
+}
+
+output "project_name" {
+  value = local.project_name
 }
