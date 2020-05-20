@@ -6,10 +6,10 @@ function sanitizeCreditCard (card) {
 }
 
 /**
- * Email Service sends validation emails to the user with the content of
- * ones order. The body thus must include the customers order and their email.
+ * The Payment Service accepts a payment value and a credit card. The service
+ * checks the credit card number for plausible validity.
  *
- * The service returns and empty result on success and an {error: "..."}
+ * The service returns a transactionID result on success and an {error: "..."}
  * response on failure.
  *
  * Ex Payload Body: {
