@@ -26,5 +26,5 @@ const { products } = require('../../productcatalog/products')
 
 module.exports = lib.serverless.rpcHandler(event => {
   const id = event.id
-  return products[id]
+  return products[id] || { error: 'Product not found.' }
 })
