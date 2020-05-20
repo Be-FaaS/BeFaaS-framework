@@ -46,13 +46,13 @@ rm -rf $exp_dir/_build/azure
 mkdir $exp_dir/_build/azure
 
 cp misc/azure/host.json $exp_dir/_build/azure
+cp $exp_dir/../experiment.json $exp_dir/_build/azure
 
 for fname in $(jq -r '.program.functions | with_entries(select(.value.provider == "azure" )) | keys[]' $exp_dir/../experiment.json); do
   echo "Going to build azure function: $fname" | chalk cyan
   d=$exp_dir/$fname
   mkdir $exp_dir/_build/azure/$fname
   cat misc/azure/function.json | jq --argjson fn "\"${fname}/{*path}\"" '.bindings[0].route = $fn' > $exp_dir/_build/azure/$fname/function.json
-  cp $exp_dir/../experiment.json $exp_dir/_build/azure/$fname/
   npx ncc build $d/index.js -o $exp_dir/_build/azure/$fname
 done
 cd $exp_dir/_build/azure && zip -r ../azure_dist.zip * && cd -
