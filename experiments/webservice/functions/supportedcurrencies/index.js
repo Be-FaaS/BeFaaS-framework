@@ -2,11 +2,10 @@ const lib = require('@faastermetrics/lib')
 const { EUR_RATES } = require('../../currency/exchangerates')
 
 /**
- * Responds with an array containing all supported currency codes when called by a POST request.
  *
- * A dict with list of supported currencies will be returned.
+ * A dict with list of supported currency codes will be returned when called by a POST request.
  *
-* Does not need a payload.
+ * Does not need a payload.
  *
  * Response: {"currencyCodes": ["EUR", "USD"]}
  *
