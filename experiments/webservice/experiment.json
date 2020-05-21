@@ -3,13 +3,16 @@
   "program": {
     "functions": {
       "frontend": {
-        "provider": "azure",
+        "provider": "aws",
         "calls": ["add"]
       },
       "email": {
         "provider": "aws"
       },
       "currency": {
+        "provider": "aws"
+      },
+      "supportedcurrencies": {
         "provider": "aws"
       },
       "add": {
