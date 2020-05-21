@@ -7,7 +7,7 @@ const { EUR_RATES } = require('../../currency/exchangerates')
  *
  * A dict with list of supported currencies will be returned.
  *
- * Ex Payload Body: {}
+Does not need a payload.
  *
  * Response: {"currencyCodes": ["EUR", "USD"]}
  *
