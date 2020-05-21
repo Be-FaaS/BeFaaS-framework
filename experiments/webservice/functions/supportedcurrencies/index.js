@@ -5,11 +5,11 @@ const { EUR_RATES } = require('../../currency/exchangerates')
  * Exchange the given currency by calling a POST request against the currency
  * endpoint with an empty JSON payload. (Content-Type: application/json)
  *
- * A list of supported currencies will be returned.
+ * A dict with list of supported currencies will be returned.
  *
  * Ex Payload Body: {}
  *
- * Response: ["EUR", "USD"]
+ * Response: {"currencyCodes": ["EUR", "USD"]}
  *
  */
 module.exports = lib.serverless.rpcHandler(_ => {
