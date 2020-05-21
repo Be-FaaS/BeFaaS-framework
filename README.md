@@ -44,6 +44,9 @@ Before you start please make sure you have following tools installed.
 | terraform | v0.12.25     |
 | node      | v12          |
 | npm       | v6           |
+| awscli    | v2           |
+| gcloud    | v293         |
+| azure-cli | v2           |
 
 ### NPM-Dependencies
 
