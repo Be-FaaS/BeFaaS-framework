@@ -14,5 +14,4 @@ scenarios:
           url: '/frontend'
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
-    beforeScenario: 'beforeScenario'
     name: 'frontend-frontpage'

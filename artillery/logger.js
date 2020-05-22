@@ -1,8 +1,6 @@
 module.exports = {
   beforeRequest: beforeRequest,
-  afterResponse: afterResponse,
-  beforeScenario: beforeScenario,
-  afterScenario: afterScenario
+  afterResponse: afterResponse
 }
 
 function getRandomID () {
@@ -11,18 +9,6 @@ function getRandomID () {
     out += Math.floor(Math.random() * 10)
   }
   return out
-}
-
-var initialized = false
-function beforeScenario (context, events, done) {
-  if (!initialized) {
-    initialized = true
-  }
-  return done()
-}
-
-function afterScenario (context, events, done) {
-  return done()
 }
 
 function beforeRequest (requestParams, context, ee, next) {
