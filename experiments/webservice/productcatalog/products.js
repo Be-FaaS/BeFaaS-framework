@@ -14,7 +14,8 @@ const products = {
   REFLECTXXX: {
     id: 'REFLECTXXX',
     name: 'Shiny Mirror',
-    description: 'You will definitely see yourself as a treasure by just looking at it.',
+    description:
+      'You will definitely see yourself as a treasure by just looking at it.',
     picture: 'https://source.unsplash.com/JR1ChBgzJvQ/1080x720',
     priceUsd: {
       currencyCode: 'USD',

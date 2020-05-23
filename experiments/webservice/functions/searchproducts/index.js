@@ -30,7 +30,11 @@ module.exports = lib.serverless.rpcHandler(event => {
   const query = event.query.toLowerCase()
   const results = []
   for (const key in products) {
-    if (key.toLowerCase().includes(query) || products[key].name.toLowerCase().includes(query) || products[key].description.toLowerCase().includes(query)) {
+    if (
+      key.toLowerCase().includes(query) ||
+      products[key].name.toLowerCase().includes(query) ||
+      products[key].description.toLowerCase().includes(query)
+    ) {
       results.push(products[key])
     }
   }
