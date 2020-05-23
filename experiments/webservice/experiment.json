@@ -35,6 +35,9 @@
       },
       "searchproducts": {
         "provider": "google"
+      },
+      "listrecommendations": {
+        "provider": "google"
       }
     }
   }
