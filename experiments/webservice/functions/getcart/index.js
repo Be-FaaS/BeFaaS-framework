@@ -10,7 +10,10 @@ const lib = require('@faastermetrics/lib')
  *
  * Example Response: {
  *   "userID": "USER12",
- *   "items": [QWERTY]
+ *   "items": [{
+ *     "productID": "QWERTY",
+ *     "quantity": 7
+ *   }]
  * }
  *
  */
