@@ -21,7 +21,6 @@ module.exports = lib.serverless.rpcHandler(async event => {
     return { error: 'Wrong payload.' }
   }
   const availableProducts = (await lib.call('listproducts', {})).products
-  console.log(availableProducts)
   if (availableProducts === undefined) {
     return { error: 'Cannot receive product list.' }
   }
@@ -29,9 +28,8 @@ module.exports = lib.serverless.rpcHandler(async event => {
   for (const key in availableProducts) {
     availableIDs.push(availableProducts[key].id)
   }
-  // console.log(availableIDs)
 
-  const suitableIDs = requestedIDs.filter(id => !availableIDs.includes(id))
+  const suitableIDs = requestedIDs.filter(id => availableIDs.includes(id))
   // We always want to have at most 7 recommendations
   while (suitableIDs.length > 7) {
     const randomIndex = Math.floor(Math.random() * suitableIDs.length)
