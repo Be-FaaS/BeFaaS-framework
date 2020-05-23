@@ -2,11 +2,21 @@
 # temporary workload running script
 
 if [ $# -ne 2 ]; then
-    # example ./artillery/run_workload.sh http://faaster-euaaa4shi4upimk5.azurewebsites.net/api workloads/frontend-example.yml
-    echo "usage: ./run_workload.sh http(s)://basepath-url workload-path"
+    echo "usage: ./run_workload.sh experiment-name workload-name"
+    echo "example: ./run_workload.sh webservice frontend-example"
     exit
 fi
 
 GIT_PATH=`git rev-parse --show-toplevel`
+EXP_JSON=$GIT_PATH/experiments/$1/experiment.json
 
-$GIT_PATH/node_modules/.bin/artillery run --overrides "{\"config\": {\"target\": \"$1\"}}" $2
+var_json="{}"
+
+for fname in `jq -r '.program.functions | keys[]' $EXP_JSON`; do
+    provider=`jq -r ".program.functions.$fname.provider" $EXP_JSON`
+    cd $GIT_PATH/infrastructure
+    endpoint=`terraform output ${provider}_invoke_url`
+    var_json=`echo $var_json | jq --arg foo bar ". + {$fname: [\"$endpoint/$fname\"]}"`
+done
+
+$GIT_PATH/node_modules/.bin/artillery run -v "$var_json" $GIT_PATH/workloads/$1/$2.yml 
