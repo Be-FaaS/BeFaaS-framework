@@ -39,8 +39,17 @@
       "searchproducts": {
         "provider": "google"
       },
-      "listrecommendations": {
-        "provider": "google"
+      "cartkvstorage": {
+        "provider": "aws"
+      },
+      "addcartitem": {
+        "provider": "aws"
+      },
+      "getcart": {
+        "provider": "aws"
+      },
+      "emptycart": {
+        "provider": "aws"
       }
     }
   }
