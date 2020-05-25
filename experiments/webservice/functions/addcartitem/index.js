@@ -37,5 +37,4 @@ module.exports = lib.serverless.rpcHandler(async event => {
       quantity: event.item.quantity
     }
   )
-  return {}
 })
