@@ -58,14 +58,11 @@ module.exports = lib.serverless.rpcHandler(event => {
       if (!items.has(userID)) {
         items.set(userID, [event.itemID])
         quantities.set([userID, event.itemID], event.quantity)
-      } else if (!items.get(userID).includes(event.itemID)) {
+      } else if (!(items.get(userID).includes(event.itemID))) {
         items.set(userID, items.get(userID).push(event.itemID))
         quantities.set([userID, event.itemID], event.quantity)
       } else {
-        quantities.set(
-          [userID, event.itemID],
-          quantities.get([userID, event.itemID]) + event.quantity
-        )
+        quantities.set([userID, event.itemID], quantities.get([userID, event.itemID]) + event.quantity)
       }
       return {}
     case 'get':
