@@ -17,11 +17,7 @@ const lib = require('@faastermetrics/lib')
  */
 
 module.exports = lib.serverless.rpcHandler(async event => {
-  if (
-    event.userID === undefined ||
-    event.item.productID === undefined ||
-    event.item.quantity === undefined
-  ) {
+  if (event.userID === undefined || event.item.productID === undefined || event.item.quantity === undefined) {
     return { error: 'Wrong input format.' }
   }
   for (let i = 1; i <= event.item.quantity; i++) {
