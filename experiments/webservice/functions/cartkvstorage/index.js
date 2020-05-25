@@ -55,29 +55,33 @@ module.exports = lib.serverless.rpcHandler(event => {
       if (event.itemID === undefined || event.quantity === undefined) {
         return { error: 'There is no item to be added.' }
       }
+      if (event.itemID.includes('-|-|-|-') || userID.includes('-|-|-|-')) {
+        return { error: 'Congratulations. You found a hidden error message.' }
+      }
       if (!items.has(userID)) {
         items.set(userID, [event.itemID])
-        quantities.set([userID, event.itemID], event.quantity)
-      } else if (!(items.get(userID).includes(event.itemID))) {
-        items.set(userID, items.get(userID).push(event.itemID))
-        quantities.set([userID, event.itemID], event.quantity)
+        quantities.set(userID + '-|-|-|-' + event.itemID, event.quantity)
+      } else if (!items.get(userID).includes(event.itemID)) {
+        items.get(userID).push(event.itemID)
+        quantities.set(userID + '-|-|-|-' + event.itemID, event.quantity)
       } else {
-        quantities.set([userID, event.itemID], quantities.get([userID, event.itemID]) + event.quantity)
+        quantities.set(
+          userID + '-|-|-|-' + event.itemID,
+          quantities.get(userID + '-|-|-|-' + event.itemID) + event.quantity
+        )
       }
       return {}
     case 'get':
-      for (const item in items.get(userID)) {
+      items.get(userID).forEach(item =>
         tmp.push({
           productID: item,
-          quantity: quantities.get([userID, item])
+          quantity: quantities.get(userID + '-|-|-|-' + item)
         })
-      }
-      return {
-        items: tmp
-      }
+      )
+      return { items: tmp }
     case 'empty':
       for (const item in items.get(userID)) {
-        quantities.delete([userID, item])
+        quantities.delete(userID + '-|-|-|-' + item)
       }
       items.delete(userID)
       return {}

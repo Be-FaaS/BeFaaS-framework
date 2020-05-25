@@ -22,13 +22,20 @@ module.exports = lib.serverless.rpcHandler(async event => {
   if (event.userID === undefined) {
     return { error: 'Wrong input format.' }
   }
-  const cartItems = await lib.call('cartkvstorage', {
-    operation: 'get',
-    userID: event.userID
-  })
+  const cart = await lib.call(
+    'cartkvstorage',
+    'ws:getcart:' +
+      Math.random()
+        .toString(36)
+        .substr(2),
+    {
+      operation: 'get',
+      userID: event.userID
+    }
+  )
 
   return {
     userID: event.userID,
-    items: cartItems
+    items: cart.items
   }
 })

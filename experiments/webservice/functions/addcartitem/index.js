@@ -17,14 +17,25 @@ const lib = require('@faastermetrics/lib')
  */
 
 module.exports = lib.serverless.rpcHandler(async event => {
-  if (event.userID === undefined || event.item.productID === undefined || event.item.quantity === undefined) {
+  if (
+    event.userID === undefined ||
+    event.item.productID === undefined ||
+    event.item.quantity === undefined
+  ) {
     return { error: 'Wrong input format.' }
   }
-  for (let i = 1; i <= event.item.quantity; i++) {
-    await lib.call('cartkvstorage', {
+  await lib.call(
+    'cartkvstorage',
+    'ws:addtocartitem:' +
+      Math.random()
+        .toString(36)
+        .substr(2),
+    {
       operation: 'add',
       userID: event.userID,
-      itemID: event.item.productID
-    })
-  }
+      itemID: event.item.productID,
+      quantity: event.item.quantity
+    }
+  )
+  return {}
 })
