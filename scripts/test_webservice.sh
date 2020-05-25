@@ -8,19 +8,21 @@ google_invoke_url=https://europe-west3-faaster-277514.cloudfunctions.net
 # Currency calls
 echo "Calling AWS functions"
 curl --header "Content-Type: application/json" --data '{"from": {"units":0,"nanos":-10000000000, "currencyCode":"PHP"}, "toCode": "RUB"}' "$aws_invoke_url/currency/call"
-sleep 1
+echo "\n" && sleep 1
 curl --header "Content-Type: application/json" --data '{"from": {"units":14,"nanos":0, "currencyCode":"EUR"}, "toCode": "RUB"}' "$aws_invoke_url/currency/call"
-sleep 10
+echo "\n" && sleep 10
 curl --header "Content-Type: application/json" --data '{"from": {"units":44,"nanos":10000000, "currencyCode":"JPY"}, "toCode": "USD"}' "$aws_invoke_url/currency/call"
+echo "\n"
 
 # listrecommendations calls
 echo "Calling Google functions"
 curl --header "Content-Type: application/json" --data '{"userID": "USER1123122", "productIDs": ["QWERTY"]}' $google_invoke_url/listrecommendations/call
-sleep 3
+echo "\n" && sleep 3
 
 
 # azure frontend calls
 echo "Calling Azure functions"
 curl --header "Content-Type: application/json" --data '{"a": 10, "b": 20}' $azure_invoke_url/frontend/result
-sleep 5
+echo "\n" && sleep 5
 curl --header "Content-Type: application/json" --data '{"a": 20, "b": 30}' $azure_invoke_url/frontend/result
+echo "\n"
