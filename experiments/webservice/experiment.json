@@ -30,6 +30,9 @@
       "listproducts": {
         "provider": "google"
       },
+      "getads": {
+        "provider": "azure"
+      },
       "getproduct": {
         "provider": "google"
       },
