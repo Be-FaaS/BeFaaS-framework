@@ -26,10 +26,7 @@ module.exports = lib.serverless.rpcHandler(async event => {
   }
   await lib.call(
     'cartkvstorage',
-    'ws:addtocartitem:' +
-      Math.random()
-        .toString(36)
-        .substr(2),
+    'ws:addtocartitem:' + lib.helper.generateRandomID(),
     {
       operation: 'add',
       userID: event.userID,
@@ -37,4 +34,5 @@ module.exports = lib.serverless.rpcHandler(async event => {
       quantity: event.item.quantity
     }
   )
+  return { }
 })

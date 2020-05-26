@@ -39,6 +39,47 @@ const items = new Map()
 // Maps userID x itemID --> quantity
 const quantities = new Map()
 
+function addItem (userID, itemID, quantity) {
+  if (itemID === undefined || quantity === undefined) {
+    return { error: 'There is no item to be added.' }
+  }
+  if (itemID.includes('-|-|-|-') || userID.includes('-|-|-|-')) {
+    return { error: 'Congratulations. You found a hidden error message.' }
+  }
+  if (!items.has(userID)) {
+    items.set(userID, [itemID])
+    quantities.set(userID + '-|-|-|-' + itemID, quantity)
+  } else if (!items.get(userID).includes(itemID)) {
+    items.get(userID).push(itemID)
+    quantities.set(userID + '-|-|-|-' + itemID, quantity)
+  } else {
+    quantities.set(
+      userID + '-|-|-|-' + itemID,
+      quantities.get(userID + '-|-|-|-' + itemID) + quantity
+    )
+  }
+  return {}
+}
+
+function getCart (userID) {
+  const tmp = []
+  items.get(userID).forEach(item =>
+    tmp.push({
+      productID: item,
+      quantity: quantities.get(userID + '-|-|-|-' + item)
+    })
+  )
+  return { items: tmp }
+}
+
+function emptyCart (userID) {
+  for (const item in items.get(userID)) {
+    quantities.delete(userID + '-|-|-|-' + item)
+  }
+  items.delete(userID)
+  return {}
+}
+
 module.exports = lib.serverless.rpcHandler(event => {
   const operation = event.operation.toLowerCase()
   if (operation !== 'add' && operation !== 'get' && operation !== 'empty') {
@@ -49,41 +90,12 @@ module.exports = lib.serverless.rpcHandler(event => {
     return { error: 'A user ID has to be specified.' }
   }
 
-  const tmp = []
   switch (operation) {
     case 'add':
-      if (event.itemID === undefined || event.quantity === undefined) {
-        return { error: 'There is no item to be added.' }
-      }
-      if (event.itemID.includes('-|-|-|-') || userID.includes('-|-|-|-')) {
-        return { error: 'Congratulations. You found a hidden error message.' }
-      }
-      if (!items.has(userID)) {
-        items.set(userID, [event.itemID])
-        quantities.set(userID + '-|-|-|-' + event.itemID, event.quantity)
-      } else if (!items.get(userID).includes(event.itemID)) {
-        items.get(userID).push(event.itemID)
-        quantities.set(userID + '-|-|-|-' + event.itemID, event.quantity)
-      } else {
-        quantities.set(
-          userID + '-|-|-|-' + event.itemID,
-          quantities.get(userID + '-|-|-|-' + event.itemID) + event.quantity
-        )
-      }
-      return {}
+      return addItem(userID, event.itemID, event.quantity)
     case 'get':
-      items.get(userID).forEach(item =>
-        tmp.push({
-          productID: item,
-          quantity: quantities.get(userID + '-|-|-|-' + item)
-        })
-      )
-      return { items: tmp }
+      return getCart(userID)
     case 'empty':
-      for (const item in items.get(userID)) {
-        quantities.delete(userID + '-|-|-|-' + item)
-      }
-      items.delete(userID)
-      return {}
+      return emptyCart(userID)
   }
 })

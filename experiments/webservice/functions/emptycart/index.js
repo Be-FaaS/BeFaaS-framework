@@ -18,13 +18,11 @@ module.exports = lib.serverless.rpcHandler(async event => {
   }
   await lib.call(
     'cartkvstorage',
-    'ws:emptycart:' +
-      Math.random()
-        .toString(36)
-        .substr(2),
+    'ws:emptycart:' + lib.helper.generateRandomID(),
     {
       operation: 'empty',
       userID: event.userID
     }
   )
+  return { }
 })
