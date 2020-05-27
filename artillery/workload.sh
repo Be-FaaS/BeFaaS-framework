@@ -16,7 +16,7 @@ for fname in `jq -r '.program.functions | keys[]' $EXP_JSON`; do
     provider=`jq -r ".program.functions.$fname.provider" $EXP_JSON`
     cd $GIT_PATH/infrastructure
     endpoint=`terraform output ${provider}_invoke_url`
-    var_json=`echo $var_json | jq --arg foo bar ". + {$fname: [\"$endpoint/$fname\"]}"`
+    var_json=`echo $var_json | jq ". + {$fname: [\"$endpoint/$fname\"]}"`
 done
 
-$GIT_PATH/node_modules/.bin/artillery run -v "$var_json" $GIT_PATH/workloads/$1/$2.yml 
+npx artillery run -v "$var_json" $GIT_PATH/workloads/$1/$2.yml 

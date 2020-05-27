@@ -1,14 +1,8 @@
+const crypto = require('crypto')
+
 module.exports = {
   beforeRequest: beforeRequest,
   afterResponse: afterResponse
-}
-
-function getRandomID () {
-  var out = ''
-  for (var i = 0; i < 32; i++) {
-    out += Math.floor(Math.random() * 10)
-  }
-  return out
 }
 
 // This is a workaround to artillery not resolving variables before the beforeRequest callback
@@ -22,9 +16,8 @@ function resolveVar (url, context) {
 
 function beforeRequest (requestParams, context, ee, next) {
   var url = resolveVar(requestParams.url, context)
-  console.log(context.vars.blubb)
   var d = new Date()
-  var id = getRandomID()
+  var id = crypto.randomBytes(32).toString('hex')
   requestParams.headers.artillery_uid = id
   console.log(`${id} ${d.getTime()} before ${url}`)
 
