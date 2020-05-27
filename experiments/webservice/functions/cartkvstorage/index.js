@@ -40,9 +40,6 @@ const items = new Map()
 const quantities = new Map()
 
 function addItem (userID, itemID, quantity) {
-  if (itemID === undefined || quantity === undefined) {
-    return { error: 'There is no item to be added.' }
-  }
   if (itemID.includes('-|-|-|-') || userID.includes('-|-|-|-')) {
     return { error: 'Congratulations. You found a hidden error message.' }
   }
@@ -86,8 +83,8 @@ module.exports = lib.serverless.rpcHandler(event => {
     return { error: 'Invalid operation.' }
   }
   const userID = event.userID
-  if (userID === undefined) {
-    return { error: 'A user ID has to be specified.' }
+  if (!userID) {
+    return { error: 'A non-empty user ID has to be specified.' }
   }
 
   switch (operation) {

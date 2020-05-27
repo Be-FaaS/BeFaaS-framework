@@ -16,23 +16,17 @@ const lib = require('@faastermetrics/lib')
  *
  */
 
-module.exports = lib.serverless.rpcHandler(async event => {
-  if (
-    event.userID === undefined ||
-    event.item.productID === undefined ||
-    event.item.quantity === undefined
-  ) {
+module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
+  if (!event.userID || !event.item) {
     return { error: 'Wrong input format.' }
   }
-  await lib.call(
-    'cartkvstorage',
-    'ws:addtocartitem:' + lib.helper.generateRandomID(),
-    {
-      operation: 'add',
-      userID: event.userID,
-      itemID: event.item.productID,
-      quantity: event.item.quantity
-    }
-  )
-  return { }
+  if (!event.item.productID || !event.item.quantity) {
+    return { error: 'There is no item to be added.' }
+  }
+  return await ctx.call('cartkvstorage', {
+    operation: 'add',
+    userID: event.userID,
+    itemID: event.item.productID,
+    quantity: event.item.quantity
+  })
 })

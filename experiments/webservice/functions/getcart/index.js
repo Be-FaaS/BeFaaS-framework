@@ -18,19 +18,14 @@ const lib = require('@faastermetrics/lib')
  *
  */
 
-module.exports = lib.serverless.rpcHandler(async event => {
-  if (event.userID === undefined) {
+module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
+  if (!event.userID) {
     return { error: 'Wrong input format.' }
   }
-  const cart = await lib.call(
-    'cartkvstorage',
-    'ws:getcart:' + lib.helper.generateRandomID(),
-    {
-      operation: 'get',
-      userID: event.userID
-    }
-  )
-
+  const cart = await ctx.call('cartkvstorage', {
+    operation: 'get',
+    userID: event.userID
+  })
   return {
     userID: event.userID,
     items: cart.items
