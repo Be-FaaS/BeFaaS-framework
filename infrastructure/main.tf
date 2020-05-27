@@ -98,11 +98,6 @@ output "azure_invoke_url" {
   value = module.azure.invoke_url
 }
 
-output "frontend_url" {
-  value       = "${module.aws.invoke_url}/frontend"
-  description = "Call this frontend URL to access the service."
-}
-
 output "project_name" {
   value = local.project_name
 }
