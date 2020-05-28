@@ -1,28 +1,54 @@
 #!/bin/sh
-aws_invoke_url=https://0hd72g31ai.execute-api.eu-central-1.amazonaws.com/dev
-azure_invoke_url=https://faaster-zjjythbsmcrwz1dq.azurewebsites.net/api
-frontend_url=https://0hd72g31ai.execute-api.eu-central-1.amazonaws.com/dev/frontend
+set -euo pipefail
+SLEEP_TIME=1  # pause between curl calls
+# Change URLs based on returned values from "npm run deploy webservice"
+# Run the script from the experiments root directory.
+aws_invoke_url=https://1e3z9h8uij.execute-api.eu-central-1.amazonaws.com/dev
+azure_invoke_url=https://faaster-nu2ai4qylbyns0wf.azurewebsites.net/api
 google_invoke_url=https://europe-west3-faaster-277514.cloudfunctions.net
 
 
+webservice_config=./experiments/webservice/experiment.json
+
+aws="$aws_invoke_url"
+google="$google_invoke_url"
+azure="$azure_invoke_url"
+
+
+functionToPlatform() {
+	fname="$1"
+	platform_key=$(jq -r ".program.functions.$fname.provider" $webservice_config)
+	eval "echo \$$platform_key/$fname"
+}
+
+
+rpcCall() {
+	payload="$1"
+	url=$(functionToPlatform "$2")/call
+	echo "Calling $url"
+	curl --header "Content-Type: application/json" --data "$payload" "$url"
+	echo "" && sleep $SLEEP_TIME
+}
+
+frontendCall() {
+	payload="$1"
+	url=$(functionToPlatform "$2")/"$3"
+	echo "Frontend-calling $url"
+	curl --header "Content-Type: application/json" --data "$payload" "$url"
+	echo "" && sleep $SLEEP_TIME
+}
+
 # Currency calls
-echo "Calling AWS functions"
-curl --header "Content-Type: application/json" --data '{"from": {"units":0,"nanos":-10000000000, "currencyCode":"PHP"}, "toCode": "RUB"}' "$aws_invoke_url/currency/call"
-echo "" && sleep 1
-curl --header "Content-Type: application/json" --data '{"from": {"units":14,"nanos":0, "currencyCode":"EUR"}, "toCode": "RUB"}' "$aws_invoke_url/currency/call"
-echo "" && sleep 10
-curl --header "Content-Type: application/json" --data '{"from": {"units":44,"nanos":10000000, "currencyCode":"JPY"}, "toCode": "USD"}' "$aws_invoke_url/currency/call"
-echo ""
+rpcCall '{"from": {"units":0,"nanos":-10000000000, "currencyCode":"PHP"}, "toCode": "RUB"}' "currency"
+rpcCall '{}' "supportedcurrencies"
 
-# listrecommendations calls
-echo "Calling Google functions"
-curl --header "Content-Type: application/json" --data '{"userID": "USER1123122", "productIDs": ["QWERTY"]}' $google_invoke_url/listrecommendations/call
-echo "" && sleep 3
+# Cart calls
+rpcCall '{"userID": "USER12", "item": {"productID": "ASDF", "quantity": 200}}' "addcartitem"
+rpcCall '{"userID": "USER12"}' "getcart"
+rpcCall '{"userID": "USER12"}' "emptycart"
 
+# Product calls
+rpcCall '{"userID": "USER1123122", "productIDs": ["QWERTY"]}' "listrecommendations"
 
-# azure frontend calls
-echo "Calling Azure functions"
-curl --header "Content-Type: application/json" --data '{"a": 10, "b": 20}' $azure_invoke_url/frontend/result
-echo "" && sleep 5
-curl --header "Content-Type: application/json" --data '{"a": 20, "b": 30}' $azure_invoke_url/frontend/result
-echo ""
+# Add function (example frontend stuff)
+frontendCall '{"a": 10, "b": 20}' "frontend" "result"
