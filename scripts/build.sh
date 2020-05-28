@@ -54,7 +54,9 @@ for fname in $(jq -r '.program.functions | with_entries(select(.value.provider =
   d=$exp_dir/$fname
   mkdir $exp_dir/_build/azure/$fname
   cat misc/azure/function.json | jq --argjson fn "\"${fname}/{*path}\"" '.bindings[0].route = $fn' > $exp_dir/_build/azure/$fname/function.json
-  npx ncc build $d/index.js -o $exp_dir/_build/azure/$fname
+  echo "process.env.FAASTERMETRICS_FN_NAME='${fname}';$(cat $d/index.js)" > $d/_index.js
+  npx ncc build $d/_index.js -o $exp_dir/_build/azure/$fname
+  rm -rf $d/_index.js
 done
 cd $exp_dir/_build/azure && zip -r ../azure_dist.zip * && cd -
 rm -rf $exp_dir/_build/azure
