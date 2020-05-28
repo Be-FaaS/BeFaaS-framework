@@ -33,11 +33,12 @@ for d in $exp_dir/*; do
     continue
   fi
   echo "Going to build function: ${fname}" | chalk cyan
-  npx ncc build $d/index.js -o $d/build
+  echo "process.env.FAASTERMETRICS_FN_NAME='${fname}';$(cat $d/index.js)" > $d/_index.js
+  npx ncc build $d/_index.js -o $d/build
   echo $PKG_JSON > $d/build/package.json
   cp $exp_dir/../experiment.json $d/build/
   cd $d/build && zip -r ../../_build/${fname}.zip * && cd -
-  rm -rf $d/build
+  rm -rf $d/build $d/_index.js
 done
 
 echo "Building azure functions" | chalk cyan
