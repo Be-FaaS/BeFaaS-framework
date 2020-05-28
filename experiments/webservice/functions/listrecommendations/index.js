@@ -15,12 +15,12 @@ const lib = require('@faastermetrics/lib')
  *
  */
 
-module.exports = lib.serverless.rpcHandler(async event => {
+module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
   const requestedIDs = event.productIDs
-  if (requestedIDs === undefined) {
+  if (!requestedIDs) {
     return { error: 'Wrong payload.' }
   }
-  const availableProducts = (await lib.call('listproducts', {})).products
+  const availableProducts = (await ctx.call('listproducts', {})).products
   if (availableProducts === undefined) {
     return { error: 'Cannot receive product list.' }
   }

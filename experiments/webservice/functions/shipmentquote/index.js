@@ -2,15 +2,15 @@ const lib = require('@faastermetrics/lib')
 
 // Iterates over given cart and calculates shipping cost in EUR
 function calculateShippingCost (cart) {
-  var count = 0
-  for (var i = 0; i < cart.length; i++) {
+  let count = 0
+  for (let i = 0; i < cart.length; i++) {
     // Yes, an item may have negative quantity as far as this function is concerned.
     count += cart[i].quantity
   }
-  // Yes, overall item quantity increases quadratically in relation to shipping cost.
   if (count < 0) {
     return 0
   }
+  // Yes, overall item quantity increases quadratically in relation to shipping cost.
   return 4 + Math.ceil(Math.sqrt(count) / 2)
 }
 
@@ -44,7 +44,7 @@ module.exports = lib.serverless.rpcHandler(event => {
   // calculates shipping cost
   const cart = event.items
   let shippingCost = 0
-  if (cart !== undefined) {
+  if (cart) {
     shippingCost = calculateShippingCost(cart)
   }
 
