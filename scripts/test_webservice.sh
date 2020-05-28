@@ -4,6 +4,8 @@ SLEEP_TIME=1  # pause between curl calls
 # Change URLs based on returned values from "npm run deploy webservice"
 # Run the script from the experiments root directory.
 
+cd $(git rev-parse --show-toplevel)  # go to experiments root directory
+
 # set these automatically via terraform output
 cd infrastructure
 eval "$(terraform output | sed 's/ //g')"
