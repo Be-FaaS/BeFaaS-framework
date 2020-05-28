@@ -3,9 +3,11 @@ set -euo pipefail
 SLEEP_TIME=1  # pause between curl calls
 # Change URLs based on returned values from "npm run deploy webservice"
 # Run the script from the experiments root directory.
-aws_invoke_url=https://1e3z9h8uij.execute-api.eu-central-1.amazonaws.com/dev
-azure_invoke_url=https://faaster-nu2ai4qylbyns0wf.azurewebsites.net/api
-google_invoke_url=https://europe-west3-faaster-277514.cloudfunctions.net
+
+# set these automatically via terraform output
+cd infrastructure
+eval "$(terraform output | sed 's/ //g')"
+cd -
 
 
 webservice_config=./experiments/webservice/experiment.json
