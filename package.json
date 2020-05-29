@@ -23,7 +23,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@faastermetrics/lib": "^5.0.1",
+    "@faastermetrics/lib": "^5.0.2",
     "card-validator": "^6.2.0",
     "lodash": "^4.17.15"
   },
@@ -31,7 +31,7 @@
     "@zeit/ncc": "^0.22.3",
     "chalk-cli": "^4.1.0",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.6",
+    "lint-staged": "^10.2.7",
     "prettier-standard": "^16.3.0",
     "standard": "^14.3.3"
   }
