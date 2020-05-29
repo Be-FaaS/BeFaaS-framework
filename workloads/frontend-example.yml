@@ -1,0 +1,18 @@
+config:
+  target: ''
+  phases:
+    - duration: 1
+      arrivalRate: 4
+    - duration: 3
+      arrivalRate: 30
+  processor: '../artillery/logger.js'
+  defaults:
+
+scenarios:
+  - flow:
+      - get:
+          url: '/frontend'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+    beforeScenario: 'beforeScenario'
+    name: 'frontend-frontpage'

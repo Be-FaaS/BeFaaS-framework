@@ -26,7 +26,8 @@
   "dependencies": {
     "@faastermetrics/lib": "^5.0.2",
     "card-validator": "^6.2.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "artillery": "^1.6.0"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.22.3",
