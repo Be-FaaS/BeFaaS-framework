@@ -45,4 +45,4 @@ build_timestamp=$(cat .build_timestamp || true)
 echo "Last build: $build_timestamp" | chalk green
 
 cd infrastructure
-terraform apply -var "experiment=${1}" -var "build_timestamp=${build_timestamp}"
+terraform apply -var "experiment=${1}" -var "build_timestamp=${build_timestamp}" -auto-approve
