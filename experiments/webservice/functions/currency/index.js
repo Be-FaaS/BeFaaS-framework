@@ -52,7 +52,6 @@ function applyRate (units, nanos, rate) {
  * }
  */
 module.exports = lib.serverless.rpcHandler(event => {
-  lib.log({ event })
   const { from, toCode } = event
   const rate = getRate(from.currencyCode, toCode)
   const [convUnits, convNanos] = applyRate(from.units, from.nanos, rate)
