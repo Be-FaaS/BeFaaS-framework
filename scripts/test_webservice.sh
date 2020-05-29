@@ -10,7 +10,10 @@ cd $(git rev-parse --show-toplevel)  # go to experiments root directory
 cd infrastructure
 eval "$(terraform output | sed 's/ //g')"
 cd -
-
+if [[ -z $aws_invoke_url ]] && [[ -z $google_invoke_url ]] && [[ -z $azure_invoke_url ]]; then
+  echo -e "No cloud provider endpoints found. Probably you should first execute:\ncd infrastructure && terraform init && cd .."
+  exit 1
+fi
 
 webservice_config=./experiments/webservice/experiment.json
 
