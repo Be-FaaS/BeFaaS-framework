@@ -19,4 +19,4 @@ for fname in `jq -r '.program.functions | keys[]' $EXP_JSON`; do
     var_json=`echo $var_json | jq ". + {$fname: [\"$endpoint/$fname\"]}"`
 done
 
-npx artillery run -v "$var_json" $GIT_PATH/workloads/$1/$2.yml 
+npx artillery run -v "$var_json" $GIT_PATH/workloads/$1/$2.yml
