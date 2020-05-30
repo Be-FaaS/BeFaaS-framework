@@ -2,8 +2,8 @@
 # temporary workload running script
 
 if [ $# -ne 2 ]; then
-    echo "usage: ./run_workload.sh experiment-name workload-name"
-    echo "example: ./run_workload.sh webservice frontend-example"
+    echo "usage: npm run workload experiment-name workload-name"
+    echo "example: npm run workload webservice frontend-example"
     exit
 fi
 
