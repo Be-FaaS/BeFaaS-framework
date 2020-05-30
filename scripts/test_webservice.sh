@@ -15,7 +15,12 @@ if [[ -z $aws_invoke_url ]] && [[ -z $google_invoke_url ]] && [[ -z $azure_invok
   exit 1
 fi
 
-webservice_config=./experiments/webservice/experiment.json
+if [ -z $1 ]; then
+	echo "Setting project to default webservice"
+	1=webservice
+fi
+
+webservice_config="./experiments/$1/experiment.json"
 
 aws="$aws_invoke_url"
 google="$google_invoke_url"
