@@ -31,3 +31,7 @@ done
 cd infrastructure/experiment/
 terraform destroy -var "experiment=${1}" -auto-approve
 cd -
+
+echo "Deleting .tfstate and .tfstate.backup"
+find infrastructure -maxdepth 3 -type f -name "*.tfstate" -delete
+find infrastructure -maxdepth 3 -type f -name "*.tfstate.backup" -delete
