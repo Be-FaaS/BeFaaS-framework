@@ -1,19 +1,10 @@
 #!/bin/sh
 set -euo pipefail
-SLEEP_TIME=1  # pause between curl calls
+SLEEP_TIME=0  # pause between curl calls
 # Change URLs based on returned values from "npm run deploy webservice"
 # Run the script from the experiments root directory.
 
 cd $(git rev-parse --show-toplevel)  # go to experiments root directory
-
-# set these automatically via terraform output
-cd infrastructure
-eval "$(terraform output | sed 's/ //g')"
-cd -
-if [[ -z $aws_invoke_url ]] && [[ -z $google_invoke_url ]] && [[ -z $azure_invoke_url ]]; then
-  echo -e "No cloud provider endpoints found. Probably you should first execute:\ncd infrastructure && terraform init && cd .."
-  exit 1
-fi
 
 if [ -z $1 ]; then
 	echo "Setting project to default webservice"
@@ -22,9 +13,22 @@ fi
 
 webservice_config="./experiments/$1/experiment.json"
 
-aws="$aws_invoke_url"
-google="$google_invoke_url"
-azure="$azure_invoke_url"
+used_providers=$(jq -r ".program.functions[] | .provider" $webservice_config | sort | uniq)
+
+# set these automatically via terraform output
+for provider in $used_providers; do
+	cd infrastructure/$provider/endpoint
+	eval "$(terraform output | sed -n '1s/ //gp')"
+	cd -
+done
+aws="$AWS_LAMBDA_ENDPOINT"
+azure="$AZURE_FUNCTIONS_ENDPOINT"
+google="$GOOGLE_CLOUDFUNCTION_ENDPOINT"
+
+if [[ -z $aws ]] && [[ -z $google ]] && [[ -z $azure ]]; then
+  echo -e "No cloud provider endpoints found. Probably you should first execute:\ncd infrastructure && terraform init && cd .."
+  exit 1
+fi
 
 
 functionToPlatform() {
