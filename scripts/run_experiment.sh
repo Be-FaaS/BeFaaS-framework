@@ -7,12 +7,22 @@
 set -euo pipefail
 
 
+# 1 - experiment name
+apply_workload() {
+	num_iterations=20
+	echo "Running simple workload for $num_iterations"
+	for _ in $(seq 1 $num_iterations); do
+		./scripts/test_webservice.sh $1
+	done
+}
+
+
 run_experiment() {
 	experiment="$1"
 	echo "Running $experiment"
-	proj_name=$(basename $experiment | cut -c-8)  # azure does not allow for too long project names
-	# set the terraform project name
-	export TF_VAR_project_prefix=$proj_name
+	# proj_name=$(basename $experiment | cut -c-8)  # azure does not allow for too long project names
+	# # set the terraform project name
+	# export TF_VAR_project_prefix=$proj_name
 
 	# initialize terraform
 	cd infrastructure
@@ -23,7 +33,7 @@ run_experiment() {
 	npm run build $experiment && npm run deploy $experiment
 
 	# run test workload
-	./scripts/test_webservice.sh $experiment
+	apply_workload $experiment
 
 	# get logs
 	npm run logs $experiment
