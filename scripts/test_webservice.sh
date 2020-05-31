@@ -18,17 +18,9 @@ used_providers=$(jq -r ".program.functions[] | .provider" $webservice_config | s
 # set these automatically via terraform output
 for provider in $used_providers; do
 	cd infrastructure/$provider/endpoint
-	eval "$(terraform output | sed -n '1s/ //gp')"
+	eval "$(terraform output | sed -n "1s/.* = /$provider=/gp")"
 	cd -
 done
-aws="$AWS_LAMBDA_ENDPOINT"
-azure="$AZURE_FUNCTIONS_ENDPOINT"
-google="$GOOGLE_CLOUDFUNCTION_ENDPOINT"
-
-if [[ -z $aws ]] && [[ -z $google ]] && [[ -z $azure ]]; then
-  echo -e "No cloud provider endpoints found. Probably you should first execute:\ncd infrastructure && terraform init && cd .."
-  exit 1
-fi
 
 
 functionToPlatform() {
