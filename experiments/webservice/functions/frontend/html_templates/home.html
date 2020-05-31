@@ -1,0 +1,62 @@
+    <!--{{ template "header" . }}-->
+    <main role="main">
+        <section class="jumbotron text-center mb-0"
+     style="background-color: <%= banner_color %>;"
+		>
+            <div class="container">
+                <h1 class="jumbotron-heading">
+                    Other peoples' junk might be your next treasure!
+                </h1>
+                <p class="lead text-muted">
+                    We know you want those items!
+                </p>
+            </div>
+        </section>
+
+        <div class="py-5 bg-light">
+            <div class="container">
+            <div class="row">
+                <% for (product of products) { %>
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow">
+                        <a href="/product/<%- product.id %>">
+                            <img class="card-img-top" alt =""
+                                style="width: 18%; height: auto;"
+                                src="<%- product.picture %>">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= product.name %>
+                            </h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="/product/<%- product.id %>">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">Buy</button>
+                                    </a>
+                                </div>
+                                <small class="text-muted">
+                                    <!--{{ renderMoney .price }}-->
+                                    <%= product.priceUsd.units %>.<%= product.priceUsd.nanos.toString().substr(0,2) %>  <%= product.priceUsd.currencyCode %>
+                                </strong>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+            <h2> And now some contacts of our sponsors: </h2>
+            <div class="row">
+              <!--{{ with $.ad }}{{ template "text_ad" . }}{{ end}}-->
+              <a href="<%- ad.redirect_url %>">
+                <img class="card-img-top" alt =""
+                style="width: 20%; height: auto;"
+                src="<%- ad.picture_url %>"><br>
+                <%- ad.text %>
+              </a>
+            </div>
+            </div>
+        </div>
+    </main>
+
+    <!--{{ template "footer" . }}-->
