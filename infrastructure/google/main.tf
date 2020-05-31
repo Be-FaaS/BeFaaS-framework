@@ -1,12 +1,19 @@
-data "google_client_config" "current" {
+data "terraform_remote_state" "exp" {
+  backend = "local"
+
+  config = {
+    path = "${path.module}/../experiment/terraform.tfstate"
+  }
 }
 
 locals {
-  invoke_url = "https://${data.google_client_config.current.region}-${data.google_client_config.current.project}.cloudfunctions.net"
+  project_name = data.terraform_remote_state.exp.outputs.project_name
+  build_id     = data.terraform_remote_state.exp.outputs.build_id
+  fns          = data.terraform_remote_state.exp.outputs.google_fns
 }
 
 resource "google_cloudfunctions_function" "fn" {
-  for_each            = var.fns
+  for_each            = local.fns
   name                = each.key
   runtime             = "nodejs10"
   entry_point         = var.entry_point
@@ -18,15 +25,11 @@ resource "google_cloudfunctions_function" "fn" {
 
   trigger_http = true
 
-  environment_variables = {
-    AWS_LAMBDA_ENDPOINT           = var.aws_invoke_url
-    GOOGLE_CLOUDFUNCTION_ENDPOINT = local.invoke_url
-    AZURE_FUNCTIONS_ENDPOINT      = var.azure_invoke_url
-  }
+  environment_variables = var.fn_env
 }
 
 resource "google_cloudfunctions_function_iam_member" "invoker" {
-  for_each       = var.fns
+  for_each       = local.fns
   project        = google_cloudfunctions_function.fn[each.key].project
   region         = google_cloudfunctions_function.fn[each.key].region
   cloud_function = google_cloudfunctions_function.fn[each.key].name

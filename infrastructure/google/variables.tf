@@ -10,22 +10,6 @@ variable "timeout" {
   default = 60
 }
 
-variable "project_name" {
-  type = string
-}
-
-variable "build_id" {
-  type = string
-}
-
-variable "aws_invoke_url" {
-  type = string
-}
-
-variable "azure_invoke_url" {
-  type = string
-}
-
-variable "fns" {
+variable "fn_env" {
   type = map(string)
 }
