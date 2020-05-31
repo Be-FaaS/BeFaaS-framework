@@ -44,5 +44,30 @@ chalk -t "{green Running deploy for} {green.bold $1}"
 build_timestamp=$(cat .build_timestamp || true)
 echo "Last build: $build_timestamp" | chalk green
 
-cd infrastructure
+cd infrastructure/experiment/
+terraform init
 terraform apply -var "experiment=${1}" -var "build_timestamp=${build_timestamp}" -auto-approve
+cd -
+
+providers=$(jq -r '[.program.functions[].provider] | unique | .[]' experiments/${1}/experiment.json)
+states=""
+for provider in $providers; do
+  echo "Initializing endpoints for $provider" | chalk green
+  cd infrastructure/${provider}/endpoint
+  terraform init
+  terraform apply -auto-approve
+  states="${states}$(cat terraform.tfstate | jq '.outputs')"
+  cd -
+done
+
+export TF_VAR_fn_env=$(echo $states | jq -sc 'add | with_entries(select(.key | endswith("ENDPOINT"))) | map_values(.value)')
+
+for provider in $providers; do
+  echo "Deploying $provider" | chalk green
+  cd infrastructure/${provider}
+  terraform init
+  terraform apply -auto-approve
+  cd -
+done
+
+echo $TF_VAR_fn_env | jq
