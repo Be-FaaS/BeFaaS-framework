@@ -20,9 +20,6 @@ apply_workload() {
 run_experiment() {
 	experiment="$1"
 	echo "Running $experiment"
-	# proj_name=$(basename $experiment | cut -c-8)  # azure does not allow for too long project names
-	# # set the terraform project name
-	# export TF_VAR_project_prefix=$proj_name
 
 	# initialize terraform
 	cd infrastructure
@@ -30,7 +27,8 @@ run_experiment() {
 	cd -
 
 	# build and deploy
-	npm run build $experiment && npm run deploy $experiment
+	npm run build $experiment
+	npm run deploy $experiment
 
 	# run test workload
 	apply_workload $experiment
