@@ -1,14 +1,49 @@
-    <!--{{ template "header" . }}-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Webshop Demo</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+                <!-- TODO: inject correct default path (this here is AWS-specific) -->
+                <a href="/dev/frontend" class="navbar-brand d-flex align-items-center">
+                    Webshop Demo
+                </a>
+                <!--form class="form-inline ml-auto" method="POST" action="/setCurrency" id="currency_form">
+                    <select name="currency_code" class="form-control"
+                    onchange="document.getElementById('currency_form').submit();" style="width:auto;">
+                    <% for (currency of currencies) { %>
+                      <option value="<%= currency %>" 
+                      <% if (currency === user_currency) { %>
+                        selected="selected"
+                      <% } %>
+                    <% } %>
+                    </select>
+                    </form> -->
+                <a class="btn btn-primary btn-light ml-2" href="/dev/cart" role="button">View Cart (<%= cart_size %>)</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN -->
     <main role="main">
         <section class="jumbotron text-center mb-0"
      style="background-color: <%= banner_color %>;"
 		>
             <div class="container">
                 <h1 class="jumbotron-heading">
-                    Other peoples' junk might be your next treasure!
+                    Other people's junk might be your new treasure!
                 </h1>
                 <p class="lead text-muted">
-                    We know you want those items!
+                    We know you want these items ;)
                 </p>
             </div>
         </section>
@@ -19,14 +54,14 @@
                 <% for (product of products) { %>
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
-                        <a href="/product/<%- product.id %>">
+                      <a href="/product/<%- product.id %>" title="<%= product.name%>">
                             <img class="card-img-top" alt =""
-                                style="width: 18%; height: auto;"
+                                style="width: 100%; height: auto;"
                                 src="<%- product.picture %>">
                         </a>
                         <div class="card-body">
                             <h5 class="card-title">
-                                <%= product.name %>
+                              <%= product.name %>: <it><%= product.description %></it>
                             </h5>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
@@ -39,24 +74,50 @@
                                     <%= product.priceUsd.units %>.<%= product.priceUsd.nanos.toString().substr(0,2) %>  <%= product.priceUsd.currencyCode %>
                                 </strong>
                                 </small>
+                                <br>
                             </div>
                         </div>
                     </div>
                 </div>
                 <% } %>
             </div>
-            <h2> And now some contacts of our sponsors: </h2>
+            <h2> And now some tribute to our gracious sponsors: </h2>
             <div class="row">
-              <!--{{ with $.ad }}{{ template "text_ad" . }}{{ end}}-->
-              <a href="<%- ad.redirect_url %>">
-                <img class="card-img-top" alt =""
-                style="width: 20%; height: auto;"
-                src="<%- ad.picture_url %>"><br>
-                <%- ad.text %>
-              </a>
+            <% for (ad of ads) { %>
+              <a href="<%- ad.redirect_url %>" title="<%= ad.text %>">
+                  <img class="card-img-top" alt ="<%= ad.text %>"
+                  style="width: 100%; height: auto;"
+                  src="<%- ad.image_url %>"><br>
+                </a>
+            <% } %>
             </div>
             </div>
-        </div>
+            </div>
     </main>
 
-    <!--{{ template "footer" . }}-->
+    <!-- FOOTER -->
+    <footer class="py-5 px-5">
+        <div class="container">
+            <p>
+                &copy; 2020 FaaSterMetrics project group
+                <span class="text-muted">
+                    <a href="https://github.com/FaaSterMetrics/experiments/tree/master/experiments/webservice">(Webshop Source Code)</a>
+                </span>
+            </p>
+            <p>
+                <small class="text-muted">
+                    This website is hosted for demo purposes only. 
+                    It is not an actual shop, but represents one for our FaaS benchmarking framework. 
+                    Webdesign originally by <a href="https://github.com/GoogleCloudPlatform/microservices-demo">Google</a>,
+                    licensed under the Apache 2.0 license.
+                </small>
+            </p>
+            <small class="text-muted">
+              session-id: <%= session_id %></br>
+            </small>
+        </div>
+    </footer>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+</body>
+</html>
+

@@ -12,10 +12,9 @@ module.exports = lib.serverless.router(async router => {
   router.get('/', async (ctx, next) => {
     const sessionID = lib.helper.generateRandomID()
     let chosenCurrency = 'USD'
-    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', '{}')).currencyCodes
-    const productList = (await ctx.lib.call('listproducts', '{}')).products
-    await console.log(productList)
-    await console.log(supportedCurrencies)
+    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
+    const productList = (await ctx.lib.call('listproducts', {})).products
+    const cats = (await ctx.lib.call('getads', {})).ads
 
     const options = {
       session_id: sessionID,
@@ -24,11 +23,7 @@ module.exports = lib.serverless.router(async router => {
       products: productList,
       cart_size: 1,
       banner_color: 'white', // illustrates canary deployments
-      ad: {
-        redirect_url: 'https://duckduckgo.com',
-        text: 'AD4U!',
-        picture_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Tabby_cat_with_blue_eyes-3336579.jpg/499px-Tabby_cat_with_blue_eyes-3336579.jpg'
-      }
+      ads: cats
     }
     ctx.type = 'text/html'
     ctx.body = homeHTML(options)
