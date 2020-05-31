@@ -7,5 +7,5 @@ tfoutput.json
 _build
 .envrc
 .eslintrc.json
-logs/
+/logs/
 .build_timestamp

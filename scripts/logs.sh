@@ -2,6 +2,12 @@
 
 set -euo pipefail
 
+if [ ! -z ${BASH_SOURCE} ]; then
+  SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+else
+  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+fi
+
 if [ -z "${1:-}" ]; then
     chalk -t "{yellow Usage: $0 }{yellow.bold <experiment name>}"
     echo "Choose one of:" | chalk yellow
@@ -17,34 +23,13 @@ if [[ ! -d $exp_dir ]]; then
     exit 1
 fi
 
-cd infrastructure
-project_name=$(terraform output -json | jq -r '.project_name.value')
+cd infrastructure/experiment
+export project_name=$(terraform output -json | jq -r '.project_name.value')
 cd -
 
-logdir=logs/$1/$(date +%Y-%m-%d_%H-%M-%S)
-
+export logdir=logs/$1/$(date +%Y-%m-%d_%H-%M-%S)
 mkdir -p $logdir
 
-echo "Getting AWS logs" | chalk magenta
-for lg in $(aws logs describe-log-groups --log-group-name-prefix /aws/lambda/${project_name} | jq -r '.logGroups[].logGroupName'); do
-  echo "Getting logs for $lg" | chalk magenta
-  for ls in $(aws logs describe-log-streams --log-group-name $lg | jq -r '.logStreams[].logStreamName'); do
-      echo "|--> $ls" | chalk magenta
-        aws logs get-log-events --log-group-name $lg --log-stream-name $ls | jq -c '.events[]' >> $logdir/aws.log
-  done
+for provider in $(jq -r '[.program.functions[].provider] | unique | .[]' experiments/${1}/experiment.json); do
+    ${SCRIPT_DIR}/logs/${provider}.sh
 done
-
-echo "Getting Google Cloud logs" | chalk magenta
-gcloud logging read 'resource.type="cloud_function"' --format json | jq -c '.[]' > $logdir/google.log
-
-echo "Getting Azure logs" | chalk magenta
-az webapp log download --resource-group $project_name --name $project_name --log-file $logdir/azure.zip
-
-echo "Extracting Azure logs" | chalk magenta
-unzip $logdir/azure.zip -d $logdir/azure
-if [[ -d $logdir/azure/LogFiles/Application/Functions/Host ]]; then
-  cat $logdir/azure/LogFiles/Application/Functions/Host/*.log > $logdir/azure.log
-else
-  echo "No azure logs found in archive." | chalk red
-fi
-rm -rf $logdir/azure.zip $logdir/azure
