@@ -1,0 +1,14 @@
+{
+  "workload": {},
+  "program": {
+    "functions": {
+      "frontend": {
+        "provider": "aws",
+        "calls": ["add"]
+      },
+      "add": {
+        "provider": "google"
+      }
+    }
+  }
+}
