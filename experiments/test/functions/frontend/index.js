@@ -26,3 +26,4 @@ module.exports = lib.serverless.router(router => {
     ctx.body = resultHTML({ result: `${calc.a} + ${calc.b} = ${res.result}` })
   })
 })
+
