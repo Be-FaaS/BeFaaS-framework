@@ -3,8 +3,21 @@
   "program": {
     "functions": {
       "frontend": {
-        "provider": "azure",
+        "provider": "aws",
         "calls": ["add"]
+      },
+      "checkout": {
+        "provider": "aws",
+        "calls": [
+          "getcart",
+          "getproduct",
+          "currency",
+          "shipmentquote",
+          "payment",
+          "shiporder",
+          "email",
+          "emptycart"
+        ]
       },
       "email": {
         "provider": "aws"

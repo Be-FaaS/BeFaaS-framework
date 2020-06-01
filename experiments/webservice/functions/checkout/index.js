@@ -7,27 +7,29 @@ const lib = require('@faastermetrics/lib')
  * Place a order with your whole cart. This call
  * gets the current shipment service price for the current user
  * cart and initiates payment in the given currency.
- * When the shipment and payment completed successfully we clear the user cart
- * and add send a confirmation email with the used prices.
+ * After successfully completing shipment and payment the user's cart will
+ * be cleared. Additionally, a confirmation email listing all used prices
+ * will be sent to the customer.
  *
  *
- * Payload Body: {
- *  "userId": "56437829",
- *  "userCurrency": "PHP",
- *  "address": {
- *    "streetAddress": "Schillerstrasse 9",
- *    "city": "Munich",
- *    "state": "Bavaria",
- *    "country": "Germany"
- *  },
- *  "email": "mail@foo",
- *  "creditCard": {
- *    "creditCardNumber": "123 456 789 000",
- *    "creditCardCvv": 123,
- *    "creditCardExpirationYear": 2000,
- *    "creditCardExpirationMonth": 10
- *  }
- * }
+ * Payload Body:
+ {
+  "userId": "56437829",
+  "userCurrency": "PHP",
+  "address": {
+    "streetAddress": "Schillerstrasse 9",
+    "city": "Munich",
+    "state": "Bavaria",
+    "country": "Germany"
+  },
+  "email": "mail@foo",
+  "creditCard": {
+    "creditCardNumber": "123 456 789 000",
+    "creditCardCvv": 123,
+    "creditCardExpirationYear": 2000,
+    "creditCardExpirationMonth": 10
+  }
+ }
  *
  *
  * Response after the order has been placed: {
@@ -62,9 +64,9 @@ const lib = require('@faastermetrics/lib')
  * }
  *
  */
-module.exports = lib.serverless.rpcHandler(async request => {
+module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   // TODO(lbb): Use right function method
-  const cart = await lib.call('google', 'cart/get', {
+  const cart = await ctx.call('getcart', {
     userId: request.userId
   })
   const totalOrderPrice = {
@@ -72,13 +74,16 @@ module.exports = lib.serverless.rpcHandler(async request => {
     units: 0,
     nanos: 0
   }
+  if (!cart.items || cart.items.length === 0) {
+    return { error: 'cart is empty' }
+  }
   const cartItems = []
   await Promise.all(
     cart.items.map(async item => {
-      const product = await lib.call('google', 'product_catalog', {
+      const product = await ctx.call('getproduct', {
         id: item.productId
       })
-      const productPrice = await lib.call('google', 'currency', {
+      const productPrice = await ctx.call('currency', {
         from: product.priceUsd,
         toCode: request.userCurrency
       })
@@ -92,12 +97,12 @@ module.exports = lib.serverless.rpcHandler(async request => {
     })
   )
 
-  const costUsd = await lib.call('google', 'ship/quote', {
+  const costUsd = await ctx.call('shipmentquote', {
     address: request.address,
     items: cart.items
   })
 
-  const convertedShipmentPrice = lib.call('google', 'currency', {
+  const convertedShipmentPrice = await ctx.call('currency', {
     from: costUsd,
     toCode: request.userCurrency
   })
@@ -106,14 +111,14 @@ module.exports = lib.serverless.rpcHandler(async request => {
   totalOrderPrice.units += convertedShipmentPrice.units
   totalOrderPrice.nanos += convertedShipmentPrice.nanos
 
-  const { transactionId } = lib.call('google', 'payment', {
+  const { transactionId } = await ctx.call('payment', {
     creditCard: request.creditCard,
     amount: totalOrderPrice
   })
 
   if (!transactionId) return { error: 'failed to charge credit card' }
 
-  const { trackingId } = await lib.call('google', 'ship', {
+  const { trackingId } = await ctx.call('shiporder', {
     address: request.address,
     items: cart.items
   })
@@ -124,11 +129,11 @@ module.exports = lib.serverless.rpcHandler(async request => {
     shippingAddress: request.address,
     items: cartItems
   }
-  await lib.call('google', 'email', {
+  await ctx.call('email', {
     email: request.email,
     order: orderResult
   })
-  await lib.call('google', 'cart/clear', {
+  await ctx.call('emptycart', {
     userId: request.userId
   })
   return orderResult
