@@ -24,7 +24,7 @@ const lib = require('@faastermetrics/lib')
   },
   "email": "mail@foo",
   "creditCard": {
-    "creditCardNumber": "123 456 789 000",
+    "creditCardNumber": "378282246310005",
     "creditCardCvv": 123,
     "creditCardExpirationYear": 2000,
     "creditCardExpirationMonth": 10
@@ -33,14 +33,14 @@ const lib = require('@faastermetrics/lib')
  *
  *
  * Response after the order has been placed: {
- *   "order_id": "123fasd4",
- *   "shipping_tracking_id": "3uwfs",
- *   "shipping_cost": {
+ *   "orderId": "123fasd4",
+ *   "shippingTrackingId": "3uwfs",
+ *   "shippingCost": {
  *     "units": 100,
  *     "nanos": 500000000,
  *     "currencyCode": "PHP"
  *   },
- *   "shipping_address": {
+ *   "shippingAddress": {
  *     "streetAddress": "Schillerstrasse 9",
  *     "city": "Munich",
  *     "state": "Bavaria",
@@ -65,7 +65,6 @@ const lib = require('@faastermetrics/lib')
  *
  */
 module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
-  // TODO(lbb): Use right function method
   const cart = await ctx.call('getcart', {
     userId: request.userId
   })
@@ -123,7 +122,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
     items: cart.items
   })
   const orderResult = {
-    orderId: 'deadbeef',
+    orderId: lib.helper.generateRandomID(),
     shippingTrackingId: trackingId,
     shippingCost: convertedShipmentPrice,
     shippingAddress: request.address,

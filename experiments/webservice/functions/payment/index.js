@@ -23,7 +23,7 @@ function getTransactionId () {
  *    "currencyCode": "PHP"
  *  },
  *  "creditCard": {
- *    "creditCardNumber": "123 456 789 000",
+ *    "creditCardNumber": "378282246310005",
  *    "creditCardCvv": 123,
  *    "creditCardExpirationYear": 2000,
  *    "creditCardExpirationMonth": 10
