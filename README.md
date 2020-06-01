@@ -47,6 +47,7 @@ Before you start please make sure you have following tools installed.
 | awscli    | v2           |
 | gcloud    | v293         |
 | azure-cli | v2           |
+| jq        | jq-1.6       |
 
 ### NPM-Dependencies
 
