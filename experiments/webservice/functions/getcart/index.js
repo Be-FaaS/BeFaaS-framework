@@ -5,13 +5,13 @@ const lib = require('@faastermetrics/lib')
  * Returns a users cart.
  *
  * Example Payload: {
- *   "userID": "USER12"
+ *   "userId": "USER12"
  * }
  *
  * Example Response: {
- *   "userID": "USER12",
+ *   "userId": "USER12",
  *   "items": [{
- *     "productID": "QWERTY",
+ *     "productId": "QWERTY",
  *     "quantity": 7
  *   }]
  * }
@@ -19,15 +19,15 @@ const lib = require('@faastermetrics/lib')
  */
 
 module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
-  if (!event.userID) {
+  if (!event.userId) {
     return { error: 'Wrong input format.' }
   }
   const cart = await ctx.call('cartkvstorage', {
     operation: 'get',
-    userID: event.userID
+    userId: event.userId
   })
   return {
-    userID: event.userID,
+    userId: event.userId,
     items: cart.items
   }
 })

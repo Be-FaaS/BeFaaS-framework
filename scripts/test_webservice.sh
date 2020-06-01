@@ -51,12 +51,12 @@ rpcCall '{"from": {"units":0,"nanos":-10000000000, "currencyCode":"PHP"}, "toCod
 rpcCall '{}' "supportedcurrencies"
 
 # Cart calls
-rpcCall '{"userID": "USER12", "item": {"productID": "ASDF", "quantity": 200}}' "addcartitem"
-rpcCall '{"userID": "USER12"}' "getcart"
-rpcCall '{"userID": "USER12"}' "emptycart"
+rpcCall '{"userId": "USER12", "item": {"productId": "ASDF", "quantity": 200}}' "addcartitem"
+rpcCall '{"userId": "USER12"}' "getcart"
+rpcCall '{"userId": "USER12"}' "emptycart"
 
 # Product calls
-rpcCall '{"userID": "USER1123122", "productIDs": ["QWERTY"]}' "listrecommendations"
+rpcCall '{"userId": "USER1123122", "productIds": ["QWERTY"]}' "listrecommendations"
 
 # Add function (example frontend stuff)
 frontendCall '{"a": 10, "b": 20}' "frontend" "result"

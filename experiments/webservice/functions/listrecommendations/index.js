@@ -5,18 +5,18 @@ const lib = require('@faastermetrics/lib')
  * Responds with an appropriate list of product recommendations.
  *
  * Example Payload: {
- *   "userID": "USER12",
- *   "productIDs": ["QWERTY", "NOTAVAILABLE"]
+ *   "userId": "USER12",
+ *   "productIds": ["QWERTY", "NOTAVAILABLE"]
  * }
  *
  * Example Response: {
- *   "productIDs": ["QWERTY"]
+ *   "productIds": ["QWERTY"]
  * }
  *
  */
 
 module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
-  const requestedIDs = event.productIDs
+  const requestedIDs = event.productIds
   if (!requestedIDs) {
     return { error: 'Wrong payload.' }
   }
@@ -35,5 +35,5 @@ module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
     const randomIndex = Math.floor(Math.random() * suitableIDs.length)
     suitableIDs.splice(randomIndex, 1)
   }
-  return { productIDs: suitableIDs }
+  return { productIds: suitableIDs }
 })

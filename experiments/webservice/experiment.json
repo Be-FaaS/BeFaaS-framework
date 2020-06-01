@@ -44,7 +44,7 @@
         "provider": "google"
       },
       "getads": {
-        "provider": "azure"
+        "provider": "aws"
       },
       "getproduct": {
         "provider": "google"

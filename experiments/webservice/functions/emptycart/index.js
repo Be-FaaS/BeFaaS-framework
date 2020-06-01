@@ -5,7 +5,7 @@ const lib = require('@faastermetrics/lib')
  * Empties a users cart.
  *
  * Example Payload: {
- *   "userID": "USER12"
+ *   "userId": "USER12"
  * }
  *
  * Example Response: { }
@@ -13,11 +13,11 @@ const lib = require('@faastermetrics/lib')
  */
 
 module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
-  if (!event.userID) {
+  if (!event.userId) {
     return { error: 'Wrong input format.' }
   }
   return await ctx.call('cartkvstorage', {
     operation: 'empty',
-    userID: event.userID
+    userId: event.userId
   })
 })

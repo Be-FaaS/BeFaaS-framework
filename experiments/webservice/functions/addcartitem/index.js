@@ -5,9 +5,9 @@ const lib = require('@faastermetrics/lib')
  * Adds a new item to a users cart.
  *
  * Example Payload: {
- *   "userID": "USER12",
+ *   "userId": "USER12",
  *   "item": {
- *     "productID": "QWERTY",
+ *     "productId": "QWERTY",
  *     "quantity": 2
  *   }
  * }
@@ -17,16 +17,16 @@ const lib = require('@faastermetrics/lib')
  */
 
 module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
-  if (!event.userID || !event.item) {
+  if (!event.userId || !event.item) {
     return { error: 'Wrong input format.' }
   }
-  if (!event.item.productID || !event.item.quantity) {
+  if (!event.item.productId || !event.item.quantity) {
     return { error: 'There is no item to be added.' }
   }
   return await ctx.call('cartkvstorage', {
     operation: 'add',
-    userID: event.userID,
-    itemID: event.item.productID,
+    userId: event.userId,
+    itemId: event.item.productId,
     quantity: event.item.quantity
   })
 })

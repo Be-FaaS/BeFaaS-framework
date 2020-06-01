@@ -6,26 +6,26 @@ const lib = require('@faastermetrics/lib')
  *
  * Example Request (add): {
  *   "operation": "add",
- *   "userID": "UID6",
- *   "itemID": "QWERTY",
+ *   "userId": "UID6",
+ *   "itemId": "QWERTY",
  *   "quantity": 7
  * }
  *
  * Example Request (get): {
  *   "operation": "get",
- *   "userID": "UID6"
+ *   "userId": "UID6"
  * }
  *
  * Example Request (empty): {
  *   "operation": "empty",
- *   "userID": "UID6"
+ *   "userId": "UID6"
  * }
  *
  * Example Response (add): { }
  *
  * Example Response (get): {
  *   "items": [{
- *     "productID": "QWERTY"],
+ *     "productId": "QWERTY"],
  *     "quantity": 7
  *   }]
  * }
@@ -34,46 +34,46 @@ const lib = require('@faastermetrics/lib')
  *
  */
 
-// Maps userID --> itemID
+// Maps userId --> itemId
 const items = new Map()
-// Maps userID x itemID --> quantity
+// Maps userId x itemId --> quantity
 const quantities = new Map()
 
-function addItem (userID, itemID, quantity) {
-  if (itemID.includes('-|-|-|-') || userID.includes('-|-|-|-')) {
+function addItem (userId, itemId, quantity) {
+  if (itemId.includes('-|-|-|-') || userId.includes('-|-|-|-')) {
     return { error: 'Congratulations. You found a hidden error message.' }
   }
-  if (!items.has(userID)) {
-    items.set(userID, [itemID])
-    quantities.set(userID + '-|-|-|-' + itemID, quantity)
-  } else if (!items.get(userID).includes(itemID)) {
-    items.get(userID).push(itemID)
-    quantities.set(userID + '-|-|-|-' + itemID, quantity)
+  if (!items.has(userId)) {
+    items.set(userId, [itemId])
+    quantities.set(userId + '-|-|-|-' + itemId, quantity)
+  } else if (!items.get(userId).includes(itemId)) {
+    items.get(userId).push(itemId)
+    quantities.set(userId + '-|-|-|-' + itemId, quantity)
   } else {
     quantities.set(
-      userID + '-|-|-|-' + itemID,
-      quantities.get(userID + '-|-|-|-' + itemID) + quantity
+      userId + '-|-|-|-' + itemId,
+      quantities.get(userId + '-|-|-|-' + itemId) + quantity
     )
   }
   return {}
 }
 
-function getCart (userID) {
+function getCart (userId) {
   const tmp = []
-  items.get(userID).forEach(item =>
+  items.get(userId).forEach(item =>
     tmp.push({
-      productID: item,
-      quantity: quantities.get(userID + '-|-|-|-' + item)
+      productId: item,
+      quantity: quantities.get(userId + '-|-|-|-' + item)
     })
   )
   return { items: tmp }
 }
 
-function emptyCart (userID) {
-  for (const item in items.get(userID)) {
-    quantities.delete(userID + '-|-|-|-' + item)
+function emptyCart (userId) {
+  for (const item in items.get(userId)) {
+    quantities.delete(userId + '-|-|-|-' + item)
   }
-  items.delete(userID)
+  items.delete(userId)
   return {}
 }
 
@@ -82,17 +82,17 @@ module.exports = lib.serverless.rpcHandler(event => {
   if (operation !== 'add' && operation !== 'get' && operation !== 'empty') {
     return { error: 'Invalid operation.' }
   }
-  const userID = event.userID
-  if (!userID) {
+  const userId = event.userId
+  if (!userId) {
     return { error: 'A non-empty user ID has to be specified.' }
   }
 
   switch (operation) {
     case 'add':
-      return addItem(userID, event.itemID, event.quantity)
+      return addItem(userId, event.itemId, event.quantity)
     case 'get':
-      return getCart(userID)
+      return getCart(userId)
     case 'empty':
-      return emptyCart(userID)
+      return emptyCart(userId)
   }
 })
