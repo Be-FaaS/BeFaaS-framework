@@ -20,6 +20,19 @@
           "emptycart"
         ]
       },
+      "checkout": {
+        "provider": "aws",
+        "calls": [
+          "getcart",
+          "getproduct",
+          "currency",
+          "shipmentquote",
+          "payment",
+          "shiporder",
+          "email",
+          "emptycart"
+        ]
+      },
       "email": {
         "provider": "aws"
       },
