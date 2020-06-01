@@ -52,7 +52,7 @@ module.exports = lib.serverless.router(async router => {
 
   // TODO make recommendations more meaningful? --> use categories?
   router.post('/product', async (ctx, next) => {
-    const requestId = lib.helper.generateRandomID(),
+    const requestId = lib.helper.generateRandomID()
     const product = (await ctx.lib.call('getproduct', ctx.request.body))
     const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
     const cat = (await ctx.lib.call('getads', {})).ads[0]
