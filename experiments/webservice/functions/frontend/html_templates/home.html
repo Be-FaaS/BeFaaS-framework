@@ -13,22 +13,23 @@
     <header>
         <div class="navbar navbar-dark bg-dark box-shadow">
             <div class="container d-flex justify-content-between">
-                <!-- TODO: inject correct default path (this here is AWS-specific) -->
-                <a href="/dev/frontend" class="navbar-brand d-flex align-items-center">
-                    Webshop Demo
+                <a href="./frontend/" class="navbar-brand d-flex align-items-center">
+                  Webshop Demo
                 </a>
-                <!--form class="form-inline ml-auto" method="POST" action="/setCurrency" id="currency_form">
+                <form class="form-inline ml-auto" method="POST" action="./setCurrency/" id="currency_form">
                     <select name="currency_code" class="form-control"
                     onchange="document.getElementById('currency_form').submit();" style="width:auto;">
                     <% for (currency of currencies) { %>
-                      <option value="<%= currency %>" 
+                    <option value="<%= currency %>"<% if (currency === user_currency) { %> selected="selected"<% } %>>
+                      <%= currency %>
                       <% if (currency === user_currency) { %>
-                        selected="selected"
+                        <!--p class="text-success">&#32;&#10004;</p-->
                       <% } %>
+                    </option>
                     <% } %>
                     </select>
-                    </form> -->
-                <a class="btn btn-primary btn-light ml-2" href="/dev/cart" role="button">View Cart (<%= cart_size %>)</a>
+                    </form>
+                <a class="btn btn-primary btn-light ml-2" href="./cart/" role="button">View Cart (<%= cart_size %>)</a>
             </div>
         </div>
     </header>
@@ -54,24 +55,23 @@
                 <% for (product of products) { %>
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
-                      <a href="/product/<%- product.id %>" title="<%= product.name%>">
+                      <a href="./product/<%- product.id %>/" title="<%= product.name%>">
                             <img class="card-img-top" alt =""
                                 style="width: 100%; height: auto;"
                                 src="<%- product.picture %>">
                         </a>
                         <div class="card-body">
                             <h5 class="card-title">
-                              <%= product.name %>: <it><%= product.description %></it>
+                              <p class="font-bold"><%= product.name %></p><br><p class="font-italic"><%= product.description %></p>
                             </h5>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="/product/<%- product.id %>">
+                                    <a href="./product/<%- product.id %>/">
                                         <button type="button" class="btn btn-sm btn-outline-secondary">Buy</button>
                                     </a>
                                 </div>
                                 <small class="text-muted">
-                                    <!--{{ renderMoney .price }}-->
-                                    <%= product.priceUsd.units %>.<%= product.priceUsd.nanos.toString().substr(0,2) %>  <%= product.priceUsd.currencyCode %>
+                                    <%= product.price.units %>.<%= product.price.nanos.toString().substr(0,2) %>  <%= product.price.currencyCode %>
                                 </strong>
                                 </small>
                                 <br>
@@ -114,6 +114,7 @@
             </p>
             <small class="text-muted">
               session-id: <%= session_id %></br>
+              request-id: <%= request_id %></br>
             </small>
         </div>
     </footer>
