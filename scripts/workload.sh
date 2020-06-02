@@ -45,4 +45,18 @@ echo "Writing config..." | chalk blue
 echo -n $var_json > artillery/variables.json
 cp $workload_config artillery/workload.yml
 
+echo "Creating docker image..." | chalk blue
 docker build -t faastermetrics/artillery artillery/
+
+echo "Exporting docker image..." | chalk blue
+docker save faastermetrics/artillery:latest | gzip > artillery/image.tar.gz
+
+echo "Deploying workload..." | chalk blue
+cd infrastructure/workload
+terraform init
+terraform apply -auto-approve | tee ../../artillery/workload-deploy.log
+
+echo "Destroying workload instance..." | chalk blue
+terraform destroy -auto-approve -target aws_instance.workload
+
+echo "Done" | chalk blue bold

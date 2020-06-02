@@ -10,8 +10,10 @@ config:
 
 scenarios:
   - flow:
-      - get:
-          url: '{{ email }}'
+      - post:
+          url: '{{ email }}/call'
+          json:
+            email: 'test@test.com'
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
     name: 'email'

@@ -27,15 +27,28 @@ data "aws_ami" "ubuntu_bionic" {
 }
 
 resource "aws_instance" "workload" {
-  ami                         = data.aws_ami.ubuntu_bionic.id
-  instance_type               = "t3a.micro"
-  associate_public_ip_address = true
-  subnet_id                   = element(values(aws_subnet.default), 0).id
-  key_name                    = aws_key_pair.ssh.key_name
-  vpc_security_group_ids      = local.security_groups
+  ami                                  = data.aws_ami.ubuntu_bionic.id
+  instance_type                        = "t3a.micro"
+  associate_public_ip_address          = true
+  subnet_id                            = element(values(aws_subnet.default), 0).id
+  key_name                             = aws_key_pair.ssh.key_name
+  vpc_security_group_ids               = local.security_groups
+  instance_initiated_shutdown_behavior = "terminate"
 
   tags = {
     Name = "${local.project_name}-workload"
+  }
+
+  provisioner "file" {
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      host        = self.public_ip
+      private_key = tls_private_key.ssh.private_key_pem
+      agent       = false
+    }
+    source      = "${path.module}/../../artillery/image.tar.gz"
+    destination = "/tmp/image.tar.gz"
   }
 
   provisioner "remote-exec" {
@@ -49,7 +62,8 @@ resource "aws_instance" "workload" {
 
     inline = [
       "curl -sSL https://get.docker.com/ | sh",
-      "sudo docker run -d --restart=always --name hello-hostname -p 5000:5000 christophwitzko/hello-hostname"
+      "sudo docker load -i /tmp/image.tar.gz",
+      "sudo docker run -it --rm faastermetrics/artillery"
     ]
   }
 }

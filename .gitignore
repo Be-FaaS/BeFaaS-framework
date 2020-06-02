@@ -11,3 +11,5 @@ _build
 .build_timestamp
 artillery/variables.json
 artillery/workload.yml
+artillery/image.tar.gz
+artillery/workload-deploy.log

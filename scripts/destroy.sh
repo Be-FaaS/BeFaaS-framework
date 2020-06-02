@@ -28,7 +28,11 @@ for provider in $providers; do
   cd -
 done
 
-cd infrastructure/experiment/
+cd infrastructure/workload
+terraform destroy -auto-approve
+cd -
+
+cd infrastructure/experiment
 terraform destroy -var "experiment=${1}" -auto-approve
 cd -
 
