@@ -13,11 +13,11 @@
     <header>
         <div class="navbar navbar-dark bg-dark box-shadow">
             <div class="container d-flex justify-content-between">
-                <a href="./frontend/" class="navbar-brand d-flex align-items-center">
+                <a href="./" class="navbar-brand d-flex align-items-center">
                   Webshop Demo
                 </a>
-                <form class="form-inline ml-auto" method="POST" action="./setCurrency/" id="currency_form">
-                    <select name="currency_code" class="form-control"
+                <form class="form-inline ml-auto" method="post" action="setCurrency" id="currency_form">
+                    <select name="currencyCode" class="form-control"
                     onchange="document.getElementById('currency_form').submit();" style="width:auto;">
                     <% for (currency of currencies) { %>
                     <option value="<%= currency %>"<% if (currency === user_currency) { %> selected="selected"<% } %>>
@@ -29,7 +29,7 @@
                     <% } %>
                     </select>
                     </form>
-                <a class="btn btn-primary btn-light ml-2" href="./cart/" role="button">View Cart (<%= cart_size %>)</a>
+                <a class="btn btn-primary btn-light ml-2" href="cart" role="button">View Cart (<%= cart_size %>)</a>
             </div>
         </div>
     </header>
@@ -55,7 +55,7 @@
                 <% for (product of products) { %>
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
-                      <a href="./product/<%- product.id %>/" title="<%= product.name%>">
+                      <a href="product/<%- product.id %>" title="<%= product.name%>">
                             <img class="card-img-top" alt =""
                                 style="width: 100%; height: auto;"
                                 src="<%- product.picture %>">
@@ -66,7 +66,7 @@
                             </h5>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="./product/<%- product.id %>/">
+                                    <a href="product/<%- product.id %>/">
                                         <button type="button" class="btn btn-sm btn-outline-secondary">Buy</button>
                                     </a>
                                 </div>
@@ -99,7 +99,7 @@
     <footer class="py-5 px-5">
         <div class="container">
             <p>
-                &copy; 2020 FaaSterMetrics project group
+                &copy; <%= (new Date()).getFullYear() %> FaaSterMetrics project group
                 <span class="text-muted">
                     <a href="https://github.com/FaaSterMetrics/experiments/tree/master/experiments/webservice">(Webshop Source Code)</a>
                 </span>

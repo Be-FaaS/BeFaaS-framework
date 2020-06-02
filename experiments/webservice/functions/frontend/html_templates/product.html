@@ -13,11 +13,11 @@
     <header>
         <div class="navbar navbar-dark bg-dark box-shadow">
             <div class="container d-flex justify-content-between">
-                <a href="./frontend/" class="navbar-brand d-flex align-items-center">
+                <a href="./" class="navbar-brand d-flex align-items-center">
                   Webshop Demo
                 </a>
-                <form class="form-inline ml-auto" method="POST" action="./setCurrency/" id="currency_form">
-                    <select name="currency_code" class="form-control"
+                <form class="form-inline ml-auto" method="post" action="../setCurrency" id="currency_form">
+                    <select name="currencyCode" class="form-control"
                     onchange="document.getElementById('currency_form').submit();" style="width:auto;">
                     <% for (currency of currencies) { %>
                     <option value="<%= currency %>"<% if (currency === user_currency) { %> selected="selected"<% } %>>
@@ -29,7 +29,7 @@
                     <% } %>
                     </select>
                     </form>
-                <a class="btn btn-primary btn-light ml-2" href="./cart/" role="button">View Cart (<%= cart_size %>)</a>
+                <a class="btn btn-primary btn-light ml-2" href="cart" role="button">View Cart (<%= cart_size %>)</a>
             </div>
         </div>
     </header>
@@ -40,24 +40,24 @@
             <div class="container bg-light py-3 px-lg-5 py-lg-5">
                 <div class="row">
                     <div class="col-12 col-lg-5">
-                            <img class="img-fluid border" style="width: 100%;"
-                            src="{{$.product.Item.Picture}}" />
+                            <img class="img-fluid border" style="width: 100%; height: auto;"
+                            src="<%= product.picture %>" />
                     </div>
                     <div class="col-12 col-lg-7">
-                            <h2>{{$.product.Item.Name}}</h2>
+                            <h2><%= product.name %></h2>
                             
                             <p class="text-muted">
-                                {{ renderMoney $.product.Price}}
+                              <%= product.price.units %>.<%= product.price.nanos.toString().substr(0,2) %>  <%= product.price.currencyCode %>
                             </p>
                             <hr/>
                             <p>
                                 <h6>Product Description:</h6>
-                                {{$.product.Item.Description}}
+                                <%= product.description %>
                             </p>
                             <hr/>
 
                             <form method="POST" action="/cart" class="form-inline text-muted">
-                                <input type="hidden" name="product_id" value="{{$.product.Item.Id}}"/>
+                              <input type="hidden" name="product_id" value="<%= product.id %>"/>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="quantity">Quantity</label>
@@ -76,15 +76,48 @@
                     </div>
                 </div>
                 
-                {{ if $.recommendations}}
+                <% if (recommendations[0]) { %>
                     <hr/>
-                    {{ template "recommendations" $.recommendations }}
-                {{ end }}
+                    Also check out our <a href="product/<%- recommendations[0].id %>" title="<%= recommendations[0].name%>"><%= recommendations[0].name %></a>!
+                    <!--TODO>{{ template "recommendations" $.recommendations }} -->
+                <% } %>
                 
-                {{ with $.ad }}{{ template "text_ad" . }}{{ end}}
+                <h2> Product sponsored by: </h2>
+                <div class="row">
+                <a href="<%- ad.redirect_url %>" title="<%= ad.text %>">
+                  <img class="card-img-top" alt ="<%= ad.text %>"
+                  style="width: 100%; height: auto;"
+                  src="<%- ad.image_url %>"><br>
+                </a>
+                </div>
             </div>
         </div>
-    
     </main>
-    {{ template "footer" . }}
-{{ end }}
+
+    <!-- FOOTER -->
+    <footer class="py-5 px-5">
+        <div class="container">
+            <p>
+              &copy; <%= (new Date()).getFullYear() %> FaaSterMetrics project group
+                <span class="text-muted">
+                    <a href="https://github.com/FaaSterMetrics/experiments/tree/master/experiments/webservice">(Webshop Source Code)</a>
+                </span>
+            </p>
+            <p>
+                <small class="text-muted">
+                    This website is hosted for demo purposes only. 
+                    It is not an actual shop, but represents one for our FaaS benchmarking framework. 
+                    Webdesign originally by <a href="https://github.com/GoogleCloudPlatform/microservices-demo">Google</a>,
+                    licensed under the Apache 2.0 license.
+                </small>
+            </p>
+            <small class="text-muted">
+              session-id: <%= session_id %></br>
+              request-id: <%= request_id %></br>
+            </small>
+        </div>
+    </footer>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+</body>
+</html>
+

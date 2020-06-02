@@ -17,6 +17,7 @@ let sessionId = lib.helper.generateRandomID()
 let cartSize = 0
 let userName = "default"
 
+
 module.exports = lib.serverless.router(async router => {
   router.get('/', async (ctx, next) => {
     const requestId = lib.helper.generateRandomID()
@@ -46,26 +47,63 @@ module.exports = lib.serverless.router(async router => {
     ctx.body = homeHTML(options)
   })
 
-  router.post('/setCurrency', async (ctx, next) => {
-    chosenCurrency = ctx.request.body
+  router.post('/setCurrency(.*)', async (ctx, next) => {
+    ctx.type = 'application/json'
+    chosenCurrency = ctx.request.body.currencyCode
+    ctx.response.redirect('back', '../')
   })
 
   // TODO make recommendations more meaningful? --> use categories?
-  router.post('/product', async (ctx, next) => {
+  // Yes, IDs are required to be word shaped here
+  router.get('/product/([A-Za-z0-9_]+)', async (ctx, next) => {
+    /*
+    const promises = [] 
+    let results = []
+    promises.push(ctx.request.url.split("/").slice(-1)[0])
+    promises.push(lib.helper.generateRandomID())
+    promises.push(ctx.lib.call('getproduct', { id: productId }))
+    await Promise.all(promises).then(x => results.push(x))
+    const productId = results[0]
+    const requestId = results[1]
+    const product   = results[2]
+    results = []
+    */
+
+    const productId = ctx.request.url.split("/").slice(-1)[0]
+     
     const requestId = lib.helper.generateRandomID()
-    const product = (await ctx.lib.call('getproduct', ctx.request.body))
+    const product = await ctx.lib.call('getproduct', { id: productId })
+    // error if product not found
+    if (product.error) {
+      ctx.type = 'application/json'
+      ctx.body = product
+      ctx.status = 422
+      return
+    }
+
+    if (chosenCurrency === 'USD') {
+      product.price = product.priceUsd
+    } else {
+      product.price = await ctx.lib.call('currency', {from: product.priceUsd, toCode: chosenCurrency})
+    }
     const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
+    let recommendedList = (await ctx.lib.call('listrecommendations', { userId: userName, productIds: [productId] })).productIds
+    recommendedList = /*await*/ recommendedList.map(x => ctx.lib.call('getproduct', { id: x }))
+    //let recommendedList = ['QWERTY'].map(x => (await ctx.lib.call('getproduct', { id: x })))
+
     const cat = (await ctx.lib.call('getads', {})).ads[0]
+
     const options = {
+      session_id: sessionId,
       request_id: requestId,
+      product: product,
       user_currency: chosenCurrency,
       currencies: supportedCurrencies, 
-      recommendations: productList,
+      recommendations: recommendedList,
       cart_size: cartSize,
       ad: cat
     }
     ctx.type = 'text/html'
-    ctx.body = __dirname // productHTML(options)
+    ctx.body = productHTML(options)
   })
-
 })
