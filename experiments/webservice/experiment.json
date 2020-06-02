@@ -1,5 +1,7 @@
 {
-  "workload": {},
+  "workload": {
+    "config": "./workload-example.yml"
+  },
   "program": {
     "functions": {
       "checkout": {

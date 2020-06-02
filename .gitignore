@@ -9,3 +9,5 @@ _build
 .eslintrc.json
 /logs/
 .build_timestamp
+artillery/variables.json
+artillery/workload.yml

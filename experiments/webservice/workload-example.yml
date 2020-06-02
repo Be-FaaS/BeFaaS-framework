@@ -5,13 +5,13 @@ config:
       arrivalRate: 2
     - duration: 3
       arrivalRate: 1
-  processor: '../../artillery/logger.js'
+  processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
   defaults:
 
 scenarios:
   - flow:
       - get:
-          url: '{{ frontend }}'
+          url: '{{ email }}'
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
-    name: 'frontend-frontpage'
+    name: 'email'

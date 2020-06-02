@@ -56,7 +56,7 @@ for provider in $providers; do
   cd infrastructure/${provider}/endpoint
   terraform init
   terraform apply -auto-approve
-  states="${states}$(cat terraform.tfstate | jq '.outputs')"
+  states="${states}$(terraform output --json)"
   cd -
 done
 
