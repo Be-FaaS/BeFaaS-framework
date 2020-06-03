@@ -28,10 +28,12 @@ for provider in $providers; do
   cd -
 done
 
+echo "Destroying workload" | chalk green
 cd infrastructure/workload
 terraform destroy -auto-approve
 cd -
 
+echo "Destroying experiment" | chalk green
 cd infrastructure/experiment
 terraform destroy -var "experiment=${1}" -auto-approve
 cd -
