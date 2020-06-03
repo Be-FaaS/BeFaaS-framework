@@ -16,7 +16,7 @@
                 <a href="../" class="navbar-brand d-flex align-items-center">
                   Webshop Demo
                 </a>
-                <form class="form-inline ml-auto" method="post" action="../frontend/setCurrency" id="currency_form">
+                <form class="form-inline ml-auto" method="post" action="../setCurrency" id="currency_form">
                     <select name="currencyCode" class="form-control"
                     onchange="document.getElementById('currency_form').submit();" style="width:auto;">
                     <% for (currency of currencies) { %>
@@ -78,7 +78,7 @@
                 
                 <% if (recommendations[0]) { %>
                     <hr/>
-                    Also check out our <a href="product/<%- recommendations[0].id %>" title="<%= recommendations[0].name%>"><%= recommendations[0].name %></a>!
+                    Also check out <a href="../product/<%- recommendations[0] %>">this item</a>!
                     <!--TODO>{{ template "recommendations" $.recommendations }} -->
                 <% } %>
                 

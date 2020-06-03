@@ -86,8 +86,8 @@ module.exports = lib.serverless.router(async router => {
       product.price = await ctx.lib.call('currency', {from: product.priceUsd, toCode: getUserCurrency(ctx)})
     }
     const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
-    let recommendedList = (await ctx.lib.call('listrecommendations', { userId: getUserName(ctx), productIds: [productId] })).productIds
-    recommendedList = /*await*/ recommendedList.map(x => ctx.lib.call('getproduct', { id: x }))
+    const recommendedIds = (await ctx.lib.call('listrecommendations', { userId: getUserName(ctx), productIds: [productId] })).productIds
+    //const recommendedList = await recommendedIds.map(x => ctx.lib.call('getproduct', { id: x }))
 
     const cat = (await ctx.lib.call('getads', {})).ads[0]
 
@@ -97,7 +97,7 @@ module.exports = lib.serverless.router(async router => {
       product: product,
       user_currency: getUserCurrency(ctx),
       currencies: supportedCurrencies, 
-      recommendations: recommendedList,
+      recommendations: recommendedIds,
       cart_size: cartSize,
       ad: cat
     }
