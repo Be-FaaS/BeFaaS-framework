@@ -1,15 +1,27 @@
 const products = {
   QWERTY: {
     id: 'QWERTY',
-    name: 'Bathing Suit',
-    description: 'You will never want to take this off!',
-    picture: 'https://source.unsplash.com/Ifh0UOYe9Gk/720x1080',
+    name: 'Espresso Machine',
+    description: 'Without this, your day has not even begun.',
+    picture: 'https://source.unsplash.com/ZfyZ14gd2FM/720x1080',
     priceUsd: {
       currencyCode: 'USD',
-      units: 64,
+      units: 179,
       nanos: 990000000
     },
-    categories: ['clothing', 'bath']
+    categories: ['machines', 'kitchen']
+  },
+  EASYSTOOL: {
+    id: 'EASYSTOOL',
+    name: 'Bar Stool',
+    description: 'Expensive chairs are overrated anyway.',
+    picture: 'https://source.unsplash.com/4kTbAMRAHtQ/720x1080',
+    priceUsd: {
+      currencyCode: 'USD',
+      units: 27,
+      nanos: 990000000
+    },
+    categories: ['furniture', 'living room', 'kitchen']
   },
   REFLECTXXX: {
     id: 'REFLECTXXX',
@@ -22,7 +34,7 @@ const products = {
       units: 149,
       nanos: 990000000
     },
-    categories: ['accessories', 'bath']
+    categories: ['furniture', 'bath']
   }
 }
 module.exports = { products }
