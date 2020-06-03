@@ -1,6 +1,6 @@
 const lib = require('@faastermetrics/lib')
 
-module.exports = lib.serverless.rpcHandler(event => {
-  lib.log({ event })
+module.exports = lib.serverless.rpcHandler((event, ctx) => {
+  ctx.log({ event })
   return { result: event.a + event.b }
 })
