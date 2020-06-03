@@ -11,12 +11,23 @@ const productHTML = _.template(
   fs.readFileSync(path.join(__dirname, 'html_templates', 'product.html'))
 )
 
-// TODO make these real and user-dependent
-let chosenCurrency = 'EUR'
-let sessionId = lib.helper.generateRandomID()
+// TODO make this real and user-dependent
 let cartSize = 0
-let userName = "default"
 
+function getSessionID (ctx) {
+  if (!ctx.cookies.get('sessionId')) {
+    ctx.cookies.set('sessionId', lib.helper.generateRandomID())
+  }
+  return ctx.cookies.get('sessionId')
+}
+
+function getUserCurrency (ctx) {
+  return ctx.cookies.get('userCurrency') || 'EUR'
+}
+
+function getUserName (ctx) {
+  return ctx.cookies.get('userName') || 'default'
+}
 
 module.exports = lib.serverless.router(async router => {
   router.get('/', async (ctx, next) => {
@@ -26,17 +37,17 @@ module.exports = lib.serverless.router(async router => {
     const cats = (await ctx.lib.call('getads', {})).ads
 
     for (product of productList) {
-      if (chosenCurrency === 'USD') {
+      if (getUserCurrency(ctx) === 'USD') {
         product.price = product.priceUsd
       } else {
-        product.price = await ctx.lib.call('currency', {from: product.priceUsd, toCode: chosenCurrency})
+        product.price = await ctx.lib.call('currency', {from: product.priceUsd, toCode: getUserCurrency(ctx)})
       }
     }
 
     const options = {
-      session_id: sessionId,
+      session_id: getSessionID(ctx),
       request_id: requestId,
-      user_currency: chosenCurrency,
+      user_currency: getUserCurrency(ctx),
       currencies: supportedCurrencies, 
       products: productList,
       cart_size: cartSize,
@@ -49,7 +60,8 @@ module.exports = lib.serverless.router(async router => {
 
   router.post('/setCurrency(.*)', async (ctx, next) => {
     ctx.type = 'application/json'
-    chosenCurrency = ctx.request.body.currencyCode
+    // chosenCurrency = ctx.request.body.currencyCode
+    ctx.cookies.set('userCurrency', ctx.request.body.currencyCode, { overwrite:true })
     ctx.response.redirect('back', '../')
   })
 
@@ -68,22 +80,22 @@ module.exports = lib.serverless.router(async router => {
       return
     }
 
-    if (chosenCurrency === 'USD') {
+    if (getUserCurrency(ctx) === 'USD') {
       product.price = product.priceUsd
     } else {
-      product.price = await ctx.lib.call('currency', {from: product.priceUsd, toCode: chosenCurrency})
+      product.price = await ctx.lib.call('currency', {from: product.priceUsd, toCode: getUserCurrency(ctx)})
     }
     const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
-    let recommendedList = (await ctx.lib.call('listrecommendations', { userId: userName, productIds: [productId] })).productIds
+    let recommendedList = (await ctx.lib.call('listrecommendations', { userId: getUserName(ctx), productIds: [productId] })).productIds
     recommendedList = /*await*/ recommendedList.map(x => ctx.lib.call('getproduct', { id: x }))
 
     const cat = (await ctx.lib.call('getads', {})).ads[0]
 
     const options = {
-      session_id: sessionId,
+      session_id: getSessionID(ctx),
       request_id: requestId,
       product: product,
-      user_currency: chosenCurrency,
+      user_currency: getUserCurrency(ctx),
       currencies: supportedCurrencies, 
       recommendations: recommendedList,
       cart_size: cartSize,

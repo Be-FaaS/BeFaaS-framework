@@ -16,7 +16,7 @@
                 <a href="./" class="navbar-brand d-flex align-items-center">
                   Webshop Demo
                 </a>
-                <form class="form-inline ml-auto" method="post" action="setCurrency" id="currency_form">
+                <form class="form-inline ml-auto" method="post" action="./setCurrency" id="currency_form">
                     <select name="currencyCode" class="form-control"
                     onchange="document.getElementById('currency_form').submit();" style="width:auto;">
                     <% for (currency of currencies) { %>
@@ -55,7 +55,7 @@
                 <% for (product of products) { %>
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
-                      <a href="./frontend/product/<%- product.id %>" title="<%= product.name%>">
+                      <a href="./product/<%- product.id %>" title="<%= product.name%>">
                             <img class="card-img-top" alt =""
                                 style="width: 100%; height: auto;"
                                 src="<%- product.picture %>">
@@ -66,7 +66,7 @@
                             </h5>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="./frontend/product/<%- product.id %>">
+                                    <a href="./product/<%- product.id %>">
                                         <button type="button" class="btn btn-sm btn-outline-secondary">Buy</button>
                                     </a>
                                 </div>
