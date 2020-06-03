@@ -7,6 +7,17 @@
   },
   "program": {
     "functions": {
+      "frontend": {
+        "provider": "aws",
+        "calls": [
+          "getcart",
+          "getproduct",
+          "currency",
+          "listrecommendations",
+          "supportedcurrencies",
+          "getads"
+        ]
+      },
       "checkout": {
         "provider": "aws",
         "calls": [
