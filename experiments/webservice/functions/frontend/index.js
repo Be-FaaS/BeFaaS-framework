@@ -56,19 +56,6 @@ module.exports = lib.serverless.router(async router => {
   // TODO make recommendations more meaningful? --> use categories?
   // Yes, IDs are required to be word shaped here
   router.get('/product/([A-Za-z0-9_]+)', async (ctx, next) => {
-    /*
-    const promises = [] 
-    let results = []
-    promises.push(ctx.request.url.split("/").slice(-1)[0])
-    promises.push(lib.helper.generateRandomID())
-    promises.push(ctx.lib.call('getproduct', { id: productId }))
-    await Promise.all(promises).then(x => results.push(x))
-    const productId = results[0]
-    const requestId = results[1]
-    const product   = results[2]
-    results = []
-    */
-
     const productId = ctx.request.url.split("/").slice(-1)[0]
      
     const requestId = lib.helper.generateRandomID()
@@ -89,7 +76,6 @@ module.exports = lib.serverless.router(async router => {
     const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
     let recommendedList = (await ctx.lib.call('listrecommendations', { userId: userName, productIds: [productId] })).productIds
     recommendedList = /*await*/ recommendedList.map(x => ctx.lib.call('getproduct', { id: x }))
-    //let recommendedList = ['QWERTY'].map(x => (await ctx.lib.call('getproduct', { id: x })))
 
     const cat = (await ctx.lib.call('getads', {})).ads[0]
 
