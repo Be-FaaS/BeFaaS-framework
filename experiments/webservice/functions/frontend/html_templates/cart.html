@@ -1,20 +1,20 @@
-{{ define "cart" }}
-    {{ template "header" . }}
-
     <main role="main">
         <div class="py-5">
             <div class="container bg-light py-3 px-lg-5 py-lg-5">
-                {{ if eq (len $.items) 0 }}
+                <% if (!items) { %>
                     <h3>Your shopping cart is empty!</h3>
                     <p>Items you add to your shopping cart will appear here.</p>
                     <a class="btn btn-primary" href="/" role="button">Browse Products &rarr; </a>
-                {{ else }}
+                <% } else { %>
 
                     <div class="row mb-3 py-2">
                         <div class="col">
-                            <h3>{{ len $.items }} item
-                                {{- if gt (len $.items) 1}}s{{end}}
-                                in your Shopping Cart</h3>
+                          <% if (items.length === 1) { %>
+                            <h3><%= items.length %> item in your Shopping Cart</h3>
+                          <% } else { %>
+                            <h3><%= items.length %> items in your Shopping Cart</h3>
+                          <% } %>
+
                         </div>
                         <div class="col text-right">
                             <form method="POST" action="/cart/empty">
@@ -26,31 +26,32 @@
                     </div>
                     <hr>
                     
-                    {{ range $.items }}
+                    <% for (item of items) { %>
                     <div class="row pt-2 mb-2">
                         <div class="col text-right">
-                                <a href="/product/{{.Item.Id}}"><img class="img-fluid" style="width: auto; max-height: 60px;"
-                                    src="{{.Item.Picture}}" /></a>
+                                <a href="/product/<%- item.id %>"><img class="img-fluid" style="width: auto; max-height: 60px;"
+                                  src="<%= item.picture %>" /></a>
                         </div>
                         <div class="col align-middle">
-                            <strong>{{.Item.Name}}</strong><br/>
-                            <small class="text-muted">SKU: #{{.Item.Id}}</small>
+                            <strong><%= item.name %></strong><br/>
+                            <!--small class="text-muted">SKU: #{{.Item.Id}}</small-->
                         </div>
                         <div class="col text-left">
-                            Qty: {{.Quantity}}<br/>
+                          Quantity: <%= item.quantity %><br/>
                             <strong>
-                                {{ renderMoney .Price}}
+                              <%= item.price.units %>.<%= item.price.nanos.toString().substr(0,2) %>  <%= item.price.currencyCode %>
                             </strong>
                         </div>
                     </div>
-                    {{ end }} <!-- range $.items-->
+                    <% } %>
                     <div class="row pt-2 my-3">
                         <div class="col text-center">
-                            <p class="text-muted my-0">Shipping Cost: <strong>{{ renderMoney .shipping_cost }}</strong></p>
-                            Total Cost: <strong>{{ renderMoney .total_cost }}</strong>
+                            <p class="text-muted my-0">Shipping Cost: <strong><%= shipping_cost.units %>.<%= shipping_cost.nanos.toString().substr(0,2) %>  <%= shipping_cost.currencyCode %></strong></p>
+                            Total Cost: <strong><%= shipping_cost.units %>.<%= shipping_cost.nanos.toString().substr(0,2) %>  <%= shipping_cost.currencyCode %></strong>
                         </div>
                     </div>
 
+                    <!-->
                     <hr/>
                     <div class="row py-3 my-2">
                         <div class="col-12 col-lg-8 offset-lg-2">
@@ -142,16 +143,17 @@
                             </form>
                         </div>
                     </div>
-                {{ end }} <!-- end if $.items -->
+                    -->
+                <% } %>
 
+                <!-->
                 {{ if $.recommendations}}
                     <hr/>
                     {{ template "recommendations" $.recommendations }}
                 {{ end }}
+                -->
 
             </div>
         </div>
     </main>
 
-    {{ template "footer" . }}
-{{ end }}
