@@ -29,9 +29,7 @@ mkdir $exp_dir/_build
 
 for d in $exp_dir/*; do
   fname=`basename $d`
-  if [[ "$fname" == '_build' ]]; then
-    continue
-  fi
+  [ "$fname" == '_build' ] && continue
   echo "Going to build function: ${fname}" | chalk cyan
   echo "process.env.FAASTERMETRICS_FN_NAME='${fname}';$(cat $d/index.js)" > $d/_index.js
   npx ncc build $d/_index.js -o $d/build
