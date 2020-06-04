@@ -19,8 +19,13 @@ fi
 
 exp_json=$(cat $exp_dir/experiment.json)
 
-workload_config=$(realpath ${exp_dir}/$(echo $exp_json | jq -r '.workload.config'))
+workload_config_name=$(echo $exp_json | jq -r '.services.workload.config')
+if [ "$workload_config_name" == "null" ]; then
+    echo -e "Workload config not defined (services.workload.config)\n" | chalk red
+    exit 1
+fi
 
+workload_config=$(realpath ${exp_dir}/${workload_config_name})
 echo "Found workload config: $workload_config" | chalk blue
 
 echo "Getting endpoints..." | chalk blue
@@ -51,12 +56,18 @@ docker build -t faastermetrics/artillery artillery/
 echo "Exporting docker image..." | chalk blue
 docker save faastermetrics/artillery:latest | gzip > artillery/image.tar.gz
 
-echo "Deploying workload..." | chalk blue
-cd infrastructure/workload
+echo "Setting up VPC..." | chalk blue
+cd infrastructure/services/vpc
 terraform init
-terraform apply -auto-approve | tee ../../artillery/workload-deploy.log
+terraform apply -auto-approve
+cd -
+
+echo "Deploying workload..." | chalk blue
+cd infrastructure/services/workload
+terraform init
+terraform apply -auto-approve | tee ../../../artillery/workload-deploy.log
 
 echo "Destroying workload instance..." | chalk blue
-terraform destroy -auto-approve -target aws_instance.workload
+terraform destroy -auto-approve
 
 echo "Done" | chalk blue bold

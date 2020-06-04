@@ -61,7 +61,7 @@ for provider in $providers; do
 done
 
 echo "Initializing services" | chalk green
-if [ "$(jq -r '.services | length' experiments/test/experiment.json)" != "0" ]; then
+if [ "$(jq -r '.services | length' experiments/${1}/experiment.json)" != "0" ]; then
   echo "Setting up VPC" | chalk green
   cd infrastructure/services/vpc
   terraform init
