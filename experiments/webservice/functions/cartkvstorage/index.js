@@ -59,6 +59,9 @@ function addItem (userId, itemId, quantity) {
 }
 
 function getCart (userId) {
+  if (!items.has(userId)) {
+    return { items: [] }
+  }
   const tmp = []
   items.get(userId).forEach(item =>
     tmp.push({
@@ -70,6 +73,9 @@ function getCart (userId) {
 }
 
 function emptyCart (userId) {
+  if (!items.has(userId)) {
+    return {}
+  }
   for (const item in items.get(userId)) {
     quantities.delete(userId + '-|-|-|-' + item)
   }
