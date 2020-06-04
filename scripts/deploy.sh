@@ -60,6 +60,24 @@ for provider in $providers; do
   cd -
 done
 
+echo "Initializing services" | chalk green
+if [ "$(jq -r '.services | length' experiments/test/experiment.json)" != "0" ]; then
+  echo "Setting up VPC" | chalk green
+  cd infrastructure/services/vpc
+  terraform init
+  terraform apply -auto-approve
+  cd -
+  for service in $(jq -r '.services | keys[]' experiments/${1}/experiment.json); do
+    [ "$service" == 'workload' ] && continue
+    echo "Starting service $service" | chalk green
+    cd infrastructure/services/${service}
+    terraform init
+    terraform apply -auto-approve
+    states="${states}$(terraform output --json)"
+    cd -
+  done
+fi
+
 export TF_VAR_fn_env=$(echo $states | jq -sc 'add | with_entries(select(.key | endswith("ENDPOINT"))) | map_values(.value)')
 
 for provider in $providers; do
