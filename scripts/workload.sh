@@ -56,12 +56,6 @@ docker build -t faastermetrics/artillery artillery/
 echo "Exporting docker image..." | chalk blue
 docker save faastermetrics/artillery:latest | gzip > artillery/image.tar.gz
 
-echo "Setting up VPC..." | chalk blue
-cd infrastructure/services/vpc
-terraform init
-terraform apply -auto-approve
-cd -
-
 echo "Deploying workload..." | chalk blue
 cd infrastructure/services/workload
 terraform init
