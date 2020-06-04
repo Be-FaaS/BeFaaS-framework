@@ -56,8 +56,8 @@ async function convertPrice (ctx, priceUsd) {
 
 // Should only be used if (a.currencyCode === b.currencyCode)
 function addPrice (a, b) {
-  const nanos = (a.nanos + b.nanos) % 1e10
-  const units = Math.trunc((a.nanos + b.nanos) / 1e10) + a.units + b.units
+  const nanos = (a.nanos + b.nanos) % 1e9
+  const units = Math.trunc((a.nanos + b.nanos) / 1e9) + a.units + b.units
   return {
     currencyCode: a.currencyCode,
     nanos: nanos,
@@ -66,8 +66,8 @@ function addPrice (a, b) {
 }
 
 function scalePrice (price, scalar) {
-  const nanos = (price.nanos * scalar) % 1e10
-  const units = Math.trunc((price.nanos * scalar) / 1e10) + (price.units * scalar)
+  const nanos = (price.nanos * scalar) % 1e9
+  const units = Math.trunc((price.nanos * scalar) / 1e9) + (price.units * scalar)
   return {
     currencyCode: price.currencyCode,
     nanos: nanos,
@@ -145,20 +145,39 @@ module.exports = lib.serverless.router(async router => {
   })
 
   router.get('/cart', async (ctx, next) => {
-    const cart = (await ctx.lib.call('getcart', { userId: getUserName(ctx) }))//.items
+    const requestId = lib.helper.generateRandomID()
+    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
+    const cart = (await ctx.lib.call('getcart', { userId: getUserName(ctx) })).items
+    cart.push({ productId: 'QWERTY', quantity: 2 })
 
-    const products = await cart.map(x => ctx.lib.call('getproduct', { id: x.productId }))
+    const products = []
+    // TODO Promise.all or similar
+    for (item of cart) {
+      await products.push(await ctx.lib.call('getproduct', { id: item.productId }))
+    }
     // Adds quantity and accordingly scaled price to each product
-    await _.forEach(products, (product, key) => {
-      product.quantity = cart[key].quantity
-      convertProductPrice(ctx, product)
-      product.price = scalePrice(product.price, cart[key].quantity)
-    })
-
-      // Should include address in call according to spec
+    // TODO Promise.all or similar
+    for (key in products) {
+      products[key].quantity = cart[key].quantity
+      await convertProductPrice(ctx, products[key])
+      products[key].price = await scalePrice(products[key].price, cart[key].quantity)
+    }
+      // Should actually include address in arg object here according to spec
     const shippingCostUsd = (await ctx.lib.call('shipmentquote', { items: cart })).costUsd
     const shippingCost = await convertPrice(ctx, shippingCostUsd)
-    const totalCost = await _.reduce(_.map(products, 'price'), addPrice, shippingCost)
+    const totalCost = await _.reduce(await _.map(products, 'price'), addPrice, shippingCost)
+    
+    const options = {
+      session_id: getSessionID(ctx),
+      request_id: requestId,
+      items: products,
+      user_currency: getUserCurrency(ctx),
+      currencies: supportedCurrencies, 
+      cart_size: getCartSize(ctx),
+      shipping_cost: shippingCost,
+      total_cost: totalCost,
+      credit_card_expiration_years: _.range((new Date()).getFullYear(), (new Date()).getFullYear() + 10)
+    }
 
     ctx.type = 'text/html'
     ctx.body = cartHTML(options)

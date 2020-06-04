@@ -1,7 +1,44 @@
-    <main role="main">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Webshop Demo</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+                <a href="../" class="navbar-brand d-flex align-items-center">
+                  Webshop Demo
+                </a>
+                <form class="form-inline ml-auto" method="post" action="../setCurrency" id="currency_form">
+                    <select name="currencyCode" class="form-control"
+                    onchange="document.getElementById('currency_form').submit();" style="width:auto;">
+                    <% for (currency of currencies) { %>
+                    <option value="<%= currency %>"<% if (currency === user_currency) { %> selected="selected"<% } %>>
+                      <%= currency %>
+                      <% if (currency === user_currency) { %>
+                        <!--p class="text-success">&#32;&#10004;</p-->
+                      <% } %>
+                    </option>
+                    <% } %>
+                    </select>
+                    </form>
+                <a class="btn btn-primary btn-light ml-2" href="cart" role="button">View Cart (<%= cart_size %>)</a>
+            </div>
+        </div>
+    </header>
+
+  
+  <main role="main">
         <div class="py-5">
             <div class="container bg-light py-3 px-lg-5 py-lg-5">
-                <% if (!items) { %>
+                <% if (!items.length) { %>
                     <h3>Your shopping cart is empty!</h3>
                     <p>Items you add to your shopping cart will appear here.</p>
                     <a class="btn btn-primary" href="/" role="button">Browse Products &rarr; </a>
@@ -9,6 +46,7 @@
 
                     <div class="row mb-3 py-2">
                         <div class="col">
+                          <!-- TODO could calculate in quantity here-->
                           <% if (items.length === 1) { %>
                             <h3><%= items.length %> item in your Shopping Cart</h3>
                           <% } else { %>
@@ -47,11 +85,10 @@
                     <div class="row pt-2 my-3">
                         <div class="col text-center">
                             <p class="text-muted my-0">Shipping Cost: <strong><%= shipping_cost.units %>.<%= shipping_cost.nanos.toString().substr(0,2) %>  <%= shipping_cost.currencyCode %></strong></p>
-                            Total Cost: <strong><%= shipping_cost.units %>.<%= shipping_cost.nanos.toString().substr(0,2) %>  <%= shipping_cost.currencyCode %></strong>
+                            Total Cost: <strong><%= total_cost.units %>.<%= total_cost.nanos.toString().substr(0,2) %>  <%= total_cost.currencyCode %></strong>
                         </div>
                     </div>
 
-                    <!-->
                     <hr/>
                     <div class="row py-3 my-2">
                         <div class="col-12 col-lg-8 offset-lg-2">
@@ -94,7 +131,7 @@
                                     </div>
                                 </div>
                                 <div class="form-row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-5 mb-3">
                                         <label for="credit_card_number">Credit Card Number</label>
                                         <input type="text" class="form-control" id="credit_card_number"
                                             name="credit_card_number"
@@ -103,7 +140,7 @@
                                             required pattern="\d{4}-\d{4}-\d{4}-\d{4}">
                                     </div>
                                     <div class="col-md-2 mb-3">
-                                        <label for="credit_card_expiration_month">Month</label>
+                                        <label for="credit_card_expiration_month">Expiration Month</label>
                                         <select name="credit_card_expiration_month" id="credit_card_expiration_month"
                                             class="form-control">
                                             <option value="1">January</option>
@@ -121,14 +158,13 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2 mb-3">
-                                            <label for="credit_card_expiration_year">Year</label>
+                                            <label for="credit_card_expiration_year">Expiration Year</label>
                                             <select name="credit_card_expiration_year" id="credit_card_expiration_year"
                                                 class="form-control">
-                                            {{ range $i, $y := $.expiration_years}}<option value="{{$y}}"
-                                                {{if eq $i 1 -}}
-                                                    selected="selected"
-                                                {{- end}}
-                                            >{{$y}}</option>{{end}}
+                                            <% for (year of credit_card_expiration_years) { %>
+                                              <option value="<%= year %>">
+                                              <%= year %></option>
+                                            <% } %>
                                             </select>
                                         </div>
                                     <div class="col-md-2 mb-3">
@@ -143,17 +179,36 @@
                             </form>
                         </div>
                     </div>
-                    -->
                 <% } %>
-
-                <!-->
-                {{ if $.recommendations}}
-                    <hr/>
-                    {{ template "recommendations" $.recommendations }}
-                {{ end }}
-                -->
 
             </div>
         </div>
     </main>
+
+    <!-- FOOTER -->
+    <footer class="py-5 px-5">
+        <div class="container">
+            <p>
+                &copy; <%= (new Date()).getFullYear() %> FaaSterMetrics project group
+                <span class="text-muted">
+                    <a href="https://github.com/FaaSterMetrics/experiments/tree/master/experiments/webservice">(Webshop Source Code)</a>
+                </span>
+            </p>
+            <p>
+                <small class="text-muted">
+                    This website is hosted for demo purposes only. 
+                    It is not an actual shop, but represents one for our FaaS benchmarking framework. 
+                    Webdesign originally by <a href="https://github.com/GoogleCloudPlatform/microservices-demo">Google</a>,
+                    licensed under the Apache 2.0 license.
+                </small>
+            </p>
+            <small class="text-muted">
+              session-id: <%= session_id %></br>
+              request-id: <%= request_id %></br>
+            </small>
+        </div>
+    </footer>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+</body>
+</html>
 
