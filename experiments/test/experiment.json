@@ -1,6 +1,9 @@
 {
-  "workload": {
-    "config": "./workload.yml"
+  "services": {
+    "redis": {},
+    "workload": {
+      "config": "./workload.yml"
+    }
   },
   "program": {
     "functions": {
