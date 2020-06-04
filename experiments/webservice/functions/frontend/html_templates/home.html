@@ -12,12 +12,13 @@
     <!-- HEADER -->
     <header>
         <div class="navbar navbar-dark bg-dark box-shadow">
-            <div class="container d-flex justify-content-between">
+            <div class="container d-flex">
                 <a href="./" class="navbar-brand d-flex align-items-center">
                   Webshop Demo
                 </a>
-                <form class="form-inline ml-auto" method="post" action="./setCurrency" id="currency_form">
-                    <select name="currencyCode" class="form-control"
+                <ul class="nav justify-content-end">
+                <form class="form-inline mr-2 mr-xs-0" method="post" action="./setCurrency" id="currency_form">
+                    <select name="currencyCode" class="form-control pr-2 pr-xs-0"
                     onchange="document.getElementById('currency_form').submit();" style="width:auto;">
                     <% for (currency of currencies) { %>
                     <option value="<%= currency %>"<% if (currency === user_currency) { %> selected="selected"<% } %>>
@@ -28,8 +29,22 @@
                     </option>
                     <% } %>
                     </select>
-                    </form>
-                <a class="btn btn-primary btn-light ml-2" href="cart" role="button">View Cart (<%= cart_size %>)</a>
+                </form>
+                <% if (user_id) { %>
+                  <a class="btn btn-primary btn-light mr-auto my-2" href="../cart" role="button">View Cart (<%= cart_size %>)</a>
+                  <li class="nav-item pt-2 mx-1 text-light">Hello, <%= user_id %></p></li>
+                  <form class="form-inline ml-auto pl-2" method="post" action="./logout" id="logout_form">
+                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" 
+                    onchange="document.getElementById('user_form').submit();">Logout</button>
+                  </form>
+                <% } else { %>
+                  <form class="form-inline ml-auto ml-xs-0" method="post" action="./setUser" id="login_form">
+                    <input class="form-control mr-2" type="text" name="userName" placeholder="User Name">
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit" 
+                      onchange="document.getElementById('login_form').submit();">Login</button>
+                  </form>
+                <% } %>
+                </ul>
             </div>
         </div>
     </header>
@@ -113,7 +128,6 @@
                 </small>
             </p>
             <small class="text-muted">
-              accessed by: <%= href %></br>
               session-id: <%= session_id %></br>
               request-id: <%= request_id %></br>
             </small>

@@ -1,5 +1,3 @@
-{{ define "order" }}
-    {{ template "header" . }}
 
     <main role="main">
         <div class="py-5">
@@ -15,9 +13,9 @@
                         Shipping Tracking ID: <strong>{{.order.ShippingTrackingId}}</strong>
                     </p>
                     <p>
-                        Shipping Cost: <strong>{{renderMoney .order.ShippingCost}}</strong>
+                        Shipping Cost: <strong><%= shipping_cost %></strong>
                         <br>
-                        Total Paid: <strong>{{renderMoney .total_paid}}</strong>
+                        Total Paid: <strong><%= total_cost %></strong>
                     </p>
                     <a class="btn btn-primary" href="/" role="button">Browse other products &rarr; </a>
                     </div>
@@ -33,5 +31,3 @@
         </div>
     </main>
 
-    {{ template "footer" . }}
-{{ end }}

@@ -26,7 +26,7 @@ function getUserCurrency (ctx) {
 }
 
 function getUserName (ctx) {
-  return ctx.cookies.get('userName') || 'default'
+  return ctx.cookies.get('userName') || ''
 }
 
 function getCartSize (ctx) {
@@ -90,23 +90,16 @@ module.exports = lib.serverless.router(async router => {
     const options = {
       session_id: getSessionID(ctx),
       request_id: requestId,
+      user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
       currencies: supportedCurrencies, 
       products: productList,
       cart_size: getCartSize(ctx),
       banner_color: 'white', // illustrates canary deployments
-      ads: cats,
-      href: ctx.request.href
+      ads: cats
     }
     ctx.type = 'text/html'
     ctx.body = homeHTML(options)
-  })
-
-  router.post('/setCurrency', async (ctx, next) => {
-    ctx.type = 'application/json'
-    // chosenCurrency = ctx.request.body.currencyCode
-    ctx.cookies.set('userCurrency', ctx.request.body.currencyCode, { overwrite:true })
-    ctx.response.redirect('back', '../')
   })
 
   // TODO make recommendations more meaningful? --> use categories?
@@ -134,6 +127,7 @@ module.exports = lib.serverless.router(async router => {
       session_id: getSessionID(ctx),
       request_id: requestId,
       product: product,
+      user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
       currencies: supportedCurrencies, 
       recommendations: recommendedIds,
@@ -148,7 +142,7 @@ module.exports = lib.serverless.router(async router => {
     const requestId = lib.helper.generateRandomID()
     const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
     const cart = (await ctx.lib.call('getcart', { userId: getUserName(ctx) })).items
-    cart.push({ productId: 'QWERTY', quantity: 2 })
+    // cart.push({ productId: 'QWERTY', quantity: 2 })
 
     const products = []
     // TODO Promise.all or similar
@@ -171,6 +165,7 @@ module.exports = lib.serverless.router(async router => {
       session_id: getSessionID(ctx),
       request_id: requestId,
       items: products,
+      user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
       currencies: supportedCurrencies, 
       cart_size: getCartSize(ctx),
@@ -182,5 +177,49 @@ module.exports = lib.serverless.router(async router => {
     ctx.type = 'text/html'
     ctx.body = cartHTML(options)
   })
+
+  // TODO
+  router.get('/confirmation', async (ctx, next) => {
+    const userId = getUserName(ctx)
+    ctx.type = 'text/html'
+  })
+
+  // TODO adapt cart size cookie (for relogin)
+  router.post('/setUser', async (ctx, next) => {
+    ctx.type = 'application/json'
+    ctx.cookies.set('userName', ctx.request.body.userName, { overwrite:true })
+    ctx.response.redirect('back', '../')
+  })
+
+  router.post('/logout', async (ctx, next) => {
+    ctx.type = 'application/json'
+    ctx.cookies.set('userName', '', { overwrite:true })
+    ctx.cookies.set('cartSize', 0, { overwrite:true })
+    ctx.response.redirect('back', '../')
+  })
+
+  router.post('/setCurrency', async (ctx, next) => {
+    ctx.type = 'application/json'
+    ctx.cookies.set('userCurrency', ctx.request.body.currencyCode, { overwrite:true })
+    ctx.response.redirect('back', '../')
+  })
+
+  router.post('/emptyCart', async (ctx, next) => {
+    ctx.type = 'application/json'
+    const userId = getUserName(ctx)
+    await ctx.lib.call('emptycart', { userId: userId})
+    ctx.response.redirect('back', '../')
+  })
+
+  // TODO (remember updating cart size), should also error if not logged in
+  router.post('/addCartItem', async (ctx, next) => {
+    ctx.type = 'application/json'
+    const userId = getUserName(ctx)
+
+    await ctx.lib.call('addcartitem', { userId: userId})
+    ctx.response.redirect('back', '../')
+  })
+
+
 
 })
