@@ -28,6 +28,11 @@ for service in $(jq -r '.services | keys[]' experiments/${1}/experiment.json); d
   cd -
 done
 
+echo "Destroying vpc" | chalk green
+cd infrastructure/services/vpc
+terraform destroy -auto-approve
+cd -
+
 for provider in $providers; do
   echo "Destroying endpoints for $provider" | chalk green
   cd infrastructure/${provider}/endpoint
