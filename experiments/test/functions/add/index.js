@@ -3,7 +3,6 @@ const lib = require('@faastermetrics/lib')
 const db = lib.db.connect()
 
 module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
-  ctx.log({ event })
   const cacheKey = `${event.a}+${event.b}`
   const res = await db.get(cacheKey)
   if (res) return { result: parseInt(res, 10) }
