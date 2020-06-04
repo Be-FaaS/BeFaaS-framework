@@ -2,22 +2,24 @@ data "terraform_remote_state" "exp" {
   backend = "local"
 
   config = {
-    path = "${path.module}/../experiment/terraform.tfstate"
+    path = "${path.module}/../../experiment/terraform.tfstate"
+  }
+}
+
+data "terraform_remote_state" "vpc" {
+  backend = "local"
+
+  config = {
+    path = "${path.module}/../vpc/terraform.tfstate"
   }
 }
 
 locals {
-  project_name = data.terraform_remote_state.exp.outputs.project_name
-}
-
-resource "tls_private_key" "ssh" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "ssh" {
-  key_name   = local.project_name
-  public_key = tls_private_key.ssh.public_key_openssh
+  project_name    = data.terraform_remote_state.exp.outputs.project_name
+  default_subnet  = data.terraform_remote_state.vpc.outputs.default_subnet
+  ssh_key_name    = data.terraform_remote_state.vpc.outputs.ssh_key_name
+  security_groups = data.terraform_remote_state.vpc.outputs.security_groups
+  ssh_private_key = data.terraform_remote_state.vpc.outputs.ssh_private_key
 }
 
 data "aws_ami" "ubuntu_bionic" {
@@ -30,8 +32,8 @@ resource "aws_instance" "workload" {
   ami                                  = data.aws_ami.ubuntu_bionic.id
   instance_type                        = "t3a.micro"
   associate_public_ip_address          = true
-  subnet_id                            = element(values(aws_subnet.default), 0).id
-  key_name                             = aws_key_pair.ssh.key_name
+  subnet_id                            = local.default_subnet
+  key_name                             = local.ssh_key_name
   vpc_security_group_ids               = local.security_groups
   instance_initiated_shutdown_behavior = "terminate"
 
@@ -44,10 +46,10 @@ resource "aws_instance" "workload" {
       type        = "ssh"
       user        = "ubuntu"
       host        = self.public_ip
-      private_key = tls_private_key.ssh.private_key_pem
+      private_key = local.ssh_private_key
       agent       = false
     }
-    source      = "${path.module}/../../artillery/image.tar.gz"
+    source      = "${path.module}/../../../artillery/image.tar.gz"
     destination = "/tmp/image.tar.gz"
   }
 
@@ -56,7 +58,7 @@ resource "aws_instance" "workload" {
       type        = "ssh"
       user        = "ubuntu"
       host        = self.public_ip
-      private_key = tls_private_key.ssh.private_key_pem
+      private_key = local.ssh_private_key
       agent       = false
     }
 

@@ -1,6 +1,15 @@
+data "terraform_remote_state" "exp" {
+  backend = "local"
+
+  config = {
+    path = "${path.module}/../../experiment/terraform.tfstate"
+  }
+}
+
 locals {
   cidr             = "10.0.0.0/16"
   cidr_subnet_bits = 8
+  project_name     = data.terraform_remote_state.exp.outputs.project_name
 }
 
 data "aws_availability_zones" "available" {}
@@ -50,6 +59,45 @@ resource "aws_security_group" "ssh" {
   }
 }
 
-locals {
-  security_groups = [aws_security_group.ssh.id, aws_vpc.default.default_security_group_id]
+resource "aws_security_group" "redis" {
+  name   = "redis-access"
+  vpc_id = aws_vpc.default.id
+
+  ingress {
+    from_port   = 6379
+    to_port     = 6379
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "tls_private_key" "ssh" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "ssh" {
+  key_name   = local.project_name
+  public_key = tls_private_key.ssh.public_key_openssh
+}
+
+
+output "security_groups" {
+  value = [aws_security_group.ssh.id, aws_security_group.redis.id, aws_vpc.default.default_security_group_id]
+}
+
+output "subnet_ids" {
+  value = values(aws_subnet.default)[*].id
+}
+
+output "default_subnet" {
+  value = element(values(aws_subnet.default), 0).id
+}
+
+output "ssh_key_name" {
+  value = aws_key_pair.ssh.key_name
+}
+
+output "ssh_private_key" {
+  value = tls_private_key.ssh.private_key_pem
 }
