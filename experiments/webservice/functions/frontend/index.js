@@ -10,6 +10,9 @@ const homeHTML = _.template(
 const productHTML = _.template(
   fs.readFileSync(path.join(__dirname, 'html_templates', 'product.html'))
 )
+const cartHTML = _.template(
+  fs.readFileSync(path.join(__dirname, 'html_templates', 'cart.html'))
+)
 
 function getSessionID (ctx) {
   if (!ctx.cookies.get('sessionId')) {
@@ -34,11 +37,41 @@ function increaseCartSize (ctx, inc) {
   ctx.cookies.set('cartSize', getCartSize(ctx) + inc, { overwrite: true })
 }
 
-async function convertProductPrize (ctx, product) {
+// TODO use convert function below
+async function convertProductPrice (ctx, product) {
   if (getUserCurrency(ctx) === 'USD') {
     product.price = product.priceUsd
   } else {
     product.price = await ctx.lib.call('currency', {from: product.priceUsd, toCode: getUserCurrency(ctx)})
+  }
+}
+
+async function convertPrice (ctx, priceUsd) {
+  if (getUserCurrency(ctx) === 'USD') {
+    return priceUsd
+  } else {
+    return await ctx.lib.call('currency', {from: priceUsd, toCode: getUserCurrency(ctx)})
+  }
+}
+
+// Should only be used if (a.currencyCode === b.currencyCode)
+function addPrice (a, b) {
+  const nanos = (a.nanos + b.nanos) % 1e10
+  const units = Math.trunc((a.nanos + b.nanos) / 1e10) + a.units + b.units
+  return {
+    currencyCode: a.currencyCode,
+    nanos: nanos,
+    units: units
+  }
+}
+
+function scalePrice (price, scalar) {
+  const nanos = (price.nanos * scalar) % 1e10
+  const units = Math.trunc((price.nanos * scalar) / 1e10) + (price.units * scalar)
+  return {
+    currencyCode: price.currencyCode,
+    nanos: nanos,
+    units: units
   }
 }
 
@@ -51,7 +84,7 @@ module.exports = lib.serverless.router(async router => {
 
     // This one could be parallelised easily
     for (product of productList) {
-      await convertProductPrize(ctx, product)    
+      await convertProductPrice(ctx, product)    
     }
 
     const options = {
@@ -91,10 +124,9 @@ module.exports = lib.serverless.router(async router => {
       return
     }
 
-    await convertProductPrize(ctx, product)
+    await convertProductPrice(ctx, product)
     const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
     const recommendedIds = (await ctx.lib.call('listrecommendations', { userId: getUserName(ctx), productIds: [productId] })).productIds
-    //const recommendedList = await recommendedIds.map(x => ctx.lib.call('getproduct', { id: x }))
 
     const cat = (await ctx.lib.call('getads', {})).ads[0]
 
@@ -112,16 +144,24 @@ module.exports = lib.serverless.router(async router => {
     ctx.body = productHTML(options)
   })
 
-  /*
-  router.get('/Cart', async (ctx, next) => {
-    let cartItems = (await ctx.lib.call('getCart', { userId: getUserName(ctx) })).items
-    cartItems = await cartItems.map(x => ctx.lib.call('getproduct', { id: x })
-    const shippingCost = ''
-    const totalCost = ''
+  router.get('/cart', async (ctx, next) => {
+    const cart = (await ctx.lib.call('getcart', { userId: getUserName(ctx) }))//.items
+
+    const products = await cart.map(x => ctx.lib.call('getproduct', { id: x.productId }))
+    // Adds quantity and accordingly scaled price to each product
+    await _.forEach(products, (product, key) => {
+      product.quantity = cart[key].quantity
+      convertProductPrice(ctx, product)
+      product.price = scalePrice(product.price, cart[key].quantity)
+    })
+
+      // Should include address in call according to spec
+    const shippingCostUsd = (await ctx.lib.call('shipmentquote', { items: cart })).costUsd
+    const shippingCost = await convertPrice(ctx, shippingCostUsd)
+    const totalCost = await _.reduce(_.map(products, 'price'), addPrice, shippingCost)
 
     ctx.type = 'text/html'
-    ctx.body = productHTML(options)
+    ctx.body = cartHTML(options)
   })
-  */
 
 })
