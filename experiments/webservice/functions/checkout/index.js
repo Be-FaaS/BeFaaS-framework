@@ -64,11 +64,41 @@ const lib = require('@faastermetrics/lib')
  * }
  *
  */
+
+async function convertPrice (ctx, priceUsd, userCurrency) {
+  if (userCurrency === 'USD') {
+    return priceUsd
+  } else {
+    return await ctx.call('currency', { from: priceUsd, toCode: userCurrency })
+  }
+}
+
+// Should only be used if (a.currencyCode === b.currencyCode)
+function addPrices (a, b) {
+  const nanos = (a.nanos + b.nanos) % 1e9
+  const units = Math.trunc((a.nanos + b.nanos) / 1e9) + a.units + b.units
+  return {
+    currencyCode: a.currencyCode,
+    nanos: nanos,
+    units: units
+  }
+}
+
+function scalePrice (price, scalar) {
+  const nanos = (price.nanos * scalar) % 1e9
+  const units = Math.trunc((price.nanos * scalar) / 1e9) + price.units * scalar
+  return {
+    currencyCode: price.currencyCode,
+    nanos: nanos,
+    units: units
+  }
+}
+
 module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   const cart = await ctx.call('getcart', {
     userId: request.userId
   })
-  const totalOrderPrice = {
+  let totalOrderPrice = {
     currencyCode: request.userCurrency,
     units: 0,
     nanos: 0
@@ -82,33 +112,35 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
       const product = await ctx.call('getproduct', {
         id: item.productId
       })
-      const productPrice = await ctx.call('currency', {
-        from: product.priceUsd,
-        toCode: request.userCurrency
-      })
+      const productPrice = await convertPrice(
+        ctx,
+        product.priceUsd,
+        request.userCurrency
+      )
       cartItems.push({
         item: item,
         cost: productPrice
       })
-      totalOrderPrice.currencyCode = request.userCurrency
-      totalOrderPrice.units += productPrice.units * item.quantity
-      totalOrderPrice.nanos += productPrice.nanos * item.quantity
+      totalOrderPrice = await addPrices(
+        totalOrderPrice,
+        await scalePrice(productPrice, item.quantity)
+      )
     })
   )
 
-  const costUsd = await ctx.call('shipmentquote', {
-    address: request.address,
-    items: cart.items
-  })
+  const shipmentPrice = (
+    await ctx.call('shipmentquote', {
+      address: request.address,
+      items: cart.items
+    })
+  ).costUsd
 
-  const convertedShipmentPrice = await ctx.call('currency', {
-    from: costUsd,
-    toCode: request.userCurrency
-  })
-
-  totalOrderPrice.currencyCode = request.userCurrency
-  totalOrderPrice.units += convertedShipmentPrice.units
-  totalOrderPrice.nanos += convertedShipmentPrice.nanos
+  const convertedShipmentPrice = await convertPrice(
+    ctx,
+    shipmentPrice,
+    request.userCurrency
+  )
+  totalOrderPrice = await addPrices(totalOrderPrice, convertedShipmentPrice)
 
   const { transactionId } = await ctx.call('payment', {
     creditCard: request.creditCard,
@@ -125,6 +157,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
     orderId: lib.helper.generateRandomID(),
     shippingTrackingId: trackingId,
     shippingCost: convertedShipmentPrice,
+    totalCost: totalOrderPrice,
     shippingAddress: request.address,
     items: cartItems
   }
