@@ -82,6 +82,10 @@ function scalePrice (price, scalar) {
   }
 }
 
+function printPrice (price) {
+  return _.toString(price.units) + '.' + (_.toString(price.nanos)).substr(0,2) + ' ' + price.currencyCode
+}
+
 module.exports = lib.serverless.router(async router => {
   router.get('/', async (ctx, next) => {
     const requestId = lib.helper.generateRandomID()
@@ -207,7 +211,7 @@ module.exports = lib.serverless.router(async router => {
         creditCardExpirationYear: _.parseInt(order.credit_card_expiration_year),
         creditCardExpirationMonth: _.parseInt(order.credit_card_expiration_month)
       }
-    }))//.order
+    })).order
  
     const options = {
       session_id: getSessionID(ctx),
@@ -216,9 +220,9 @@ module.exports = lib.serverless.router(async router => {
       user_currency: getUserCurrency(ctx),
       currencies: supportedCurrencies, 
       cart_size: 0,
-      shipping_cost: checkoutResult.shippingCost,
+      shipping_cost: printPrice(checkoutResult.shippingCost),
       tracking_id: checkoutResult.shippingTrackingId,
-      total_cost: checkoutResult.shippingCost, // TODO
+      total_cost: printPrice(checkoutResult.totalCost), 
       order_id: checkoutResult.orderId,
     }
 
