@@ -17,6 +17,7 @@ if [ -z "${1:-}" ]; then
 fi
 
 exp_dir="experiments/$1/functions"
+artillery_dir="artillery"
 
 if [[ ! -d $exp_dir ]]; then
     echo -e "Invalid experiment name\n" | chalk red
@@ -33,3 +34,10 @@ mkdir -p $logdir
 for provider in $(jq -r '[.program.functions[].provider] | unique | .[]' experiments/${1}/experiment.json); do
     ${SCRIPT_DIR}/logs/${provider}.sh
 done
+
+# obtain artillery logs
+artillery_logs="$artillery_dir/workload-deploy.log"
+if [ -f "$artillery_logs" ]; then
+	echo "Getting artillery logs from $artillery_logs" | chalk magenta
+	cp "$artillery_logs" "$logdir/artillery.log"
+fi

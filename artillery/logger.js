@@ -1,4 +1,9 @@
-const crypto = require('crypto')
+const lib = require('@faastermetrics/lib')
+const { performance } = require('perf_hooks')
+
+const LIB_VERSION = require('@faastermetrics/lib/package.json').version
+
+const fnName = 'artillery'
 
 module.exports = {
   beforeRequest: beforeRequest,
@@ -14,24 +19,35 @@ function resolveVar (url, context) {
   return url.replace(match, context.vars[varname])
 }
 
+function logEvent (event) {
+  console.log(
+    'FAASTERMETRICS' +
+      JSON.stringify({
+        version: LIB_VERSION,
+        timestamp: new Date().getTime(),
+        now: performance.now(),
+        fn: {
+          id: '',
+          name: fnName
+        },
+        event
+      })
+  )
+}
+
 function beforeRequest (requestParams, context, ee, next) {
   var url = resolveVar(requestParams.url, context)
-  var d = new Date()
-  var id = crypto.randomBytes(32).toString('hex')
-  requestParams.headers.artillery_uid = id
-  console.log(`${id} ${d.getTime()} before ${url}`)
-
+  var contextId = lib.helper.generateRandomID()
+  requestParams.headers['x-context'] = contextId
+  logEvent({ url, contextId, type: 'before' })
   return next()
 }
 
 function afterResponse (requestParams, response, context, ee, next) {
-  var d = new Date()
-
-  console.log(
-    `${requestParams.headers.artillery_uid} ${d.getTime()} after ${
-      requestParams.url
-    } ${response.statusCode}`
-  )
-
+  logEvent({
+    url: requestParams.url,
+    contextId: requestParams.headers['x-context'],
+    type: 'after'
+  })
   return next()
 }

@@ -50,8 +50,14 @@ echo "Writing config..." | chalk blue
 echo -n $var_json > artillery/variables.json
 cp $workload_config artillery/workload.yml
 
+echo "Compiling logger.js" | chalk blue
+npx ncc build artillery/logger.js -o artillery/build
+
 echo "Creating docker image..." | chalk blue
 docker build -t faastermetrics/artillery artillery/
+
+echo "Cleaning up build files" | chalk blue
+rm -rf artillery/build
 
 echo "Exporting docker image..." | chalk blue
 docker save faastermetrics/artillery:latest | gzip > artillery/image.tar.gz
