@@ -38,8 +38,10 @@ function logEvent (event) {
 function beforeRequest (requestParams, context, ee, next) {
   var url = resolveVar(requestParams.url, context)
   var contextId = lib.helper.generateRandomID()
+  var xPair = `${contextId}-${lib.helper.generateRandomID()}`
   requestParams.headers['x-context'] = contextId
-  logEvent({ url, contextId, type: 'before' })
+  requestParams.headers['x-pair'] = xPair
+  logEvent({ url, contextId, xPair, type: 'before' })
   return next()
 }
 
@@ -47,6 +49,7 @@ function afterResponse (requestParams, response, context, ee, next) {
   logEvent({
     url: requestParams.url,
     contextId: requestParams.headers['x-context'],
+    xPair: requestParams.headers['x-pair'],
     type: 'after'
   })
   return next()
