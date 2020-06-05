@@ -25,7 +25,7 @@ if [ "$workload_config_name" == "null" ]; then
     exit 1
 fi
 
-workload_config=$(realpath ${exp_dir}/${workload_config_name})
+workload_config="${exp_dir}/${workload_config_name}"
 echo "Found workload config: $workload_config" | chalk blue
 
 echo "Getting endpoints..." | chalk blue
