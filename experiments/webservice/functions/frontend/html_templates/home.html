@@ -31,11 +31,11 @@
                     </select>
                 </form>
                 <% if (user_id) { %>
-                  <a class="btn btn-primary btn-light mr-auto my-2" href="../cart" role="button">View Cart (<%= cart_size %>)</a>
+                  <a class="btn btn-primary btn-light mr-auto my-2" href="./cart" role="button">View Cart (<%= cart_size %>)</a>
                   <li class="nav-item pt-2 mx-1 text-light">Hello, <%= user_id %></p></li>
                   <form class="form-inline ml-auto pl-2" method="post" action="./logout" id="logout_form">
                     <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" 
-                    onchange="document.getElementById('user_form').submit();">Logout</button>
+                    onchange="document.getElementById('logout_form').submit();">Logout</button>
                   </form>
                 <% } else { %>
                   <form class="form-inline ml-auto ml-xs-0" method="post" action="./setUser" id="login_form">

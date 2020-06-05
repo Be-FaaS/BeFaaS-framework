@@ -40,6 +40,10 @@ function increaseCartSize (ctx, inc) {
   ctx.cookies.set('cartSize', getCartSize(ctx) + inc, { overwrite: true })
 }
 
+function emptyCartSize (ctx) {
+  ctx.cookies.set('cartSize', 0, { overwrite: true })
+}
+
 // TODO use convert function below
 async function convertProductPrice (ctx, product) {
   if (getUserCurrency(ctx) === 'USD') {
@@ -144,7 +148,7 @@ module.exports = lib.serverless.router(async router => {
   router.get('/cart', async (ctx, next) => {
     const requestId = lib.helper.generateRandomID()
     const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
-    const cart = (await ctx.lib.call('getcart', { userId: getUserName(ctx) })).items
+    const cart = (await ctx.lib.call('getcart', { userId: getUserName(ctx) })).items || []
     // cart.push({ productId: 'QWERTY', quantity: 2 })
 
     const products = []
@@ -181,10 +185,45 @@ module.exports = lib.serverless.router(async router => {
     ctx.body = cartHTML(options)
   })
 
-  // TODO
-  router.get('/confirmation', async (ctx, next) => {
-    const userId = getUserName(ctx)
+  router.post('/checkout', async (ctx, next) => {
+    emptyCartSize(ctx)
+    const requestId = lib.helper.generateRandomID()
+    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
+    const order = ctx.request.body
+    const checkoutResult = (await ctx.lib.call('checkout', {
+      userId: getUserName(ctx),
+      userCurrency: getUserCurrency(ctx),
+      address: {
+        streetAddress: order.street_address,
+        city: order.city,
+        state: order.state,
+        country: order.country,
+        zipCode: _.parseInt(order.zip_code)
+      },
+      email: order.email,
+      creditCard: {
+        creditCardNumber: order.credit_card_number,
+        creditCardCvv: _.parseInt(order.credit_card_cvv),
+        creditCardExpirationYear: _.parseInt(order.credit_card_expiration_year),
+        creditCardExpirationMonth: _.parseInt(order.credit_card_expiration_month)
+      }
+    }))//.order
+ 
+    const options = {
+      session_id: getSessionID(ctx),
+      request_id: requestId,
+      user_id: getUserName(ctx),
+      user_currency: getUserCurrency(ctx),
+      currencies: supportedCurrencies, 
+      cart_size: 0,
+      shipping_cost: checkoutResult.shippingCost,
+      tracking_id: checkoutResult.shippingTrackingId,
+      total_cost: checkoutResult.shippingCost, // TODO
+      order_id: checkoutResult.orderId,
+    }
+
     ctx.type = 'text/html'
+    ctx.body = orderHTML(options)
   })
 
   router.post('/setUser', async (ctx, next) => {
@@ -193,30 +232,37 @@ module.exports = lib.serverless.router(async router => {
     const cartSize = await _.reduce(await _.map(cartItems, 'quantity'), (x, y)  => x + y)
 
     ctx.cookies.set('userName', userName, { overwrite:true })
-    ctx.cookies.set('cartSize', cartSize, { overwrite: true })
+    emptyCartSize(ctx)
     ctx.type = 'application/json'
-    ctx.response.redirect('back', '../')
+    ctx.response.redirect('back')
   })
 
   router.post('/logout', async (ctx, next) => {
     ctx.cookies.set('userName', '', { overwrite:true })
-    ctx.cookies.set('cartSize', 0, { overwrite:true })
+    emptyCartSize(ctx)
     ctx.type = 'application/json'
-    ctx.response.redirect('back', '../')
+    ctx.response.redirect('back')
+  })
+
+  router.post('/logoutAndLeave', async (ctx, next) => {
+    ctx.cookies.set('userName', '', { overwrite:true })
+    emptyCartSize(ctx)
+    ctx.type = 'application/json'
+    ctx.response.redirect('./')
   })
 
   router.post('/setCurrency', async (ctx, next) => {
     ctx.cookies.set('userCurrency', ctx.request.body.currencyCode, { overwrite:true })
     ctx.type = 'application/json'
-    ctx.response.redirect('back', '../')
+    ctx.response.redirect('back')
   })
 
   router.post('/emptyCart', async (ctx, next) => {
     const userId = getUserName(ctx)
     await ctx.lib.call('emptycart', { userId: userId})
-    ctx.cookies.set('cartSize', 0, { overwrite:true })
+    emptyCartSize(ctx)
     ctx.type = 'application/json'
-    ctx.response.redirect('back', '../')
+    ctx.response.redirect('back')
   })
 
   router.post('/addCartItem', async (ctx, next) => {
@@ -235,9 +281,7 @@ module.exports = lib.serverless.router(async router => {
       await increaseCartSize(ctx, quantity)
     }
     ctx.type = 'application/json'
-    ctx.response.redirect('back', '../')
+    ctx.response.redirect('back')
   })
-
-
 
 })

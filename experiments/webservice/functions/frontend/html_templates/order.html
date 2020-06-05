@@ -1,4 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Webshop Demo</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+</head>
+<body>
 
+    <!-- HEADER -->
+    <header>
+        <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex">
+                <a href="./" class="navbar-brand d-flex align-items-center">
+                  Webshop Demo
+                </a>
+                <ul class="nav justify-content-end">
+                <form class="form-inline mr-2 mr-xs-0" method="post" action="./setCurrency" id="currency_form">
+                    <select name="currencyCode" class="form-control pr-2 pr-xs-0"
+                    onchange="document.getElementById('currency_form').submit();" style="width:auto;">
+                    <% for (currency of currencies) { %>
+                    <option value="<%= currency %>"<% if (currency === user_currency) { %> selected="selected"<% } %>>
+                      <%= currency %>
+                      <% if (currency === user_currency) { %>
+                        <!--p class="text-success">&#32;&#10004;</p-->
+                      <% } %>
+                    </option>
+                    <% } %>
+                    </select>
+                </form>
+                <% if (user_id) { %>
+                  <a class="btn btn-primary btn-light mr-auto my-2" href="./cart" role="button">View Cart (<%= cart_size %>)</a>
+                  <li class="nav-item pt-2 mx-1 text-light">Hello, <%= user_id %></p></li>
+                  <form class="form-inline ml-auto pl-2" method="post" action="./logoutAndLeave" id="logout_form">
+                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit
+                    onchange="document.getElementById('logout_form').submit();">Logout</button>
+                  </form>
+                <% } else { %>
+                  <form class="form-inline ml-auto ml-xs-0" method="post" action="./setUser" id="login_form">
+                    <input class="form-control mr-2" type="text" name="userName" placeholder="User Name">
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit" 
+                      onchange="document.getElementById('login_form').submit();">Login</button>
+                  </form>
+                <% } %>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN -->
     <main role="main">
         <div class="py-5">
             <div class="container bg-light py-3 px-lg-5">
@@ -8,26 +59,47 @@
                         Your order is complete!
                     </h3>
                     <p>
-                        Order Confirmation ID: <strong>{{.order.OrderId}}</strong>
+                        Order Confirmation ID: <strong><%= order_id %></strong>
                         <br>
-                        Shipping Tracking ID: <strong>{{.order.ShippingTrackingId}}</strong>
+                        Shipping Tracking ID: <strong><%= tracking_id %></strong>
                     </p>
                     <p>
                         Shipping Cost: <strong><%= shipping_cost %></strong>
                         <br>
                         Total Paid: <strong><%= total_cost %></strong>
                     </p>
-                    <a class="btn btn-primary" href="/" role="button">Browse other products &rarr; </a>
+                    <a class="btn btn-primary" href="./" role="button">Browse other products &rarr; </a>
                     </div>
                 </div>
                 <hr/>
-
-                {{ if $.recommendations }}
-                <div class="row mt-5 py-2">
-                    {{ template "recommendations" $.recommendations }}
-                </div>
-                {{ end }}
             </div>
         </div>
     </main>
+
+    <!-- FOOTER -->
+    <footer class="py-5 px-5">
+        <div class="container">
+            <p>
+              &copy; <%= (new Date()).getFullYear() %> FaaSterMetrics project group
+                <span class="text-muted">
+                    <a href="https://github.com/FaaSterMetrics/experiments/tree/master/experiments/webservice">(Webshop Source Code)</a>
+                </span>
+            </p>
+            <p>
+                <small class="text-muted">
+                    This website is hosted for demo purposes only. 
+                    It is not an actual shop, but represents one for our FaaS benchmarking framework. 
+                    Webdesign originally by <a href="https://github.com/GoogleCloudPlatform/microservices-demo">Google</a>,
+                    licensed under the Apache 2.0 license.
+                </small>
+            </p>
+            <small class="text-muted">
+              session-id: <%= session_id %></br>
+              request-id: <%= request_id %></br>
+            </small>
+        </div>
+    </footer>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+</body>
+</html>
 

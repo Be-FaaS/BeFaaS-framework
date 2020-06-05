@@ -12,12 +12,13 @@
     <!-- HEADER -->
     <header>
         <div class="navbar navbar-dark bg-dark box-shadow">
-            <div class="container d-flex justify-content-between">
-                <a href="../" class="navbar-brand d-flex align-items-center">
+            <div class="container d-flex">
+                <a href="./" class="navbar-brand d-flex align-items-center">
                   Webshop Demo
                 </a>
-                <form class="form-inline ml-auto" method="post" action="../setCurrency" id="currency_form">
-                    <select name="currencyCode" class="form-control"
+                <ul class="nav justify-content-end">
+                <form class="form-inline mr-2 mr-xs-0" method="post" action="./setCurrency" id="currency_form">
+                    <select name="currencyCode" class="form-control pr-2 pr-xs-0"
                     onchange="document.getElementById('currency_form').submit();" style="width:auto;">
                     <% for (currency of currencies) { %>
                     <option value="<%= currency %>"<% if (currency === user_currency) { %> selected="selected"<% } %>>
@@ -28,20 +29,34 @@
                     </option>
                     <% } %>
                     </select>
-                    </form>
-                <a class="btn btn-primary btn-light ml-2" href="cart" role="button">View Cart (<%= cart_size %>)</a>
+                </form>
+                <% if (user_id) { %>
+                  <a class="btn btn-primary btn-light mr-auto my-2" href="./cart" role="button">View Cart (<%= cart_size %>)</a>
+                  <li class="nav-item pt-2 mx-1 text-light">Hello, <%= user_id %></p></li>
+                  <form class="form-inline ml-auto pl-2" method="post" action="./logout" id="logout_form">
+                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" 
+                    onchange="document.getElementById('logout_form').submit();">Logout</button>
+                  </form>
+                <% } else { %>
+                  <form class="form-inline ml-auto ml-xs-0" method="post" action="./setUser" id="login_form">
+                    <input class="form-control mr-2" type="text" name="userName" placeholder="User Name">
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit" 
+                      onchange="document.getElementById('login_form').submit();">Login</button>
+                  </form>
+                <% } %>
+                </ul>
             </div>
         </div>
     </header>
 
-  
-  <main role="main">
+    <!-- MAIN -->
+    <main role="main">
         <div class="py-5">
             <div class="container bg-light py-3 px-lg-5 py-lg-5">
                 <% if (!items.length) { %>
                     <h3>Your shopping cart is empty!</h3>
                     <p>Items you add to your shopping cart will appear here.</p>
-                    <a class="btn btn-primary" href="/" role="button">Browse Products &rarr; </a>
+                    <a class="btn btn-primary" href="./" role="button">Browse Products &rarr; </a>
                 <% } else { %>
 
                     <div class="row mb-3 py-2">
@@ -55,9 +70,9 @@
 
                         </div>
                         <div class="col text-right">
-                            <form method="post" action="../emptyCart">
+                            <form method="post" action="./emptyCart">
                                 <button class="btn btn-secondary" type="submit">Empty cart</button>
-                                <a class="btn btn-info" href="/" role="button">Browse more products &rarr; </a>
+                                <a class="btn btn-info" href="./" role="button">Browse more products &rarr; </a>
                             </form>
                     
                         </div>
@@ -67,7 +82,7 @@
                     <% for (item of items) { %>
                     <div class="row pt-2 mb-2">
                         <div class="col text-right">
-                                <a href="/product/<%- item.id %>"><img class="img-fluid" style="width: auto; max-height: 60px;"
+                                <a href="./product/<%- item.id %>"><img class="img-fluid" style="width: auto; max-height: 60px;"
                                   src="<%= item.picture %>" /></a>
                         </div>
                         <div class="col align-middle">
@@ -93,7 +108,7 @@
                     <div class="row py-3 my-2">
                         <div class="col-12 col-lg-8 offset-lg-2">
                             <h3>Checkout</h3>
-                            <form action="../checkout" method="post">
+                            <form action="./checkout" method="post">
                                 <div class="form-row">
                                     <div class="col-md-5 mb-3">
                                             <label for="email">E-mail Address</label>
