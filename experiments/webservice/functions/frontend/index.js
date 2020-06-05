@@ -13,6 +13,9 @@ const productHTML = _.template(
 const cartHTML = _.template(
   fs.readFileSync(path.join(__dirname, 'html_templates', 'cart.html'))
 )
+const orderHTML = _.template(
+  fs.readFileSync(path.join(__dirname, 'html_templates', 'order.html'))
+)
 
 function getSessionID (ctx) {
   if (!ctx.cookies.get('sessionId')) {
@@ -30,7 +33,7 @@ function getUserName (ctx) {
 }
 
 function getCartSize (ctx) {
-  return ctx.cookies.get('cartSize') || 0
+  return _.parseInt(ctx.cookies.get('cartSize')) || 0
 }
 
 function increaseCartSize (ctx, inc) {
@@ -184,39 +187,54 @@ module.exports = lib.serverless.router(async router => {
     ctx.type = 'text/html'
   })
 
-  // TODO adapt cart size cookie (for relogin)
   router.post('/setUser', async (ctx, next) => {
+    const userName = ctx.request.body.userName
+    const cartItems =  (await ctx.lib.call('getcart', { userId: userName })).items
+    const cartSize = await _.reduce(await _.map(cartItems, 'quantity'), (x, y)  => x + y)
+
+    ctx.cookies.set('userName', userName, { overwrite:true })
+    ctx.cookies.set('cartSize', cartSize, { overwrite: true })
     ctx.type = 'application/json'
-    ctx.cookies.set('userName', ctx.request.body.userName, { overwrite:true })
     ctx.response.redirect('back', '../')
   })
 
   router.post('/logout', async (ctx, next) => {
-    ctx.type = 'application/json'
     ctx.cookies.set('userName', '', { overwrite:true })
     ctx.cookies.set('cartSize', 0, { overwrite:true })
+    ctx.type = 'application/json'
     ctx.response.redirect('back', '../')
   })
 
   router.post('/setCurrency', async (ctx, next) => {
-    ctx.type = 'application/json'
     ctx.cookies.set('userCurrency', ctx.request.body.currencyCode, { overwrite:true })
+    ctx.type = 'application/json'
     ctx.response.redirect('back', '../')
   })
 
   router.post('/emptyCart', async (ctx, next) => {
-    ctx.type = 'application/json'
     const userId = getUserName(ctx)
     await ctx.lib.call('emptycart', { userId: userId})
+    ctx.cookies.set('cartSize', 0, { overwrite:true })
+    ctx.type = 'application/json'
     ctx.response.redirect('back', '../')
   })
 
-  // TODO (remember updating cart size), should also error if not logged in
   router.post('/addCartItem', async (ctx, next) => {
-    ctx.type = 'application/json'
-    const userId = getUserName(ctx)
+    const userName = getUserName(ctx)
+    const productId = ctx.request.body.productId
+    const quantity = _.parseInt(ctx.request.body.quantity)
 
-    await ctx.lib.call('addcartitem', { userId: userId})
+    if (userName) {
+      await ctx.lib.call('addcartitem', {
+        userId: userName,
+        item: {
+          productId: productId,
+          quantity: quantity
+        }
+      })
+      await increaseCartSize(ctx, quantity)
+    }
+    ctx.type = 'application/json'
     ctx.response.redirect('back', '../')
   })
 

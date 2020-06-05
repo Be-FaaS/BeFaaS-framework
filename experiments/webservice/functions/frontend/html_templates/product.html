@@ -56,8 +56,8 @@
                             </p>
                             <hr/>
 
-                            <form method="POST" action="/cart" class="form-inline text-muted">
-                              <input type="hidden" name="product_id" value="<%= product.id %>"/>
+                            <form method="POST" action="../addCartItem" class="form-inline text-muted">
+                              <input type="hidden" name="productId" value="<%= product.id %>"/>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="quantity">Quantity</label>
