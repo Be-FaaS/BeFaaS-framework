@@ -1,6 +1,5 @@
 {
   "services": {
-    "redis": {},
     "workload": {
       "config": "./workload.yml"
     }
@@ -15,7 +14,11 @@
           "currency",
           "listrecommendations",
           "supportedcurrencies",
-          "getads"
+          "getads",
+          "checkout",
+          "listproducts",
+          "shipmentquote",
+          "emptycart"
         ]
       },
       "checkout": {
