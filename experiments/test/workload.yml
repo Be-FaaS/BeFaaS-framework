@@ -14,4 +14,11 @@ scenarios:
           url: '{{ frontend }}'
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
+      - post:
+          url: '{{ frontend }}/result'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+          json:
+            a: 20
+            b: 22
     name: 'frontend'
