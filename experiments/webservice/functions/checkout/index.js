@@ -90,7 +90,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
         item: item,
         cost: productPrice
       })
-      totalOrderPrice.units = productPrice.currencyCode
+      totalOrderPrice.currencyCode = request.userCurrency
       totalOrderPrice.units += productPrice.units * item.quantity
       totalOrderPrice.nanos += productPrice.nanos * item.quantity
     })
@@ -106,7 +106,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
     toCode: request.userCurrency
   })
 
-  totalOrderPrice.units = convertedShipmentPrice
+  totalOrderPrice.currencyCode = request.userCurrency
   totalOrderPrice.units += convertedShipmentPrice.units
   totalOrderPrice.nanos += convertedShipmentPrice.nanos
 
@@ -135,5 +135,5 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   await ctx.call('emptycart', {
     userId: request.userId
   })
-  return orderResult
+  return { order: orderResult }
 })
