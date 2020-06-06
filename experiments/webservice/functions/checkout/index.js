@@ -149,10 +149,12 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
 
   if (!transactionId) return { error: 'failed to charge credit card' }
 
-  const { trackingId } = await ctx.call('shiporder', {
-    address: request.address,
-    items: cart.items
-  })
+  const trackingId = (
+    await ctx.call('shiporder', {
+      address: request.address,
+      items: cart.items
+    })
+  ).id
   const orderResult = {
     orderId: lib.helper.generateRandomID(),
     shippingTrackingId: trackingId,
