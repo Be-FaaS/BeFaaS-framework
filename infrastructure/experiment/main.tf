@@ -23,17 +23,20 @@ locals {
 }
 
 locals {
-  aws_fn_names    = [for i, z in local.expconfig.program.functions : i if z.provider == "aws"]
-  google_fn_names = [for i, z in local.expconfig.program.functions : i if z.provider == "google"]
+  aws_fn_names      = [for i, z in local.expconfig.program.functions : i if z.provider == "aws"]
+  google_fn_names   = [for i, z in local.expconfig.program.functions : i if z.provider == "google"]
+  tinyfaas_fn_names = [for i, z in local.expconfig.program.functions : i if z.provider == "tinyfaas"]
 }
 
 locals {
-  aws_fn_files    = [for fn in local.aws_fn_names : "${local.build_dir}/${fn}.zip"]
-  google_fn_files = [for fn in local.google_fn_names : "${local.build_dir}/${fn}.zip"]
+  aws_fn_files      = [for fn in local.aws_fn_names : "${local.build_dir}/${fn}.zip"]
+  google_fn_files   = [for fn in local.google_fn_names : "${local.build_dir}/${fn}.zip"]
+  tinyfaas_fn_files = [for fn in local.tinyfaas_fn_names : "${local.build_dir}/${fn}.zip"]
 }
 
 locals {
   aws_fns       = zipmap(local.aws_fn_names, local.aws_fn_files)
   google_fns    = zipmap(local.google_fn_names, local.google_fn_files)
+  tinyfaas_fns  = zipmap(local.tinyfaas_fn_names, local.tinyfaas_fn_files)
   azure_fn_file = "${local.build_dir}/azure_dist.zip"
 }

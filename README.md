@@ -107,6 +107,8 @@ export GOOGLE_REGION=<ie us-east1>
 
 export ARM_TENANT_ID=<tenantId from az account list>
 export ARM_SUBSCRIPTION_ID=<id from az account list>
+
+export TINYFAAS_ADDRESS=<address of your tinyfaas instance eg localhost>
 ```
 
 ### Initlialize terraform

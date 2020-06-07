@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-PKG_JSON='{"name": "fn", "main": "index.js"}'
+PKG_JSON='{"name": "fn", "version": "1.0.0", "main": "index.js"}'
 
 if [ -z "${1:-}" ]; then
     chalk -t "{yellow Usage: $0 }{yellow.bold <experiment name>}"

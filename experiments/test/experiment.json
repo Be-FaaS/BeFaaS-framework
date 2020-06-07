@@ -1,18 +1,12 @@
 {
-  "services": {
-    "redis": {},
-    "workload": {
-      "config": "./workload.yml"
-    }
-  },
   "program": {
     "functions": {
       "frontend": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["add"]
       },
       "add": {
-        "provider": "google"
+        "provider": "tinyfaas"
       }
     }
   }

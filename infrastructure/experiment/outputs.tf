@@ -13,6 +13,10 @@ output "google_fns" {
   value = local.google_fns
 }
 
+output "tinyfaas_fns" {
+  value = local.tinyfaas_fns
+}
+
 output "azure_fn_file" {
   value = local.azure_fn_file
 }
