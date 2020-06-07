@@ -32,6 +32,7 @@ fi
     exit 1
 }
 
+export TF_VAR_TINYFAAS_ADDRESS=$TINYFAAS_ADDRESS
 
 exp_dir="experiments/$1/functions"
 

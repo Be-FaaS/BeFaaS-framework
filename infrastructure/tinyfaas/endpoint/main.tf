@@ -7,5 +7,5 @@ data "terraform_remote_state" "exp" {
 }
 
 output "TINYFAAS_FUNCTIONS_ENDPOINT" {
-  value = "http://localhost:5683/"
+  value = "http://${var.TINYFAAS_ADDRESS}:5683/"
 }

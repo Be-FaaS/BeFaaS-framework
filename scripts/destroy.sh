@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+export TF_VAR_TINYFAAS_ADDRESS=$TINYFAAS_ADDRESS
+
+
 if [ -z "${1:-}" ]; then
     chalk -t "{yellow Usage: $0 }{yellow.bold <experiment name>}"
     echo "Choose one of:" | chalk yellow
