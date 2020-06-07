@@ -1,4 +1,10 @@
 {
+  "services": {
+    "redis": {},
+    "workload": {
+      "config": "./workload.yml"
+    }
+  },
   "program": {
     "functions": {
       "frontend": {
