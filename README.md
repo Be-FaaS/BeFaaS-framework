@@ -91,6 +91,11 @@ In order to deploy we need to build the source first. Do: `npm run build`
 3. Run `az account list`.
 4. Choose your subscription you want to use for the deployment.
 
+#### TinyFaaS
+
+1. If you don't have an tinyFaaS instance follow the instructions [here](https://github.com/FaaSterMetrics/tinyFaaS).
+2. Set the `TINYFAAS_ADDRESS` environment variable as described below.
+
 ### Environment Setup
 
 Get the `project_name` from the cloud provider setup.
