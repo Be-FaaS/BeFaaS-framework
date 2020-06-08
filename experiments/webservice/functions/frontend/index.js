@@ -49,7 +49,10 @@ async function convertProductPrice (ctx, product) {
   if (getUserCurrency(ctx) === 'USD') {
     product.price = product.priceUsd
   } else {
-    product.price = await ctx.lib.call('currency', {from: product.priceUsd, toCode: getUserCurrency(ctx)})
+    product.price = await ctx.lib.call('currency', {
+      from: product.priceUsd,
+      toCode: getUserCurrency(ctx)
+    })
   }
 }
 
@@ -57,7 +60,10 @@ async function convertPrice (ctx, priceUsd) {
   if (getUserCurrency(ctx) === 'USD') {
     return priceUsd
   } else {
-    return await ctx.lib.call('currency', {from: priceUsd, toCode: getUserCurrency(ctx)})
+    return await ctx.lib.call('currency', {
+      from: priceUsd,
+      toCode: getUserCurrency(ctx)
+    })
   }
 }
 
@@ -74,7 +80,7 @@ function addPrice (a, b) {
 
 function scalePrice (price, scalar) {
   const nanos = (price.nanos * scalar) % 1e9
-  const units = Math.trunc((price.nanos * scalar) / 1e9) + (price.units * scalar)
+  const units = Math.trunc((price.nanos * scalar) / 1e9) + price.units * scalar
   return {
     currencyCode: price.currencyCode,
     nanos: nanos,
@@ -83,19 +89,26 @@ function scalePrice (price, scalar) {
 }
 
 function printPrice (price) {
-  return _.toString(price.units) + '.' + (_.toString(price.nanos)).substr(0,2) + ' ' + price.currencyCode
+  return (
+    _.toString(price.units) +
+    '.' +
+    _.toString(price.nanos).substr(0, 2) +
+    ' ' +
+    price.currencyCode
+  )
 }
 
 module.exports = lib.serverless.router(async router => {
   router.get('/', async (ctx, next) => {
     const requestId = lib.helper.generateRandomID()
-    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
+    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {}))
+      .currencyCodes
     const productList = (await ctx.lib.call('listproducts', {})).products
     const cats = (await ctx.lib.call('getads', {})).ads
 
     // This one could be parallelised easily
-    for (product of productList) {
-      await convertProductPrice(ctx, product)    
+    for (const product of productList) {
+      await convertProductPrice(ctx, product)
     }
 
     const options = {
@@ -103,7 +116,7 @@ module.exports = lib.serverless.router(async router => {
       request_id: requestId,
       user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
-      currencies: supportedCurrencies, 
+      currencies: supportedCurrencies,
       products: productList,
       cart_size: getCartSize(ctx),
       banner_color: 'white', // illustrates canary deployments
@@ -116,8 +129,10 @@ module.exports = lib.serverless.router(async router => {
   // TODO make recommendations more meaningful? --> use categories?
   // Yes, IDs are required to be word shaped here
   router.get('/product/([A-Za-z0-9_]+)', async (ctx, next) => {
-    const productId = ctx.request.url.split("/").slice(-1)[0] || ctx.request.url.split("/").slice(-2,-1)[0]
-     
+    const productId =
+      ctx.request.url.split('/').slice(-1)[0] ||
+      ctx.request.url.split('/').slice(-2, -1)[0]
+
     const requestId = lib.helper.generateRandomID()
     const product = await ctx.lib.call('getproduct', { id: productId })
     // error if product not found
@@ -129,8 +144,14 @@ module.exports = lib.serverless.router(async router => {
     }
 
     await convertProductPrice(ctx, product)
-    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
-    const recommendedIds = (await ctx.lib.call('listrecommendations', { userId: getUserName(ctx), productIds: [productId] })).productIds
+    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {}))
+      .currencyCodes
+    const recommendedIds = (
+      await ctx.lib.call('listrecommendations', {
+        userId: getUserName(ctx),
+        productIds: [productId]
+      })
+    ).productIds
 
     const cat = (await ctx.lib.call('getads', {})).ads[0]
 
@@ -140,7 +161,7 @@ module.exports = lib.serverless.router(async router => {
       product: product,
       user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
-      currencies: supportedCurrencies, 
+      currencies: supportedCurrencies,
       recommendations: recommendedIds,
       cart_size: getCartSize(ctx),
       ad: cat
@@ -151,38 +172,54 @@ module.exports = lib.serverless.router(async router => {
 
   router.get('/cart', async (ctx, next) => {
     const requestId = lib.helper.generateRandomID()
-    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
-    const cart = (await ctx.lib.call('getcart', { userId: getUserName(ctx) })).items || []
+    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {}))
+      .currencyCodes
+    const cart =
+      (await ctx.lib.call('getcart', { userId: getUserName(ctx) })).items || []
     // cart.push({ productId: 'QWERTY', quantity: 2 })
 
     const products = []
     // TODO Promise.all or similar
-    for (item of cart) {
-      await products.push(await ctx.lib.call('getproduct', { id: item.productId }))
+    for (const item of cart) {
+      await products.push(
+        await ctx.lib.call('getproduct', { id: item.productId })
+      )
     }
     // Adds quantity and accordingly scaled price to each product
     // TODO Promise.all or similar
-    for (key in products) {
+    for (const key in products) {
       products[key].quantity = cart[key].quantity
       await convertProductPrice(ctx, products[key])
-      products[key].price = await scalePrice(products[key].price, cart[key].quantity)
+      products[key].price = await scalePrice(
+        products[key].price,
+        cart[key].quantity
+      )
     }
-      // Should actually include address in arg object here according to spec
-    const shippingCostUsd = (await ctx.lib.call('shipmentquote', { items: cart })).costUsd
+    // Should actually include address in arg object here according to spec
+    const shippingCostUsd = (
+      await ctx.lib.call('shipmentquote', { items: cart })
+    ).costUsd
     const shippingCost = await convertPrice(ctx, shippingCostUsd)
-    const totalCost = await _.reduce(await _.map(products, 'price'), addPrice, shippingCost)
-    
+    const totalCost = await _.reduce(
+      await _.map(products, 'price'),
+      addPrice,
+      shippingCost
+    )
+
     const options = {
       session_id: getSessionID(ctx),
       request_id: requestId,
       items: products,
       user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
-      currencies: supportedCurrencies, 
+      currencies: supportedCurrencies,
       cart_size: getCartSize(ctx),
       shipping_cost: shippingCost,
       total_cost: totalCost,
-      credit_card_expiration_years: _.range((new Date()).getFullYear(), (new Date()).getFullYear() + 10)
+      credit_card_expiration_years: _.range(
+        new Date().getFullYear(),
+        new Date().getFullYear() + 10
+      )
     }
 
     ctx.type = 'text/html'
@@ -192,38 +229,45 @@ module.exports = lib.serverless.router(async router => {
   router.post('/checkout', async (ctx, next) => {
     emptyCartSize(ctx)
     const requestId = lib.helper.generateRandomID()
-    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {})).currencyCodes
+    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {}))
+      .currencyCodes
     const order = ctx.request.body
-    const checkoutResult = (await ctx.lib.call('checkout', {
-      userId: getUserName(ctx),
-      userCurrency: getUserCurrency(ctx),
-      address: {
-        streetAddress: order.street_address,
-        city: order.city,
-        state: order.state,
-        country: order.country,
-        zipCode: _.parseInt(order.zip_code)
-      },
-      email: order.email,
-      creditCard: {
-        creditCardNumber: order.credit_card_number,
-        creditCardCvv: _.parseInt(order.credit_card_cvv),
-        creditCardExpirationYear: _.parseInt(order.credit_card_expiration_year),
-        creditCardExpirationMonth: _.parseInt(order.credit_card_expiration_month)
-      }
-    })).order
- 
+    const checkoutResult = (
+      await ctx.lib.call('checkout', {
+        userId: getUserName(ctx),
+        userCurrency: getUserCurrency(ctx),
+        address: {
+          streetAddress: order.street_address,
+          city: order.city,
+          state: order.state,
+          country: order.country,
+          zipCode: _.parseInt(order.zip_code)
+        },
+        email: order.email,
+        creditCard: {
+          creditCardNumber: order.credit_card_number,
+          creditCardCvv: _.parseInt(order.credit_card_cvv),
+          creditCardExpirationYear: _.parseInt(
+            order.credit_card_expiration_year
+          ),
+          creditCardExpirationMonth: _.parseInt(
+            order.credit_card_expiration_month
+          )
+        }
+      })
+    ).order
+
     const options = {
       session_id: getSessionID(ctx),
       request_id: requestId,
       user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
-      currencies: supportedCurrencies, 
+      currencies: supportedCurrencies,
       cart_size: 0,
       shipping_cost: printPrice(checkoutResult.shippingCost),
       tracking_id: checkoutResult.shippingTrackingId,
-      total_cost: printPrice(checkoutResult.totalCost), 
-      order_id: checkoutResult.orderId,
+      total_cost: printPrice(checkoutResult.totalCost),
+      order_id: checkoutResult.orderId
     }
 
     ctx.type = 'text/html'
@@ -232,38 +276,44 @@ module.exports = lib.serverless.router(async router => {
 
   router.post('/setUser', async (ctx, next) => {
     const userName = ctx.request.body.userName
-    const cartItems =  (await ctx.lib.call('getcart', { userId: userName })).items
-    const cartSize = await _.reduce(await _.map(cartItems, 'quantity'), (x, y)  => x + y)
+    // const cartItems = (await ctx.lib.call('getcart', { userId: userName }))
+    //   .items
+    // const cartSize = await _.reduce(
+    //   await _.map(cartItems, 'quantity'),
+    //   (x, y) => x + y
+    // )
 
-    ctx.cookies.set('userName', userName, { overwrite:true })
+    ctx.cookies.set('userName', userName, { overwrite: true })
     emptyCartSize(ctx)
     ctx.type = 'application/json'
     ctx.response.redirect('back')
   })
 
   router.post('/logout', async (ctx, next) => {
-    ctx.cookies.set('userName', '', { overwrite:true })
+    ctx.cookies.set('userName', '', { overwrite: true })
     emptyCartSize(ctx)
     ctx.type = 'application/json'
     ctx.response.redirect('back')
   })
 
   router.post('/logoutAndLeave', async (ctx, next) => {
-    ctx.cookies.set('userName', '', { overwrite:true })
+    ctx.cookies.set('userName', '', { overwrite: true })
     emptyCartSize(ctx)
     ctx.type = 'application/json'
     ctx.response.redirect('./')
   })
 
   router.post('/setCurrency', async (ctx, next) => {
-    ctx.cookies.set('userCurrency', ctx.request.body.currencyCode, { overwrite:true })
+    ctx.cookies.set('userCurrency', ctx.request.body.currencyCode, {
+      overwrite: true
+    })
     ctx.type = 'application/json'
     ctx.response.redirect('back')
   })
 
   router.post('/emptyCart', async (ctx, next) => {
     const userId = getUserName(ctx)
-    await ctx.lib.call('emptycart', { userId: userId})
+    await ctx.lib.call('emptycart', { userId: userId })
     emptyCartSize(ctx)
     ctx.type = 'application/json'
     ctx.response.redirect('back')
@@ -287,5 +337,4 @@ module.exports = lib.serverless.router(async router => {
     ctx.type = 'application/json'
     ctx.response.redirect('back')
   })
-
 })
