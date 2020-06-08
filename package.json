@@ -11,7 +11,8 @@
     "deploy": "./scripts/deploy.sh",
     "destroy": "./scripts/destroy.sh",
     "logs": "./scripts/logs.sh",
-    "workload": "./scripts/workload.sh"
+    "workload": "./scripts/workload.sh",
+    "preinstall": "curl -sf https://gobinaries.com/FaaSterMetrics/terraform-provider-tinyfaas | PREFIX=./infrastructure/tinyfaas sh"
   },
   "husky": {
     "hooks": {
@@ -25,7 +26,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@faastermetrics/lib": "^7.0.1",
+    "@faastermetrics/lib": "file:../lib",
     "card-validator": "^6.2.0",
     "lodash": "^4.17.15"
   },
