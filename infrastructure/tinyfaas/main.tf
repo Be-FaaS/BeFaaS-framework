@@ -15,7 +15,7 @@ locals {
 resource "tinyfaas_function" "funtions" {
   for_each    = local.fns
   name        = each.key
-  num_threads = 4
+  num_threads = 1
   zip_path    = each.value
   environment = var.fn_env
 }
