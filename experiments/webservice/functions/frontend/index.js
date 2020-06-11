@@ -4,18 +4,20 @@ const _ = require('lodash')
 const fs = require('fs')
 const path = require('path')
 
-const homeHTML = _.template(
-  fs.readFileSync(path.join(__dirname, 'html_templates', 'home.html'))
-)
-const productHTML = _.template(
-  fs.readFileSync(path.join(__dirname, 'html_templates', 'product.html'))
-)
-const cartHTML = _.template(
-  fs.readFileSync(path.join(__dirname, 'html_templates', 'cart.html'))
-)
-const orderHTML = _.template(
-  fs.readFileSync(path.join(__dirname, 'html_templates', 'order.html'))
-)
+const templates = {
+  home: _.template(
+    fs.readFileSync(path.join(__dirname, 'html_templates', 'home.html'))
+  ),
+  product: _.template(
+    fs.readFileSync(path.join(__dirname, 'html_templates', 'product.html'))
+  ),
+  cart: _.template(
+    fs.readFileSync(path.join(__dirname, 'html_templates', 'cart.html'))
+  ),
+  order: _.template(
+    fs.readFileSync(path.join(__dirname, 'html_templates', 'order.html'))
+  )
+}
 
 function getSessionID (ctx) {
   if (!ctx.cookies.get('sessionId')) {
@@ -44,27 +46,14 @@ function emptyCartSize (ctx) {
   ctx.cookies.set('cartSize', 0, { overwrite: true })
 }
 
-// TODO use convert function below
-async function convertProductPrice (ctx, product) {
-  if (getUserCurrency(ctx) === 'USD') {
-    product.price = product.priceUsd
-  } else {
-    product.price = await ctx.lib.call('currency', {
-      from: product.priceUsd,
-      toCode: getUserCurrency(ctx)
-    })
-  }
-}
-
 async function convertPrice (ctx, priceUsd) {
   if (getUserCurrency(ctx) === 'USD') {
     return priceUsd
-  } else {
-    return await ctx.lib.call('currency', {
-      from: priceUsd,
-      toCode: getUserCurrency(ctx)
-    })
   }
+  return ctx.lib.call('currency', {
+    from: priceUsd,
+    toCode: getUserCurrency(ctx)
+  })
 }
 
 // Should only be used if (a.currencyCode === b.currencyCode)
@@ -101,37 +90,37 @@ function printPrice (price) {
 module.exports = lib.serverless.router(async router => {
   router.get('/', async (ctx, next) => {
     const requestId = lib.helper.generateRandomID()
-    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {}))
-      .currencyCodes
-    const productList = (await ctx.lib.call('listproducts', {})).products
-    const cats = (await ctx.lib.call('getads', {})).ads
+    const [supportedCurrencies, productList, cats] = await Promise.all([
+      ctx.lib.call('supportedcurrencies', {}),
+      ctx.lib.call('listproducts', {}),
+      ctx.lib.call('getads', {})
+    ])
 
-    // This one could be parallelised easily
-    for (const product of productList) {
-      await convertProductPrice(ctx, product)
-    }
+    const products = await Promise.all(
+      productList.products.map(async p =>
+        Object.assign({ price: await convertPrice(ctx, p.priceUsd) }, p)
+      )
+    )
 
     const options = {
       session_id: getSessionID(ctx),
       request_id: requestId,
       user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
-      currencies: supportedCurrencies,
-      products: productList,
+      currencies: supportedCurrencies.currencyCodes,
+      products,
       cart_size: getCartSize(ctx),
       banner_color: 'white', // illustrates canary deployments
-      ads: cats
+      ads: cats.ads
     }
     ctx.type = 'text/html'
-    ctx.body = homeHTML(options)
+    ctx.body = templates.home(options)
   })
 
   // TODO make recommendations more meaningful? --> use categories?
   // Yes, IDs are required to be word shaped here
-  router.get('/product/([A-Za-z0-9_]+)', async (ctx, next) => {
-    const productId =
-      ctx.request.url.split('/').slice(-1)[0] ||
-      ctx.request.url.split('/').slice(-2, -1)[0]
+  router.get('/product/:productId', async (ctx, next) => {
+    const productId = ctx.params.productId
 
     const requestId = lib.helper.generateRandomID()
     const product = await ctx.lib.call('getproduct', { id: productId })
@@ -143,17 +132,19 @@ module.exports = lib.serverless.router(async router => {
       return
     }
 
-    await convertProductPrice(ctx, product)
-    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {}))
-      .currencyCodes
-    const recommendedIds = (
-      await ctx.lib.call('listrecommendations', {
-        userId: getUserName(ctx),
-        productIds: [productId]
-      })
-    ).productIds
+    const [price, supportedCurrencies, recommendedIds, cat] = await Promise.all(
+      [
+        convertPrice(ctx, product.priceUsd),
+        ctx.lib.call('supportedcurrencies', {}),
+        ctx.lib.call('listrecommendations', {
+          userId: getUserName(ctx),
+          productIds: [productId]
+        }),
+        ctx.lib.call('getads', {})
+      ]
+    )
 
-    const cat = (await ctx.lib.call('getads', {})).ads[0]
+    product.price = price
 
     const options = {
       session_id: getSessionID(ctx),
@@ -161,47 +152,53 @@ module.exports = lib.serverless.router(async router => {
       product: product,
       user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
-      currencies: supportedCurrencies,
-      recommendations: recommendedIds,
+      currencies: supportedCurrencies.currencyCodes,
+      recommendations: recommendedIds.productIds,
       cart_size: getCartSize(ctx),
-      ad: cat
+      ad: cat.ads[0]
     }
     ctx.type = 'text/html'
-    ctx.body = productHTML(options)
+    ctx.body = templates.product(options)
   })
 
   router.get('/cart', async (ctx, next) => {
     const requestId = lib.helper.generateRandomID()
-    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {}))
-      .currencyCodes
+
     const cart =
       (await ctx.lib.call('getcart', { userId: getUserName(ctx) })).items || []
     // cart.push({ productId: 'QWERTY', quantity: 2 })
 
-    const products = []
-    // TODO Promise.all or similar
-    for (const item of cart) {
-      await products.push(
-        await ctx.lib.call('getproduct', { id: item.productId })
+    const products = await Promise.all(
+      cart.map(async i =>
+        Object.assign(
+          {
+            quantity: i.quantity
+          },
+          await ctx.lib.call('getproduct', { id: i.productId })
+        )
       )
-    }
+    )
+
     // Adds quantity and accordingly scaled price to each product
-    // TODO Promise.all or similar
-    for (const key in products) {
-      products[key].quantity = cart[key].quantity
-      await convertProductPrice(ctx, products[key])
-      products[key].price = await scalePrice(
-        products[key].price,
-        cart[key].quantity
+    const productsWithPrice = await Promise.all(
+      products.map(async p =>
+        Object.assign(
+          {
+            price: scalePrice(await convertPrice(ctx, p.priceUsd), p.quantity)
+          },
+          p
+        )
       )
-    }
+    )
     // Should actually include address in arg object here according to spec
-    const shippingCostUsd = (
-      await ctx.lib.call('shipmentquote', { items: cart })
-    ).costUsd
-    const shippingCost = await convertPrice(ctx, shippingCostUsd)
-    const totalCost = await _.reduce(
-      await _.map(products, 'price'),
+    const [shippingCostUsd, supportedCurrencies] = await Promise.all([
+      ctx.lib.call('shipmentquote', { items: cart }),
+      ctx.lib.call('supportedcurrencies', {})
+    ])
+    const shippingCost = await convertPrice(ctx, shippingCostUsd.costUsd)
+
+    const totalCost = _.reduce(
+      _.map(productsWithPrice, 'price'),
       addPrice,
       shippingCost
     )
@@ -209,10 +206,10 @@ module.exports = lib.serverless.router(async router => {
     const options = {
       session_id: getSessionID(ctx),
       request_id: requestId,
-      items: products,
+      items: productsWithPrice,
       user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
-      currencies: supportedCurrencies,
+      currencies: supportedCurrencies.currencyCodes,
       cart_size: getCartSize(ctx),
       shipping_cost: shippingCost,
       total_cost: totalCost,
@@ -223,17 +220,17 @@ module.exports = lib.serverless.router(async router => {
     }
 
     ctx.type = 'text/html'
-    ctx.body = cartHTML(options)
+    ctx.body = templates.cart(options)
   })
 
   router.post('/checkout', async (ctx, next) => {
     emptyCartSize(ctx)
     const requestId = lib.helper.generateRandomID()
-    const supportedCurrencies = (await ctx.lib.call('supportedcurrencies', {}))
-      .currencyCodes
+
     const order = ctx.request.body
-    const checkoutResult = (
-      await ctx.lib.call('checkout', {
+    const [supportedCurrencies, checkoutResult] = await Promise.all([
+      ctx.lib.call('supportedcurrencies', {}),
+      ctx.lib.call('checkout', {
         userId: getUserName(ctx),
         userCurrency: getUserCurrency(ctx),
         address: {
@@ -255,34 +252,27 @@ module.exports = lib.serverless.router(async router => {
           )
         }
       })
-    ).order
+    ])
 
     const options = {
       session_id: getSessionID(ctx),
       request_id: requestId,
       user_id: getUserName(ctx),
       user_currency: getUserCurrency(ctx),
-      currencies: supportedCurrencies,
+      currencies: supportedCurrencies.currencyCodes,
       cart_size: 0,
-      shipping_cost: printPrice(checkoutResult.shippingCost),
-      tracking_id: checkoutResult.shippingTrackingId,
-      total_cost: printPrice(checkoutResult.totalCost),
-      order_id: checkoutResult.orderId
+      shipping_cost: printPrice(checkoutResult.order.shippingCost),
+      tracking_id: checkoutResult.order.shippingTrackingId,
+      total_cost: printPrice(checkoutResult.order.totalCost),
+      order_id: checkoutResult.order.orderId
     }
 
     ctx.type = 'text/html'
-    ctx.body = orderHTML(options)
+    ctx.body = templates.order(options)
   })
 
   router.post('/setUser', async (ctx, next) => {
     const userName = ctx.request.body.userName
-    // const cartItems = (await ctx.lib.call('getcart', { userId: userName }))
-    //   .items
-    // const cartSize = await _.reduce(
-    //   await _.map(cartItems, 'quantity'),
-    //   (x, y) => x + y
-    // )
-
     ctx.cookies.set('userName', userName, { overwrite: true })
     emptyCartSize(ctx)
     ctx.type = 'application/json'
@@ -332,7 +322,7 @@ module.exports = lib.serverless.router(async router => {
           quantity: quantity
         }
       })
-      await increaseCartSize(ctx, quantity)
+      increaseCartSize(ctx, quantity)
     }
     ctx.type = 'application/json'
     ctx.response.redirect('back')
