@@ -60,7 +60,8 @@ resource "aws_instance" "redis" {
     inline = [
       "sleep 30",
       "grep -o 'requirepass .*' /opt/bitnami/redis/conf/redis.conf | sed 's/requirepass //' > /tmp/redispass",
-      "redis-cli -a $(cat /tmp/redispass) CONFIG set requirepass ${random_string.redispass.result}"
+      "sudo sed -i \"s/$(cat /tmp/redispass)/${random_string.redispass.result}/\" /opt/bitnami/redis/conf/redis.conf",
+      "sudo /opt/bitnami/nami/bin/nami --nami-prefix /root/.nami restart redis"
     ]
   }
 }
