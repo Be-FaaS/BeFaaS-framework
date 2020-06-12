@@ -68,7 +68,7 @@ for folder in infrastructure/services/*; do
     if test -f $folder/terraform.tfstate && [ "$(jq -r '.resources | length' $folder/terraform.tfstate)" != "0" ]; then
       echo "destroying $(basename $folder)"
       cd $folder
-      TF_VAR_fn_env='{}' terraform destroy -auto-approve
+      terraform destroy -auto-approve
       cd -
     fi
   fi
