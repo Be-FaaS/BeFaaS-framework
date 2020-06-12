@@ -9,7 +9,7 @@ data "terraform_remote_state" "exp" {
 locals {
   project_name  = data.terraform_remote_state.exp.outputs.project_name
   build_id      = data.terraform_remote_state.exp.outputs.build_id
-  deployment_id = data.terraform_remote_state.exp.outputs.deploy_id
+  deployment_id = data.terraform_remote_state.exp.outputs.deployment_id
   fns           = data.terraform_remote_state.exp.outputs.google_fns
 }
 
