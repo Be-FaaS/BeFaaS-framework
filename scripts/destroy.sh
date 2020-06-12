@@ -12,7 +12,6 @@ providers=( "${providers[@]/experiment}" )
 
 services=`ls infrastructure/services/`
 services=( "${services[@]/vpc}" )
-echo $services
 
 for provider in $providers; do
   echo "Destroying $provider" | chalk green
@@ -51,7 +50,7 @@ done
 
 echo "Destroying experiment" | chalk green
 cd infrastructure/experiment
-  if test -f terraform.tfstate && [ "$(jq -r '.resources | length' terraform.tfstate)" != "0" ]; then
-    terraform destroy -var "experiment=test" -auto-approve # just needs some experiment that exists
-  fi
+if test -f terraform.tfstate && [ "$(jq -r '.resources | length' terraform.tfstate)" != "0" ]; then
+  terraform destroy -var "experiment=test" -auto-approve # just needs some experiment that exists
+fi
 cd -
