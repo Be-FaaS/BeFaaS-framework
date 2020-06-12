@@ -35,7 +35,9 @@ done
 
 echo "Destroying vpc" | chalk green
 cd infrastructure/services/vpc
-terraform destroy -auto-approve
+if test -f terraform.tfstate && [ "$(jq -r '.resources | length' terraform.tfstate)" != "0" ]; then
+  terraform destroy -auto-approve
+fi
 cd -
 
 for provider in $providers; do
