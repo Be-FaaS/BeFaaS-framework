@@ -7,9 +7,10 @@ data "terraform_remote_state" "exp" {
 }
 
 locals {
-  project_name = data.terraform_remote_state.exp.outputs.project_name
-  build_id     = data.terraform_remote_state.exp.outputs.build_id
-  fn_file      = data.terraform_remote_state.exp.outputs.azure_fn_file
+  project_name  = data.terraform_remote_state.exp.outputs.project_name
+  build_id      = data.terraform_remote_state.exp.outputs.build_id
+  deployment_id = data.terraform_remote_state.exp.outputs.deploy_id
+  fn_file       = data.terraform_remote_state.exp.outputs.azure_fn_file
 }
 
 provider "azurerm" {
@@ -108,5 +109,6 @@ resource "azurerm_function_app" "functions" {
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.ai.instrumentation_key
     HASH                           = base64sha256(local.fn_file)
     WEBSITE_RUN_FROM_PACKAGE       = "https://${azurerm_storage_account.storage.name}.blob.core.windows.net/${azurerm_storage_container.deployments.name}/${azurerm_storage_blob.appcode.name}${data.azurerm_storage_account_sas.sas.sas}"
+    FAASTERMETRICS_DEPLOYMENT_ID   = local.deployment_id
   }, var.fn_env)
 }

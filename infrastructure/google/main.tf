@@ -7,9 +7,10 @@ data "terraform_remote_state" "exp" {
 }
 
 locals {
-  project_name = data.terraform_remote_state.exp.outputs.project_name
-  build_id     = data.terraform_remote_state.exp.outputs.build_id
-  fns          = data.terraform_remote_state.exp.outputs.google_fns
+  project_name  = data.terraform_remote_state.exp.outputs.project_name
+  build_id      = data.terraform_remote_state.exp.outputs.build_id
+  deployment_id = data.terraform_remote_state.exp.outputs.deploy_id
+  fns           = data.terraform_remote_state.exp.outputs.google_fns
 }
 
 resource "google_cloudfunctions_function" "fn" {
@@ -25,7 +26,9 @@ resource "google_cloudfunctions_function" "fn" {
 
   trigger_http = true
 
-  environment_variables = var.fn_env
+  environment_variables = merge({
+    FAASTERMETRICS_DEPLOYMENT_ID = local.deployment_id
+  }, var.fn_env)
 }
 
 resource "google_cloudfunctions_function_iam_member" "invoker" {

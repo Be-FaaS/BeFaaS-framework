@@ -1,8 +1,13 @@
 output "project_name" {
   value = local.project_name
 }
+
 output "build_id" {
   value = random_string.build_id.result
+}
+
+output "deployment_id" {
+  value = random_string.deployment_id.result
 }
 
 output "aws_fns" {

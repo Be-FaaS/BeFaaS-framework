@@ -8,11 +8,11 @@
   "program": {
     "functions": {
       "frontend": {
-        "provider": "tinyfaas",
+        "provider": "google",
         "calls": ["add"]
       },
       "add": {
-        "provider": "tinyfaas"
+        "provider": "google"
       }
     }
   }

@@ -78,6 +78,7 @@ done
 cd infrastructure/experiment/
 terraform init
 terraform apply -var "experiment=${1}" -var "build_timestamp=${build_timestamp}" -auto-approve
+deployment_id=$(terraform output -json | jq -r '.deployment_id.value')
 cd -
 
 states=""
@@ -119,3 +120,5 @@ for provider in $providers; do
 done
 
 echo $TF_VAR_fn_env | jq
+
+chalk -t "\n{green Unique deployment id:} {green.bold $deployment_id}"

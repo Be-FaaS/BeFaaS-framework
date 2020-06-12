@@ -16,6 +16,15 @@ resource "random_string" "project_id" {
   }
 }
 
+resource "random_string" "deployment_id" {
+  length  = 16
+  special = false
+  upper   = false
+  keepers = {
+    ts = timestamp()
+  }
+}
+
 locals {
   project_name = "${var.project_prefix}-${random_string.project_id.result}"
   expconfig    = jsondecode(file("${path.module}/../../experiments/${var.experiment}/experiment.json"))

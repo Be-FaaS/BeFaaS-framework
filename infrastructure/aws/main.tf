@@ -7,9 +7,10 @@ data "terraform_remote_state" "exp" {
 }
 
 locals {
-  project_name = data.terraform_remote_state.exp.outputs.project_name
-  build_id     = data.terraform_remote_state.exp.outputs.build_id
-  fns          = data.terraform_remote_state.exp.outputs.aws_fns
+  project_name  = data.terraform_remote_state.exp.outputs.project_name
+  build_id      = data.terraform_remote_state.exp.outputs.build_id
+  deployment_id = data.terraform_remote_state.exp.outputs.deploy_id
+  fns           = data.terraform_remote_state.exp.outputs.aws_fns
 }
 
 resource "aws_iam_role" "lambda_exec" {
@@ -80,7 +81,9 @@ resource "aws_lambda_function" "fn" {
   role = aws_iam_role.lambda_exec.arn
 
   environment {
-    variables = var.fn_env
+    variables = merge({
+      FAASTERMETRICS_DEPLOYMENT_ID = local.deployment_id
+    }, var.fn_env)
   }
 }
 
