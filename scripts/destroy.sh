@@ -4,52 +4,52 @@ set -euo pipefail
 
 export TF_VAR_TINYFAAS_ADDRESS=$TINYFAAS_ADDRESS
 
-
-if [ -z "${1:-}" ]; then
-    chalk -t "{yellow Usage: $0 }{yellow.bold <experiment name>}"
-    echo "Choose one of:" | chalk yellow
-    chalk -t "{yellow >} {yellow.bold $(ls experiments/ | tr '\n' ' ')}"
-    echo ""
-    exit 1
-fi
-
 export TF_VAR_fn_env='{}'
 
-providers=$(jq -r '[.program.functions[].provider] | unique | .[]' experiments/${1}/experiment.json)
+providers=`ls infrastructure/`
+providers=( "${providers[@]/services}" )
+providers=( "${providers[@]/experiment}" )
+
+services=`ls infrastructure/services/`
+services=( "${services[@]/vpc}" )
+echo $services
 
 for provider in $providers; do
   echo "Destroying $provider" | chalk green
   cd infrastructure/${provider}
-  terraform destroy -auto-approve
+  if test -f terraform.tfstate && [ "$(jq -r '.resources | length' terraform.tfstate)" != "0" ]; then
+    terraform destroy -auto-approve
+  fi
   cd -
 done
 
-if [ "$(jq -r '.services | length' experiments/${1}/experiment.json)" != "0" ]; then
-  for service in $(jq -r '.services | keys[]' experiments/${1}/experiment.json); do
-    echo "Destroying service $service" | chalk green
-    cd infrastructure/services/${service}
+for service in $services; do
+  echo "Destroying service $service" | chalk green
+  cd infrastructure/services/${service}
+  if test -f terraform.tfstate && [ "$(jq -r '.resources | length' terraform.tfstate)" != "0" ]; then
     terraform destroy -auto-approve
-    cd -
-  done
-
-  echo "Destroying vpc" | chalk green
-  cd infrastructure/services/vpc
-  terraform destroy -auto-approve
+  fi
   cd -
-fi
+done
+
+
+echo "Destroying vpc" | chalk green
+cd infrastructure/services/vpc
+terraform destroy -auto-approve
+cd -
 
 for provider in $providers; do
   echo "Destroying endpoints for $provider" | chalk green
   cd infrastructure/${provider}/endpoint
-  terraform destroy -auto-approve
+  if test -f terraform.tfstate && [ "$(jq -r '.resources | length' terraform.tfstate)" != "0" ]; then
+    terraform destroy -auto-approve
+  fi
   cd -
 done
 
 echo "Destroying experiment" | chalk green
 cd infrastructure/experiment
-terraform destroy -var "experiment=${1}" -auto-approve
+  if test -f terraform.tfstate && [ "$(jq -r '.resources | length' terraform.tfstate)" != "0" ]; then
+    terraform destroy -var "experiment=test" -auto-approve # just needs some experiment that exists
+  fi
 cd -
-
-echo "Deleting .tfstate and .tfstate.backup" | chalk green
-find infrastructure -maxdepth 3 -type f -name "*.tfstate" -delete
-find infrastructure -maxdepth 3 -type f -name "*.tfstate.backup" -delete

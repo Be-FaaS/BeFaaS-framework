@@ -1,6 +1,9 @@
 #!/bin/bash
 
 set -euo pipefail
+contains() {
+  [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]]
+}
 
 if [ -z "${1:-}" ]; then
     chalk -t "{yellow Usage: $0 }{yellow.bold <experiment name>}"
@@ -45,12 +48,38 @@ chalk -t "{green Running deploy for} {green.bold $1}"
 build_timestamp=$(cat .build_timestamp || true)
 echo "Last build: $build_timestamp" | chalk green
 
+providers=$(jq -r '[.program.functions[].provider] | unique | .[]' experiments/${1}/experiment.json)
+services=$(jq -r '.services | keys[]' experiments/${1}/experiment.json)
+
+echo "cleaning up" | chalk green
+for folder in infrastructure/*; do
+  if [  `basename $folder` != "services" ] && [ `basename $folder` != "experiment" ] && ! contains "$providers" `basename $folder`; then
+    if test -f $folder/terraform.tfstate && [ "$(jq -r '.resources | length' $folder/terraform.tfstate)" != "0" ]; then
+      echo "destroying $(basename $folder)"
+      cd $folder
+      TF_VAR_fn_env='{}' terraform destroy -auto-approve
+      cd -
+    fi
+  fi
+done
+
+for folder in infrastructure/services/*; do
+  if [  `basename $folder` != "vpc" ] && [  `basename $folder` != "workload" ] && ! contains "$services" `basename $folder`; then
+    if test -f $folder/terraform.tfstate && [ "$(jq -r '.resources | length' $folder/terraform.tfstate)" != "0" ]; then
+      echo "destroying $(basename $folder)"
+      cd $folder
+      TF_VAR_fn_env='{}' terraform destroy -auto-approve
+      cd -
+    fi
+  fi
+done
+
+
 cd infrastructure/experiment/
 terraform init
 terraform apply -var "experiment=${1}" -var "build_timestamp=${build_timestamp}" -auto-approve
 cd -
 
-providers=$(jq -r '[.program.functions[].provider] | unique | .[]' experiments/${1}/experiment.json)
 states=""
 for provider in $providers; do
   echo "Initializing endpoints for $provider" | chalk green
@@ -68,7 +97,7 @@ if [ "$(jq -r '.services | length' experiments/${1}/experiment.json)" != "0" ]; 
   terraform init
   terraform apply -auto-approve
   cd -
-  for service in $(jq -r '.services | keys[]' experiments/${1}/experiment.json); do
+  for service in $services; do
     [ "$service" == 'workload' ] && continue
     echo "Starting service $service" | chalk green
     cd infrastructure/services/${service}
