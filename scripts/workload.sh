@@ -28,6 +28,12 @@ fi
 workload_config="${exp_dir}/${workload_config_name}"
 echo "Found workload config: $workload_config" | chalk blue
 
+cd infrastructure/experiment/
+deployment_id=$(terraform output -json | jq -r '.deployment_id.value')
+cd -
+
+echo "Found deployment id: $deployment_id" | chalk blue
+
 echo "Getting endpoints..." | chalk blue
 states=""
 for provider in $(echo $exp_json | jq -r '[.program.functions[].provider] | unique | .[]'); do

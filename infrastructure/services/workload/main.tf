@@ -16,6 +16,7 @@ data "terraform_remote_state" "vpc" {
 
 locals {
   project_name    = data.terraform_remote_state.exp.outputs.project_name
+  deployment_id   = data.terraform_remote_state.exp.outputs.deployment_id
   default_subnet  = data.terraform_remote_state.vpc.outputs.default_subnet
   ssh_key_name    = data.terraform_remote_state.vpc.outputs.ssh_key_name
   security_groups = data.terraform_remote_state.vpc.outputs.security_groups
@@ -65,7 +66,7 @@ resource "aws_instance" "workload" {
     inline = [
       "curl -sSL https://get.docker.com/ | sh",
       "sudo docker load -i /tmp/image.tar.gz",
-      "sudo docker run -it --rm faastermetrics/artillery"
+      "sudo docker run -it --rm -e FAASTERMETRICS_DEPLOYMENT_ID=${local.deployment_id} faastermetrics/artillery"
     ]
   }
 }
