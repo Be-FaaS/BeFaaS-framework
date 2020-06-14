@@ -8,11 +8,11 @@
   "program": {
     "functions": {
       "frontend": {
-        "provider": "google",
+        "provider": "aws",
         "calls": ["add"]
       },
       "add": {
-        "provider": "google"
+        "provider": "aws"
       }
     }
   }
