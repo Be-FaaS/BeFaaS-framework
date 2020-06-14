@@ -83,7 +83,7 @@ function emptyCart (userId) {
   return {}
 }
 
-module.exports = lib.serverless.rpcHandler(event => {
+module.exports = lib.serverless.rpcHandler({ db: 'redis' }, event => {
   const operation = event.operation.toLowerCase()
   if (operation !== 'add' && operation !== 'get' && operation !== 'empty') {
     return { error: 'Invalid operation.' }
