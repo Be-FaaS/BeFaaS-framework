@@ -43,7 +43,7 @@ if [ -f "$artillery_logs" ]; then
 fi
 
 # copy deployment id into a separate file
-cd $(dirname $0)/../infrastructure/experiment
-deploy_id=$(terraform output | grep "deployment_id" | sed 's/ //g' | cut -d '=' -f 2)
+cd infrastructure/experiment
+deploy_id=$(terraform output -json | jq -r '.deployment_id.value')
 cd - > /dev/null
 echo $deploy_id > "$logdir/deployment_id.txt"
