@@ -41,3 +41,9 @@ if [ -f "$artillery_logs" ]; then
 	echo "Getting artillery logs from $artillery_logs" | chalk magenta
 	cp "$artillery_logs" "$logdir/artillery.log"
 fi
+
+# copy deployment id into a separate file
+cd $(dirname $0)/../infrastructure/experiment
+deploy_id=$(terraform output | grep "deployment_id" | sed 's/ //g' | cut -d '=' -f 2)
+cd - > /dev/null
+echo $deploy_id > "$logdir/deployment_id.txt"
