@@ -1,4 +1,5 @@
 const lib = require('@faastermetrics/lib')
+const _ = require('lodash')
 
 /**
  *
@@ -34,71 +35,45 @@ const lib = require('@faastermetrics/lib')
  *
  */
 
-// Maps userId --> itemId
-const items = new Map()
-// Maps userId x itemId --> quantity
-const quantities = new Map()
+module.exports = lib.serverless.rpcHandler(
+  { db: 'redis' },
+  async (event, ctx) => {
+    const operation = event.operation.toLowerCase()
+    if (!['add', 'get', 'empty'].includes(operation)) {
+      return { error: 'Invalid operation.' }
+    }
+    const userId = event.userId
+    if (!userId) {
+      return { error: 'A non-empty user ID has to be specified.' }
+    }
 
-function addItem (userId, itemId, quantity) {
-  if (itemId.includes('-|-|-|-') || userId.includes('-|-|-|-')) {
-    return { error: 'Congratulations. You found a hidden error message.' }
-  }
-  if (!items.has(userId)) {
-    items.set(userId, [itemId])
-    quantities.set(userId + '-|-|-|-' + itemId, quantity)
-  } else if (!items.get(userId).includes(itemId)) {
-    items.get(userId).push(itemId)
-    quantities.set(userId + '-|-|-|-' + itemId, quantity)
-  } else {
-    quantities.set(
-      userId + '-|-|-|-' + itemId,
-      quantities.get(userId + '-|-|-|-' + itemId) + quantity
-    )
-  }
-  return {}
-}
+    if (operation === 'empty') {
+      await ctx.db.set(userId, null)
+      return {}
+    }
 
-function getCart (userId) {
-  if (!items.has(userId)) {
-    return { items: [] }
-  }
-  const tmp = []
-  items.get(userId).forEach(item =>
-    tmp.push({
-      productId: item,
-      quantity: quantities.get(userId + '-|-|-|-' + item)
-    })
-  )
-  return { items: tmp }
-}
+    const cartItems = (await ctx.db.get(userId)) || []
+    if (operation === 'get') {
+      return { items: cartItems }
+    }
 
-function emptyCart (userId) {
-  if (!items.has(userId)) {
+    if (operation === 'add') {
+      if (!_.isString(event.itemId) || !_.isNumber(event.quantity)) {
+        return { error: 'itemId or quantity is missing' }
+      }
+      const pos = _.findIndex(cartItems, ['productId', event.itemId])
+      if (pos !== -1) {
+        cartItems[pos].quantity += event.quantity
+      } else {
+        cartItems.push({
+          productId: event.itemId,
+          quantity: event.quantity
+        })
+      }
+      await ctx.db.set(userId, cartItems)
+      return {}
+    }
+
     return {}
   }
-  for (const item in items.get(userId)) {
-    quantities.delete(userId + '-|-|-|-' + item)
-  }
-  items.delete(userId)
-  return {}
-}
-
-module.exports = lib.serverless.rpcHandler({ db: 'redis' }, event => {
-  const operation = event.operation.toLowerCase()
-  if (operation !== 'add' && operation !== 'get' && operation !== 'empty') {
-    return { error: 'Invalid operation.' }
-  }
-  const userId = event.userId
-  if (!userId) {
-    return { error: 'A non-empty user ID has to be specified.' }
-  }
-
-  switch (operation) {
-    case 'add':
-      return addItem(userId, event.itemId, event.quantity)
-    case 'get':
-      return getCart(userId)
-    case 'empty':
-      return emptyCart(userId)
-  }
-})
+)
