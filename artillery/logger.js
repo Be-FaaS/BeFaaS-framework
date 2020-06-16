@@ -10,10 +10,14 @@ const fnName = 'artillery'
 // This is a workaround to artillery not resolving variables before the beforeRequest callback
 // this results in the url field being {{ functionName }} instead of the actual url
 function resolveVar (url, context) {
-  const regex = /{{ \w+ }}/g
-  const match = url.match(regex)[0]
-  const varname = match.match(/\w+/g)[0]
-  return url.replace(match, context.vars[varname])
+  const regex = /{{\s*\w+\s*}}/gm
+  const match = url.match(regex)
+  if (!match) return url
+  for (var i = 0; i < match.length; i++) {
+    const varname = match[i].match(/\w+/gm)
+    url = url.replace(match[i], context.vars[varname])
+  }
+  return url
 }
 
 function logEvent (event) {
