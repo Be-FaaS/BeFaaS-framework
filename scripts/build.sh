@@ -37,6 +37,7 @@ for d in $exp_dir/*; do
   if [[ -f "$d/.installed" ]]; then
     echo "Function already built: ${fname}" | chalk cyan
     cp $exp_config $d
+    chmod -R +r $d
     cd $d && zip -r ../_build/${fname}.zip * && cd -
     rm $d/experiment.json
     continue
