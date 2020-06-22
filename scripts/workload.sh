@@ -52,6 +52,9 @@ for fname in $(echo $exp_json | jq -r '.program.functions | keys[]'); do
  var_json=`echo $var_json | jq ". + {$fname: [\"$f_ep\"]}"`
 done
 
+
+cp misc/usernames.csv artillery/usernames.csv
+
 echo "Writing config..." | chalk blue
 echo -n $var_json > artillery/variables.json
 cp $workload_config artillery/workload.yml
