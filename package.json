@@ -37,6 +37,9 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.9",
     "prettier-standard": "^16.3.0",
-    "standard": "^14.3.3"
+    "standard": "^14.3.3",
+    "chalk": "^4.1.0",
+    "libnpmconfig": "^1.2.1",
+    "pacote": "^11.1.10"
   }
 }

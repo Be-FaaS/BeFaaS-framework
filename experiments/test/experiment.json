@@ -5,13 +5,19 @@
       "config": "./workload.yml"
     }
   },
+  "defaults": {
+    "registry": "https://npm.pkg.github.com/",
+    "prefix": "@faastermetrics/exp-test-"
+  },
   "program": {
     "functions": {
       "frontend": {
+        "version": "^1.0.0",
         "provider": "aws",
         "calls": ["add"]
       },
       "add": {
+        "version": "^1.0.0",
         "provider": "aws"
       }
     }
