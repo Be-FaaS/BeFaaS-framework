@@ -1,4 +1,5 @@
 const lib = require('@faastermetrics/lib')
+const _ = require('lodash')
 
 /**
  *
@@ -24,16 +25,10 @@ module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
   if (availableProducts === undefined) {
     return { error: 'Cannot receive product list.' }
   }
-  const availableIDs = []
-  for (const key in availableProducts) {
-    availableIDs.push(availableProducts[key].id)
-  }
+  const suitableCategories = _.reduce(_.map(availableProducts, 'categories'), _.union)
+  const suitableProducts = _.filter(availableProducts, x => ! _.isEmpty(_.intersection(x.categories, suitableCategories)))
+  const suitableIDs = _.shuffle(_.difference(_.map(suitableProducts, 'id'), requestedIDs))
 
-  const suitableIDs = requestedIDs.filter(id => availableIDs.includes(id))
   // We always want to have at most 7 recommendations
-  while (suitableIDs.length > 7) {
-    const randomIndex = Math.floor(Math.random() * suitableIDs.length)
-    suitableIDs.splice(randomIndex, 1)
-  }
-  return { productIds: suitableIDs }
+  return { productIds: _.slice(suitableIDs, 0, 7) }
 })
