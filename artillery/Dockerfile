@@ -11,5 +11,6 @@ ADD build/index.js ./logger.js
 ADD run.sh ./
 ADD variables.json ./
 ADD workload.yml ./
+ADD usernames.csv ./
 
 CMD ["/workload/run.sh"]
