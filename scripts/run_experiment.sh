@@ -15,7 +15,7 @@ run_experiment() {
 	npm run deploy $@
 
 	# run workload
-	npm run artillery "$@"
+	npm run workload "$@"
 
 	# get logs
 	npm run logs $@
