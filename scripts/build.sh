@@ -12,8 +12,14 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
+if [[ -z "$2" ]]; then
+	exp_json="experiment.json"
+else
+	exp_json="$2"
+fi
+
 exp_dir="experiments/$1/functions"
-exp_config="experiments/$1/experiment.json"
+exp_config="experiments/$1/$exp_json"
 
 if [[ ! -f $exp_config ]]; then
     echo -e "Invalid experiment name\n" | chalk red

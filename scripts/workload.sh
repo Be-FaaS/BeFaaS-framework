@@ -17,7 +17,13 @@ if [[ ! -d $exp_dir ]]; then
     exit 1
 fi
 
-exp_json=$(cat $exp_dir/experiment.json)
+if [[ -z "$2" ]]; then
+	exp_json="experiment.json"
+else
+	exp_json="$2"
+fi
+
+exp_json="${exp_dir}/${exp_json}"
 
 workload_config_name=$(echo $exp_json | jq -r '.services.workload.config')
 if [ "$workload_config_name" == "null" ]; then

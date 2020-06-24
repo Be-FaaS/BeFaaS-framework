@@ -13,6 +13,12 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
+if [[ -z "$2" ]]; then
+	exp_json="experiment.json"
+else
+	exp_json="$2"
+fi
+
 # Check for regiosn
 [ -z "${AWS_REGION:-}" ] && {
     echo -e "Environment variable AWS_REGION should be set\n" | chalk red
@@ -48,8 +54,8 @@ chalk -t "{green Running deploy for} {green.bold $1}"
 build_timestamp=$(cat .build_timestamp || true)
 echo "Last build: $build_timestamp" | chalk green
 
-providers=$(jq -r '[.program.functions[].provider] | unique | .[]' experiments/${1}/experiment.json)
-services=$(jq -r '.services | keys[]' experiments/${1}/experiment.json)
+providers=$(jq -r '[.program.functions[].provider] | unique | .[]' "experiments/${1}/$exp_json")
+services=$(jq -r '.services | keys[]' "experiments/${1}/$exp_json")
 
 echo "cleaning up" | chalk green
 for folder in infrastructure/*; do
@@ -92,7 +98,7 @@ for provider in $providers; do
 done
 
 echo "Initializing services" | chalk green
-if [ "$(jq -r '.services | length' experiments/${1}/experiment.json)" != "0" ]; then
+if [ "$(jq -r '.services | length' "experiments/${1}/$exp_json")" != "0" ]; then
   echo "Setting up VPC" | chalk green
   cd infrastructure/services/vpc
   terraform init

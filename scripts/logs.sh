@@ -16,6 +16,12 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
+if [[ -z "$2" ]]; then
+	exp_json="experiment.json"
+else
+	exp_json="$2"
+fi
+
 exp_dir="experiments/$1/functions"
 artillery_dir="artillery"
 
@@ -31,7 +37,7 @@ cd -
 export logdir=logs/$1/$(date +%Y-%m-%d_%H-%M-%S)
 mkdir -p $logdir
 
-for provider in $(jq -r '[.program.functions[].provider] | unique | .[]' experiments/${1}/experiment.json); do
+for provider in $(jq -r '[.program.functions[].provider] | unique | .[]' "experiments/${1}/$exp_json"); do
     ${SCRIPT_DIR}/logs/${provider}.sh
 done
 

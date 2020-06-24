@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # This runs the experiment setup specified here:
 # Platform analysis will compare function execution times between different
 # platforms. For that all functions will be deployed to a single platform for
@@ -7,37 +7,21 @@
 set -euo pipefail
 
 
-# 1 - experiment name
-apply_workload() {
-	num_iterations=20
-	echo "Running simple workload for $num_iterations"
-	for _ in $(seq 1 $num_iterations); do
-		./scripts/test_webservice.sh $1
-	done
-}
-
-
 run_experiment() {
-	experiment="$1"
-	echo "Running $experiment"
-
-	# initialize terraform
-	cd infrastructure
-	terraform init
-	cd -
+	echo "Running $1"
 
 	# build and deploy
-	npm run build $experiment
-	npm run deploy $experiment
+	npm run build $@
+	npm run deploy $@
 
-	# run test workload
-	apply_workload $experiment
+	# run workload
+	npm run artillery "$@"
 
 	# get logs
-	npm run logs $experiment
+	npm run logs $@
 
 	# cleanup deployment
-	npm run destroy $experiment
+	npm run destroy $@
 }
 
-run_experiment $1
+run_experiment $@

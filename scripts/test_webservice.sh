@@ -11,7 +11,13 @@ if [ -z $1 ]; then
 	1=webservice
 fi
 
-webservice_config="./experiments/$1/experiment.json"
+if [[ -z "$2" ]]; then
+	exp_json="experiment.json"
+else
+	exp_json="$2"
+fi
+
+webservice_config="./experiments/$1/$exp_json"
 
 used_providers=$(jq -r ".program.functions[] | .provider" $webservice_config | sort | uniq)
 
