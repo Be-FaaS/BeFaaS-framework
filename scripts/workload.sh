@@ -25,7 +25,7 @@ fi
 
 exp_json="${exp_dir}/${exp_json}"
 
-workload_config_name=$(echo $exp_json | jq -r '.services.workload.config')
+workload_config_name=$(jq -r '.services.workload.config' "$exp_json")
 if [ "$workload_config_name" == "null" ]; then
     echo -e "Workload config not defined (services.workload.config)\n" | chalk red
     exit 1
@@ -42,7 +42,7 @@ echo "Found deployment id: $deployment_id" | chalk blue
 
 echo "Getting endpoints..." | chalk blue
 states=""
-for provider in $(echo $exp_json | jq -r '[.program.functions[].provider] | unique | .[]'); do
+for provider in $(jq -r '[.program.functions[].provider] | unique | .[]' $exp_json); do
   cd infrastructure/${provider}/endpoint
   states="${states}$(terraform output --json)"
   cd -
@@ -52,8 +52,8 @@ endpoints=$(echo $states | jq -sc 'add | with_entries(select(.key | endswith("EN
 
 echo "Matching endpoints..." | chalk blue
 var_json="{}"
-for fname in $(echo $exp_json | jq -r '.program.functions | keys[]'); do
-  provider=$(echo $exp_json | jq -r --arg f $fname '.program.functions[$f].provider')
+for fname in $(jq -r '.program.functions | keys[]' "$exp_json"); do
+  provider=$(jq -r --arg f $fname '.program.functions[$f].provider' "$exp_json")
   f_ep=$(echo $endpoints | jq -r --arg p $provider 'with_entries(select(.key | ascii_downcase | startswith($p))) | to_entries[0].value')/$fname
  var_json=`echo $var_json | jq ". + {$fname: [\"$f_ep\"]}"`
 done
