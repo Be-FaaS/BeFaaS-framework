@@ -7,6 +7,10 @@
       "weathersensorfilter": {
         "provider": "aws",
         "calls": ["roadcondition"]
+      },
+      "roadcondition": {
+        "provider": "aws",
+        "calls": ["setlightphasecalculation"]
       }
     }
   }
