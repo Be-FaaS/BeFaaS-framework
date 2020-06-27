@@ -11,6 +11,12 @@
       "roadcondition": {
         "provider": "aws",
         "calls": ["setlightphasecalculation"]
+      },
+      "emergencydetection": {
+        "provider": "aws",
+        "calls": [
+          "setlightphasecalculation"
+        ]
       }
     }
   }
