@@ -32,8 +32,7 @@ function calculateRoadCondition (temperature, humidity, wind, rain) {
 }
 
 /*
- * Filters incoming weather sensor data, such as removing erroneous data or NaN
- * values.
+ * Calculate road condition and pass to light phase calculation.
  *
  * Ex Payload Body: {
  *    "temperature": 10.0,
