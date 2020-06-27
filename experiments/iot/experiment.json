@@ -1,84 +1,12 @@
 {
   "services": {
-    "redis": {},
-    "workload": {
-      "config": "./workload.yml"
-    }
+    "redis": {}
   },
   "program": {
     "functions": {
-      "frontend": {
+      "weathersensorfilter": {
         "provider": "aws",
-        "calls": [
-          "getcart",
-          "getproduct",
-          "currency",
-          "listrecommendations",
-          "supportedcurrencies",
-          "getads",
-          "checkout",
-          "listproducts",
-          "shipmentquote",
-          "emptycart"
-        ]
-      },
-      "checkout": {
-        "provider": "aws",
-        "calls": [
-          "getcart",
-          "getproduct",
-          "currency",
-          "shipmentquote",
-          "payment",
-          "shiporder",
-          "email",
-          "emptycart"
-        ]
-      },
-      "email": {
-        "provider": "aws"
-      },
-      "currency": {
-        "provider": "aws"
-      },
-      "supportedcurrencies": {
-        "provider": "aws"
-      },
-      "shiporder": {
-        "provider": "google"
-      },
-      "shipmentquote": {
-        "provider": "google"
-      },
-      "payment": {
-        "provider": "aws"
-      },
-      "listproducts": {
-        "provider": "google"
-      },
-      "getads": {
-        "provider": "aws"
-      },
-      "getproduct": {
-        "provider": "google"
-      },
-      "searchproducts": {
-        "provider": "google"
-      },
-      "listrecommendations": {
-        "provider": "google"
-      },
-      "cartkvstorage": {
-        "provider": "aws"
-      },
-      "addcartitem": {
-        "provider": "aws"
-      },
-      "getcart": {
-        "provider": "aws"
-      },
-      "emptycart": {
-        "provider": "aws"
+        "calls": ["roadcondition"]
       }
     }
   }
