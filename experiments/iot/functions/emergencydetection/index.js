@@ -24,7 +24,7 @@ const _ = require('lodash')
  *
  */
 
-module.exports = lib.serverless.rpcHandler(event => {
+module.exports = lib.serverless.rpcHandler((event, ctx) => {
   const objects = event.objects
   if (! Array.isArray(objects)) return { error: 'Wrong payload.' }
 
