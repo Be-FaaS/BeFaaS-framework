@@ -28,12 +28,15 @@ module.exports = lib.serverless.rpcHandler(event => {
   const objects = event.objects
   if (! Array.isArray(objects)) return { error: 'Wrong payload.' }
 
+  let emergency = { active: false, type: '' }
+
   const emergencies = ['ambulance', 'police', 'lunatic']
   for (const key of emergencies) {
     if (_.filter(objects, { type: key }).length > 0) {
-      return { emergency: { active: true, type: key }}
+      emergency = { active: true, type: key }
+      break
     }
   }
-
-  return { emergency: { active: false, type: '' }}
+  ctx.call('setlightphasecalculation', { emergency: emergency })
+  return { emergency: emergency }
 })
