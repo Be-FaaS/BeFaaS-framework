@@ -48,8 +48,6 @@ module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
 
   const condition = calculateRoadCondition(temperature, humidity, wind, rain)
 
-  console.log(condition)
-
   ctx.call('setlightphasecalculation', {
     condition: condition
   })
