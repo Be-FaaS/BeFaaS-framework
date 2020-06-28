@@ -6,12 +6,12 @@ SLEEP_TIME=0  # pause between curl calls
 
 cd $(git rev-parse --show-toplevel)  # go to experiments root directory
 
-if [ -z $1 ]; then
+if [ -z ${1:-} ]; then
 	echo "Setting project to default webservice"
 	1=webservice
 fi
 
-if [[ -z "$2" ]]; then
+if [[ -z "${2:-}" ]]; then
 	exp_json="experiment.json"
 else
 	exp_json="$2"

@@ -17,7 +17,7 @@ if [[ ! -d $exp_dir ]]; then
     exit 1
 fi
 
-if [[ -z "$2" ]]; then
+if [[ -z "${2:-}" ]]; then
 	exp_json="experiment.json"
 else
 	exp_json="$2"
