@@ -62,8 +62,12 @@ function checkAndUnlock (ctx) {
   return false
 }
 
-function waitAppropriately (ctx) {
-  const condition = _.toInteger(ctx.db.get('lightcalculation:condition'))
+async function wait(sec) {
+  return new Promise(resolve => setTimeout(resolve, sec * 1000));
+}
+
+async function waitAppropriately (ctx) {
+  const condition = await _.toInteger(ctx.db.get('lightcalculation:condition'))
   return new Promise(resolve => setTimeout(resolve, (condition + 2.5) * 1000));
 }
 
@@ -78,9 +82,30 @@ function changeLight (ctx) {
 
   // If no movement plan or cars just say lights are red blink (so pedestrians are happy)
   const plates = ctx.db.get('lightcalculation:plates')
-  const directions = ctx.db.get('lightcalculation:directions')
+  //const directions = ctx.db.get('lightcalculation:directions')
+  // We probably really should have 4 different traffic lights
   const speeds = ctx.db.get('lightcalculation:speeds')
-
+  if (_.isEmpty(plates) || ! _.find(_.map(speeds, _.toFinite)), x => x > 50) {
+    ctx.db.set('lightcalculation:light', ['yellow'])
+    ctx.db.set('lightcalculation:blink', 'false')
+    wait(1)
+    ctx.db.set('lightcalculation:light', ['red'])
+    ctx.db.set('lightcalculation:blink', 'false')
+  }
+  else {
+    ctx.db.set('lightcalculation:light', ['yellow', 'red'])
+    ctx.db.set('lightcalculation:blink', 'false')
+    wait(1)
+    ctx.db.set('lightcalculation:light', ['green'])
+    ctx.db.set('lightcalculation:blink', 'false')
+  }
+  
+  const new_emergency = (ctx.db.get('lightcalculation:emergency') === 'true')
+  if (new_emergency) {
+    ctx.db.set('lightcalculation:light', ['yellow'])
+    ctx.db.set('lightcalculation:blink', 'true')
+    return
+  }
 
 }
 
