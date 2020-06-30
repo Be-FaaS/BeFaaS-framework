@@ -82,10 +82,10 @@ function changeLight (ctx) {
 
   // If no movement plan or cars just say lights are red blink (so pedestrians are happy)
   const plates = ctx.db.get('lightcalculation:plates')
-  //const directions = ctx.db.get('lightcalculation:directions')
+  // const directions = ctx.db.get('lightcalculation:directions')
   // We probably really should have 4 different traffic lights
   const speeds = ctx.db.get('lightcalculation:speeds')
-  if (_.isEmpty(plates) || ! _.find(_.map(speeds, _.toFinite)), x => x > 50) {
+  if (_.isEmpty(plates) || ! _.find(_.map(speeds, _.toFinite), x => x > 50)) {
     ctx.db.set('lightcalculation:light', ['yellow'])
     ctx.db.set('lightcalculation:blink', 'false')
     wait(1)
@@ -100,13 +100,11 @@ function changeLight (ctx) {
     ctx.db.set('lightcalculation:blink', 'false')
   }
   
-  const new_emergency = (ctx.db.get('lightcalculation:emergency') === 'true')
-  if (new_emergency) {
+  const newEmergency = (ctx.db.get('lightcalculation:emergency') === 'true')
+  if (newEmergency) {
     ctx.db.set('lightcalculation:light', ['yellow'])
     ctx.db.set('lightcalculation:blink', 'true')
-    return
   }
-
 }
 
 module.exports = lib.serverless.rpcHandler(

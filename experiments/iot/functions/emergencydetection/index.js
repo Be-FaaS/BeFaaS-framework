@@ -28,8 +28,6 @@ module.exports = lib.serverless.rpcHandler((event, ctx) => {
   const { objects } = event
   if (!Array.isArray(objects)) return { error: 'Wrong payload.' }
 
-  let emergency = { active: false, type: '' }
-
   const emergencies = ['ambulance', 'police', 'lunatic']
 
   let emergency = { active: false, type: '' }
