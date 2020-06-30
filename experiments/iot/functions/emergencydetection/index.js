@@ -25,12 +25,12 @@ const _ = require('lodash')
  */
 
 module.exports = lib.serverless.rpcHandler((event, ctx) => {
-  const objects = event.objects
+  const { objects } = event
   if (! Array.isArray(objects)) return { error: 'Wrong payload.' }
 
-  let emergency = { active: false, type: '' }
-
   const emergencies = ['ambulance', 'police', 'lunatic']
+
+  let emergency = { active: false, type: '' }
   for (const key of emergencies) {
     if (_.filter(objects, { type: key }).length > 0) {
       emergency = { active: true, type: key }
