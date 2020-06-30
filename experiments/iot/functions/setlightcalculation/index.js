@@ -91,9 +91,9 @@ module.exports = lib.serverless.rpcHandler(
 
     initialDBUpdate(ctx, condition, plan, emergency)
 
-    if (checkAndLock(ctx) return { }
+    if (checkAndLock(ctx)) return { }
     waitAppropriately(ctx)
-    if (checkAndUnlock(ctx) return { }
+    if (checkAndUnlock(ctx)) return { }
 
     changeLight(ctx)
     return { }
