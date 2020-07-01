@@ -69,7 +69,7 @@ module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
     return { error: 'Invalid rain.' }
   }
 
-  ctx.call('roadcondition', {
+  await ctx.call('roadcondition', {
     temperature: temperature,
     humidity: humidity,
     wind: wind,
