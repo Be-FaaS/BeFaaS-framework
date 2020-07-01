@@ -138,8 +138,8 @@ module.exports = lib.serverless.router(async router => {
         _.random(0, possibleObjects.length)
       )
     }
-    await ctx.lib.call('trafficStatistics', res)
-    await ctx.lib.call('movementPlan', res)
+    await ctx.lib.call('trafficstatistics', res)
+    await ctx.lib.call('movementplan', res)
 
     ctx.type = 'application/json'
     ctx.body = res
