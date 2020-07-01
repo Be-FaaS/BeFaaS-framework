@@ -127,7 +127,8 @@ const possibleObjects = [
  *
  */
 module.exports = lib.serverless.router(async router => {
-  router.post('/', upload.single('image'), async ctx => {
+  router.post('/', async (ctx, next) => {
+    await upload.single('image')(ctx, () => {})
     const pic = await Jimp.read(ctx.file.buffer)
     // We loaded a picture successfully and parsed it.
     console.log(pic)
