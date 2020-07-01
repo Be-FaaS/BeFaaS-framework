@@ -4,6 +4,10 @@
   },
   "program": {
     "functions": {
+      "trafficsensorfilter": {
+        "provider": "aws",
+        "calls": ["movementplan"]
+      },
       "weathersensorfilter": {
         "provider": "aws",
         "calls": ["roadcondition"]
