@@ -7,10 +7,10 @@ const _ = require('lodash')
  *
  * Example Payload: {
  *   "objects": [{
- *     "type": "ambulance", 
- *     "positionx": 0, 
- *     "positiony": 0, 
- *     "boundx": 3, 
+ *     "type": "ambulance",
+ *     "positionx": 0,
+ *     "positiony": 0,
+ *     "boundx": 3,
  *     "boundy": 2
  *   }]
  * }
@@ -26,7 +26,7 @@ const _ = require('lodash')
 
 module.exports = lib.serverless.rpcHandler((event, ctx) => {
   const { objects } = event
-  if (! Array.isArray(objects)) return { error: 'Wrong payload.' }
+  if (!Array.isArray(objects)) return { error: 'Wrong payload.' }
 
   const emergencies = ['ambulance', 'police', 'lunatic']
 

@@ -25,9 +25,17 @@ module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
   if (availableProducts === undefined) {
     return { error: 'Cannot receive product list.' }
   }
-  const suitableCategories = _.reduce(_.map(availableProducts, 'categories'), _.union)
-  const suitableProducts = _.filter(availableProducts, x => ! _.isEmpty(_.intersection(x.categories, suitableCategories)))
-  const suitableIDs = _.shuffle(_.difference(_.map(suitableProducts, 'id'), requestedIDs))
+  const suitableCategories = _.reduce(
+    _.map(availableProducts, 'categories'),
+    _.union
+  )
+  const suitableProducts = _.filter(
+    availableProducts,
+    x => !_.isEmpty(_.intersection(x.categories, suitableCategories))
+  )
+  const suitableIDs = _.shuffle(
+    _.difference(_.map(suitableProducts, 'id'), requestedIDs)
+  )
 
   // We always want to have at most 7 recommendations
   return { productIds: _.slice(suitableIDs, 0, 7) }
