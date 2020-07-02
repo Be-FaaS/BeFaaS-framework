@@ -26,6 +26,9 @@ output "openfaas_fns" {
   value = local.openfaas_fn_names
 }
 
+output "openwhisk_fns" {
+  value = local.openwhisk_fns
+}
 
 output "azure_fn_file" {
   value = local.azure_fn_file
