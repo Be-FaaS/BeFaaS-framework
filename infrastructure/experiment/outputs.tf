@@ -22,6 +22,11 @@ output "tinyfaas_fns" {
   value = local.tinyfaas_fns
 }
 
+output "openfaas_fns" {
+  value = local.openfaas_fns
+}
+
+
 output "azure_fn_file" {
   value = local.azure_fn_file
 }

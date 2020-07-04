@@ -20,6 +20,10 @@ fi
 
 exp_dir="experiments/$1/functions"
 exp_config="experiments/$1/$exp_json"
+export DOCKERHUB_USER=`docker info 2>/dev/null | sed '/Username:/!d;s/.* //'`
+ 
+
+command -v faas-cli >/dev/null && faas-cli template store pull node10-express #template pull ../node10-express-template #
 
 if [[ ! -f $exp_config ]]; then
     echo -e "Invalid experiment name\n" | chalk red
@@ -55,6 +59,17 @@ for d in $exp_dir/*; do
   echo $PKG_JSON > $d/build/package.json
   cp $exp_config $d/build/
   cd $d/build && zip -r ../../_build/${fname}.zip * && cd -
+  if [[ $(jq -r ".program.functions | with_entries(select(.key == \"$fname\" and .value.provider == \"openfaas\")) | keys[]" $exp_config) ]]; then
+    
+    # TODO: @christoph please check if I'm not messing up the function caching for openfaas
+
+    export FUNCTION_HANDLER=`readlink -f ./$d/build`
+    
+    # WORKAROUND: openfaas for some reason does not respect the package.json and just assumes handler.js
+    echo "module.exports = async (config) => {process.chdir('function');config.app.all('/*', require('./index.js').openfaasHandler);}" > $FUNCTION_HANDLER/handler.js
+    FUNCTION_NAME=$fname faas-cli build -f misc/openfaas.yml 
+    FUNCTION_NAME=$fname faas-cli push -f misc/openfaas.yml 
+  fi
   rm -rf $d/build $d/_index.js
 done
 

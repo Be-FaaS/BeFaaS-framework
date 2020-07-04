@@ -1,0 +1,12 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: ${OPENFAAS_GATEWAY}
+functions:
+  ${FUNCTION_NAME:-NO_NAME_PROVIDED}:
+    lang: node10-express-service
+    handler: ${FUNCTION_HANDLER}
+    image: ${DOCKERHUB_USER:-DOCKERHUB_USER_MISSING}/${FUNCTION_NAME:-NO_NAME_PROVIDED}:latest
+    environment:
+      IS_OPENFAAS: 1
+    

@@ -48,6 +48,7 @@ Before you start please make sure you have following tools installed.
 | gcloud    | v293         |
 | azure-cli | v2           |
 | jq        | jq-1.6       |
+| docker    | 19.03.12     |
 
 ### NPM-Dependencies
 
@@ -97,6 +98,17 @@ In order to deploy we need to build the source first. Do: `npm run build`
 2. Set the `TINYFAAS_ADDRESS` environment variable. Please note that TINYFAAS_ADDRESS must be publically visible on the internet in order for other FaaS platforms to talk to it.  
    **Anyone with access to the tinyFaaS management port (8080) will be able to upload arbitrary functions, it is very advisable to configure your firewall to only let the deploying computer access that port**
 
+### OpenFaaS
+
+**Warning:** this will **only** work with actual openfaas and **not** with faasd due to multiple bugs in faasd.
+
+# TODO
+
+1. Install faas-cli https://docs.openfaas.com/cli/install/
+2. login into your openfaas instance with faas-cli login and note the password used here
+2. Log your docker into docker hub with `docker login` (other container registries are not officially supported by this project)
+
+
 ### Environment Setup
 
 Get the `project_name` from the cloud provider setup.
@@ -115,6 +127,9 @@ export ARM_TENANT_ID=<tenantId from az account list>
 export ARM_SUBSCRIPTION_ID=<id from az account list>
 
 export TINYFAAS_ADDRESS=<address of your tinyfaas instance eg localhost>
+
+export OPENFAAS_GATEWAY=http://<address of openfaas gateway>:8080
+export OPENFAAS_TOKEN=<token for openfaas, the one you also use when logging into faas-cli>
 ```
 
 ### Initlialize terraform
