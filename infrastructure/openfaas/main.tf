@@ -21,12 +21,12 @@ locals {
 }
 
 resource "openfaas_function" "funtions" {
-  for_each    = local.fns
-  name        = each.key
-  image       = "${var.DOCKERHUB_USER}/${each.key}:latest"
-  
+  for_each = local.fns
+  name     = each.key
+  image    = "${var.DOCKERHUB_USER}/${each.key}:latest"
+
   env_vars = merge({
-    IS_OPENFAAS = 1
+    IS_OPENFAAS                  = 1
     FAASTERMETRICS_DEPLOYMENT_ID = local.deployment_id
   }, var.fn_env)
 
