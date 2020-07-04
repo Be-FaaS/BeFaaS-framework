@@ -5,6 +5,11 @@ set -euo pipefail
 export TF_VAR_TINYFAAS_ADDRESS=$TINYFAAS_ADDRESS
 
 export TF_VAR_fn_env='{}'
+export TF_VAR_OPENFAAS_GATEWAY=$OPENFAAS_GATEWAY
+export TF_VAR_OPENFAAS_USER=admin
+export TF_VAR_OPENFAAS_TOKEN=$OPENFAAS_TOKEN
+export TF_VAR_DOCKERHUB_USER=`docker info 2>/dev/null | sed '/Username:/!d;s/.* //'`
+
 
 providers=`ls infrastructure/`
 providers=( "${providers[@]/services}" )
