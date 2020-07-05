@@ -16,7 +16,7 @@ const lib = require('@faastermetrics/lib')
 module.exports = lib.serverless.rpcHandler(
   { db: 'redis' }, async (event, ctx) => {
     const lights = await ctx.db.get('lightcalculation:lights')
-    const blink = (await ctx.db.get('lightcalculation:blink') === 'true'
+    const blink = (await ctx.db.get('lightcalculation:blink')) === 'true'
 
     return { lights, blink }
   }
