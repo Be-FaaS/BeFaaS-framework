@@ -28,6 +28,7 @@ resource "openfaas_function" "funtions" {
   env_vars = merge({
     IS_OPENFAAS                  = 1
     FAASTERMETRICS_DEPLOYMENT_ID = local.deployment_id
+    write_debug                  = "true"
   }, var.fn_env)
 
   labels = {

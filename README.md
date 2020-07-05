@@ -100,7 +100,9 @@ In order to deploy we need to build the source first. Do: `npm run build`
 
 ### OpenFaaS
 
-**Warning:** this will **only** work with actual openfaas and **not** with faasd due to multiple bugs in faasd.
+**Warning:** this will **only** work with actual openfaas **not** with faasd due to multiple bugs in faasd.  
+The only supported setup is the one using docker swarm https://docs.openfaas.com/deployment/docker-swarm/  
+
 
 # TODO
 

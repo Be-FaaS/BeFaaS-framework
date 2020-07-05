@@ -38,7 +38,7 @@ export logdir=logs/$1/$(date +%Y-%m-%d_%H-%M-%S)
 mkdir -p $logdir
 
 for provider in $(jq -r '[.program.functions[].provider] | unique | .[]' "experiments/${1}/$exp_json"); do
-    ${SCRIPT_DIR}/logs/${provider}.sh
+    ${SCRIPT_DIR}/logs/${provider}.sh "experiments/${1}/$exp_json"
 done
 
 # obtain artillery logs
