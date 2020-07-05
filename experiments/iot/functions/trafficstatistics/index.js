@@ -28,7 +28,7 @@ module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
 
   const statistics = _.countBy(objects, 'type')
   const timestamp = new Date().toISOString()
-  await ctx.db.set(timestamp, statistics)
+  await ctx.db.set(`trafficstatistics-${timestamp}`, statistics)
 
   return statistics
 })
