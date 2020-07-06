@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
+
 contains() {
   [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]]
 }
@@ -54,6 +55,9 @@ if [[ ! -d $exp_dir ]]; then
     echo -e "Invalid experiment name\n" | chalk red
     exit 1
 fi
+
+echo "Installing terraform provider" | chalk green
+./scripts/install-provider.sh
 
 chalk -t "{green Running deploy for} {green.bold $1}"
 build_timestamp=$(cat .build_timestamp || true)

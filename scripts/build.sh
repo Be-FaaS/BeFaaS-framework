@@ -3,6 +3,7 @@
 set -euo pipefail
 
 PKG_JSON='{"name": "fn", "version": "1.0.0", "main": "index.js"}'
+OW_JS="module.exports.main = require('@faastermetrics/lib/openwhisk')(() => require('./index.js'))"
 
 if [ -z "${1:-}" ]; then
     chalk -t "{yellow Usage: $0 }{yellow.bold <experiment name>}"
@@ -20,9 +21,8 @@ fi
 
 exp_dir="experiments/$1/functions"
 exp_config="experiments/$1/$exp_json"
-export DOCKERHUB_USER=`docker info 2>/dev/null | sed '/Username:/!d;s/.* //'`
- 
 
+export DOCKERHUB_USER=`docker info 2>/dev/null | sed '/Username:/!d;s/.* //'`
 command -v faas-cli >/dev/null && faas-cli template store pull node10-express #template pull ../node10-express-template #
 
 if [[ ! -f $exp_config ]]; then
@@ -54,18 +54,28 @@ for d in $exp_dir/*; do
     continue
   fi
   echo "Going to build function: ${fname}" | chalk cyan
-  echo "process.env.FAASTERMETRICS_FN_NAME='${fname}';$(cat $d/index.js)" > $d/_index.js
+  fProvider=$(jq -r ".program.functions.${fname}.provider" $exp_config)
+  injectFname="process.env.FAASTERMETRICS_FN_NAME='${fname}';"
+  zipSuffix=""
+  if [ "$fProvider" == 'openwhisk' ]; then
+    echo "Building special function for $fProvider" | chalk cyan
+    zipSuffix="-ow"
+    echo "${injectFname}${OW_JS}" > $d/_index.js
+  else
+    echo "${injectFname}$(cat $d/index.js)" > $d/_index.js
+  fi
+
   npx ncc build $d/_index.js -o $d/build
   echo $PKG_JSON > $d/build/package.json
   cp $exp_config $d/build/
-  cd $d/build && zip -r ../../_build/${fname}.zip * && cd -
+  cd $d/build && zip -r ../../_build/${fname}${zipSuffix}.zip * && cd -
   if [[ $(jq -r ".program.functions | with_entries(select(.key == \"$fname\" and .value.provider == \"openfaas\")) | keys[]" $exp_config) ]]; then
     export FUNCTION_HANDLER=`readlink -f ./$d/build`
-    
+
     # WORKAROUND: openfaas for some reason does not respect the package.json and just assumes handler.js
     echo "module.exports = async (config) => {process.chdir('function');config.app.all('/*', require('./index.js').openfaasHandler);}" > $FUNCTION_HANDLER/handler.js
-    FUNCTION_NAME=$fname faas-cli build -f misc/openfaas.yml 
-    FUNCTION_NAME=$fname faas-cli push -f misc/openfaas.yml 
+    FUNCTION_NAME=$fname faas-cli build -f misc/openfaas.yml
+    FUNCTION_NAME=$fname faas-cli push -f misc/openfaas.yml
   fi
   rm -rf $d/build $d/_index.js
 done
