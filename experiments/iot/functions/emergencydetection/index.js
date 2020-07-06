@@ -24,7 +24,7 @@ const _ = require('lodash')
  *
  */
 
-module.exports = lib.serverless.rpcHandler((event, ctx) => {
+module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
   const { objects } = event
   if (!Array.isArray(objects)) return { error: 'Wrong payload.' }
 
@@ -37,6 +37,6 @@ module.exports = lib.serverless.rpcHandler((event, ctx) => {
       break
     }
   }
-  ctx.call('setlightphasecalculation', { emergency: emergency })
+  await ctx.call('setlightphasecalculation', { emergency: emergency })
   return { emergency: emergency }
 })

@@ -28,6 +28,10 @@
       },
       "getlightphasecalculation": {
         "provider": "aws"
+      },
+      "movementplan": {
+        "provider": "aws",
+        "calls": ["setlightphasecalculation"]
       }
     }
   }
