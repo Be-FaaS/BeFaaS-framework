@@ -11,8 +11,7 @@
     "deploy": "./scripts/deploy.sh",
     "destroy": "./scripts/destroy.sh",
     "logs": "./scripts/logs.sh",
-    "workload": "./scripts/workload.sh",
-    "preinstall": "./scripts/fetch_provider.sh https://github.com/ewilde/terraform-provider-openfaas openfaas; ./scripts/fetch_provider.sh https://github.com/FaaSterMetrics/terraform-provider-tinyfaas tinyfaas"
+    "workload": "./scripts/workload.sh"
   },
   "husky": {
     "hooks": {
