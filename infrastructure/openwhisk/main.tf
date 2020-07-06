@@ -13,10 +13,10 @@ locals {
   fns           = data.terraform_remote_state.exp.outputs.openwhisk_fns
 }
 
-resource "openwhisk_function" "funtions" {
-  for_each    = local.fns
-  name        = each.key
-  zip_path    = each.value
+resource "openwhisk_function" "fn" {
+  for_each = local.fns
+  name     = each.key
+  zip_path = each.value
   environment = merge({
     FAASTERMETRICS_DEPLOYMENT_ID = local.deployment_id
   }, var.fn_env)
