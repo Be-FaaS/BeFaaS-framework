@@ -7,5 +7,5 @@ data "terraform_remote_state" "exp" {
 }
 
 output "OPENWHISK_ENDPOINT" {
-  value = "http://${var.OPENWHISK_EXTERNAL}:3233/api/v1/web/guest/faastermetrics"
+  value = "https://${var.OPENWHISK_EXTERNAL}/api/v1/web/guest/faastermetrics"
 }
