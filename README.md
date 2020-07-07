@@ -100,16 +100,14 @@ In order to deploy we need to build the source first. Do: `npm run build`
 
 ### OpenFaaS
 
-**Warning:** this will **only** work with actual openfaas **not** with faasd due to multiple bugs in faasd.  
-The only supported setup is the one using docker swarm https://docs.openfaas.com/deployment/docker-swarm/  
+**Warning:** this will **only** work with full openfaas **not** with faasd due to multiple bugs in faasd.  
+**The only supported setup is the one using docker swarm https://docs.openfaas.com/deployment/docker-swarm/**
 
-
-# TODO
-
-1. Install faas-cli https://docs.openfaas.com/cli/install/
-2. login into your openfaas instance with faas-cli login and note the password used here
-2. Log your docker into docker hub with `docker login` (other container registries are not officially supported by this project)
-
+1. Setup an openfaas instance using https://docs.openfaas.com/deployment/docker-swarm/ and write down the password it generates
+2. Install faas-cli https://docs.openfaas.com/cli/install/ and login like the guide above details.
+3. Log your local docker into docker hub with `docker login` (other container registries are not directly supported by this project).  
+   This is needed to deploy functions to openfaas. Please note that by default this will make the functions you deploy to openfaas public on your account.
+4. Set your `OPENFAAS_GATEWAY` environment variable like detailed below and `OPENFAAS_TOKEN` to the password generated during openfaas setup.
 
 ### Environment Setup
 
@@ -131,7 +129,7 @@ export ARM_SUBSCRIPTION_ID=<id from az account list>
 export TINYFAAS_ADDRESS=<address of your tinyfaas instance eg localhost>
 
 export OPENFAAS_GATEWAY=http://<address of openfaas gateway>:8080
-export OPENFAAS_TOKEN=<token for openfaas, the one you also use when logging into faas-cli>
+export OPENFAAS_TOKEN=<password for openfaas, the one you also use when logging into faas-cli>
 ```
 
 ### Initlialize terraform
