@@ -22,13 +22,16 @@ const _ = require('lodash')
  *
  */
 
-module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
-  const { objects } = event
-  if (!Array.isArray(objects)) return { error: 'Wrong payload.' }
+module.exports = lib.serverless.rpcHandler(
+  { db: 'redis' },
+  async (event, ctx) => {
+    const { objects } = event
+    if (!Array.isArray(objects)) return { error: 'Wrong payload.' }
 
-  const statistics = _.countBy(objects, 'type')
-  const timestamp = new Date().toISOString()
-  await ctx.db.set(`trafficstatistics-${timestamp}`, statistics)
+    const statistics = _.countBy(objects, 'type')
+    const timestamp = new Date().toISOString()
+    await ctx.db.set(`trafficstatistics-${timestamp}`, statistics)
 
-  return statistics
-})
+    return statistics
+  }
+)
