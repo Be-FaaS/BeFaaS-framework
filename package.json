@@ -25,7 +25,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@faastermetrics/lib": "^8.2.0",
+    "@faastermetrics/lib": "^8.3.0",
     "@koa/multer": "^3.0.0",
     "card-validator": "^6.2.0",
     "jimp": "^0.14.0",
@@ -34,14 +34,14 @@
   },
   "devDependencies": {
     "@zeit/ncc": "^0.22.3",
-    "artillery": "^1.6.0",
+    "artillery": "^1.6.1",
+    "chalk": "^4.1.0",
     "chalk-cli": "^4.1.0",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.9",
-    "prettier-standard": "^16.3.0",
-    "standard": "^14.3.3",
-    "chalk": "^4.1.0",
     "libnpmconfig": "^1.2.1",
-    "pacote": "^11.1.10"
+    "lint-staged": "^10.2.11",
+    "pacote": "^11.1.10",
+    "prettier-standard": "^16.3.0",
+    "standard": "^14.3.3"
   }
 }
