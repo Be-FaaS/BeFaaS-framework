@@ -23,7 +23,7 @@ output "tinyfaas_fns" {
 }
 
 output "openfaas_fns" {
-  value = local.openfaas_fns
+  value = local.openfaas_fn_names
 }
 
 
