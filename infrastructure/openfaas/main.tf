@@ -22,8 +22,8 @@ locals {
 
 resource "openfaas_function" "funtions" {
   count = length(local.fns)
-  name     = local.fns[count.index]
-  image    = "${var.DOCKERHUB_USER}/${local.fns[count.index]}:latest"
+  name  = local.fns[count.index]
+  image = "${var.DOCKERHUB_USER}/${local.fns[count.index]}:latest"
 
   env_vars = merge({
     IS_OPENFAAS                  = 1
