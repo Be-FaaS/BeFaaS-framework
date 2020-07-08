@@ -60,9 +60,6 @@ for d in $exp_dir/*; do
   cp $exp_config $d/build/
   cd $d/build && zip -r ../../_build/${fname}.zip * && cd -
   if [[ $(jq -r ".program.functions | with_entries(select(.key == \"$fname\" and .value.provider == \"openfaas\")) | keys[]" $exp_config) ]]; then
-    
-    # TODO: @christoph please check if I'm not messing up the function caching for openfaas
-
     export FUNCTION_HANDLER=`readlink -f ./$d/build`
     
     # WORKAROUND: openfaas for some reason does not respect the package.json and just assumes handler.js
