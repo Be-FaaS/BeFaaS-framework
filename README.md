@@ -39,17 +39,18 @@ npm run deploy webservice
 
 Before you start please make sure you have following tools installed.
 
-| Tool      | Min. version |
-| --------- | ------------ |
-| terraform | v0.12.25     |
-| node      | v12          |
-| npm       | v6           |
-| awscli    | v2           |
-| gcloud    | v293         |
-| azure-cli | v2           |
-| jq        | jq-1.6       |
-| docker    | 19.03.12     |
-| go        | 1.13.8       |
+| Tool          | Min. version |
+| ------------- | ------------ |
+| terraform     | v0.12.25     |
+| node          | v12          |
+| npm           | v6           |
+| awscli        | v2           |
+| gcloud        | v293         |
+| azure-cli     | v2           |
+| jq            | jq-1.6       |
+| docker        | 19.03.12     |
+| go            | 1.13.8       |
+| openwhisk-cli | 1.0.0        |
 
 ### NPM-Dependencies
 
@@ -110,6 +111,18 @@ In order to deploy we need to build the source first. Do: `npm run build`
    This is needed to deploy functions to openfaas. Please note that by default this will make the functions you deploy to openfaas public on your account.
 4. Set your `OPENFAAS_GATEWAY` environment variable like detailed below and `OPENFAAS_TOKEN` to the password generated during openfaas setup.
 
+#### OpenWhisk
+
+1. Setup [OpenWhisk](https://openwhisk.apache.org/documentation.html#openwhisk_deployment).
+2. Set the `OPENWHISK_EXTERNAL` environment variable. For example: `https://my.openwhisk-apigateway.faas`.
+3. Configure credentials:
+
+```
+wsk property set \
+  --apihost '<your openwhisk api host>' \
+  --auth '<username>:<password>'
+```
+
 ### Environment Setup
 
 Get the `project_name` from the cloud provider setup.
@@ -131,6 +144,7 @@ export TINYFAAS_ADDRESS=<address of your tinyfaas instance eg localhost>
 
 export OPENFAAS_GATEWAY=http://<address of openfaas gateway>:8080
 export OPENFAAS_TOKEN=<password for openfaas, the one you also use when logging into faas-cli>
+export OPENWHISK_EXTERNAL=<address of your openwhisk api gateway eg http://localhost:3233>
 ```
 
 ### Initlialize terraform
