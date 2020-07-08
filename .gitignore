@@ -14,6 +14,9 @@ artillery/workload.yml
 artillery/image.tar.gz
 artillery/workload-deploy.log
 infrastructure/tinyfaas/terraform-provider-tinyfaas
+infrastructure/openfaas/terraform-provider-openfaas
+.tinyfaas
+.openfaas
 experiments/test/functions/
 experiments/newtest
 template

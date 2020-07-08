@@ -49,6 +49,7 @@ Before you start please make sure you have following tools installed.
 | azure-cli | v2           |
 | jq        | jq-1.6       |
 | docker    | 19.03.12     |
+| go        | 1.13.8       |
 
 ### NPM-Dependencies
 
