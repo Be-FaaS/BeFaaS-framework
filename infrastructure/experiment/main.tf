@@ -32,10 +32,10 @@ locals {
 }
 
 locals {
-  aws_fn_names      = [for i, z in local.expconfig.program.functions : i if z.provider == "aws"]
-  google_fn_names   = [for i, z in local.expconfig.program.functions : i if z.provider == "google"]
-  tinyfaas_fn_names = [for i, z in local.expconfig.program.functions : i if z.provider == "tinyfaas"]
-  openfaas_fn_names = [for i, z in local.expconfig.program.functions : i if z.provider == "openfaas"]
+  aws_fn_names       = [for i, z in local.expconfig.program.functions : i if z.provider == "aws"]
+  google_fn_names    = [for i, z in local.expconfig.program.functions : i if z.provider == "google"]
+  tinyfaas_fn_names  = [for i, z in local.expconfig.program.functions : i if z.provider == "tinyfaas"]
+  openfaas_fn_names  = [for i, z in local.expconfig.program.functions : i if z.provider == "openfaas"]
   openwhisk_fn_names = [for i, z in local.expconfig.program.functions : i if z.provider == "openwhisk"]
 }
 
