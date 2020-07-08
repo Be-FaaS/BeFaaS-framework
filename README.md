@@ -146,10 +146,3 @@ export OPENFAAS_GATEWAY=http://<address of openfaas gateway>:8080
 export OPENFAAS_TOKEN=<password for openfaas, the one you also use when logging into faas-cli>
 export OPENWHISK_EXTERNAL=<address of your openwhisk api gateway eg http://localhost:3233>
 ```
-
-### Initlialize terraform
-
-```shell
-cd infrastructure
-terraform init
-```
