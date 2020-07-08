@@ -88,14 +88,14 @@ async function changeLight (ctx) {
   if (_.isEmpty(plates) || ! _.find(_.map(speeds, _.toFinite), x => x > 50)) {
     await ctx.db.set('lightcalculation:lights', ['yellow'])
     await ctx.db.set('lightcalculation:blink', 'false')
-    await wait(1)
+    await wait(2.5)
     await ctx.db.set('lightcalculation:lights', ['red'])
     await ctx.db.set('lightcalculation:blink', 'false')
   }
   else {
     await ctx.db.set('lightcalculation:lights', ['yellow', 'red'])
     await ctx.db.set('lightcalculation:blink', 'false')
-    await wait(1)
+    await wait(2.5)
     await ctx.db.set('lightcalculation:lights', ['green'])
     await ctx.db.set('lightcalculation:blink', 'false')
   }
