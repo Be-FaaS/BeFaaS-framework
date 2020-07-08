@@ -44,22 +44,32 @@ mkdir $exp_dir/_build
 for d in $exp_dir/*; do
   fname=`basename $d`
   [ "$fname" == '_build' ] && continue
-  if [[ -f "$d/.installed" ]]; then
-    fnVersion=$(jq -r '.version' $d/.installed)
-    echo "Function already built: ${fname} (version: ${fnVersion})" | chalk cyan
-    cp $exp_config $d
-    chmod -R +r $d
-    cd $d && zip -r ../_build/${fname}.zip * && cd -
-    rm $d/experiment.json
-    continue
-  fi
-  echo "Going to build function: ${fname}" | chalk cyan
   fProvider=$(jq -r ".program.functions.${fname}.provider" $exp_config)
-  injectFname="process.env.FAASTERMETRICS_FN_NAME='${fname}';"
   zipSuffix=""
   if [ "$fProvider" == 'openwhisk' ]; then
     echo "Building special function for $fProvider" | chalk cyan
     zipSuffix="-ow"
+  fi
+
+  if [[ -f "$d/.installed" ]]; then
+    fnVersion=$(jq -r '.version' $d/.installed)
+    echo "Function already built: ${fname} (version: ${fnVersion})" | chalk cyan
+    chmod -R +r $d
+    cp $exp_config $d
+    if [ "$fProvider" == 'openwhisk' ]; then
+      echo "${OW_JS}" > $d/_index.js
+      npx ncc build $d/_index.js -o $d/build
+      cp $d/build/index.js $d
+      rm -rf $d/build $d/_index.js
+    fi
+    cd $d && zip -r ../_build/${fname}${zipSuffix}.zip * && cd -
+    rm $d/experiment.json
+    continue
+  fi
+
+  echo "Going to build function: ${fname}" | chalk cyan
+  injectFname="process.env.FAASTERMETRICS_FN_NAME='${fname}';"
+  if [ "$fProvider" == 'openwhisk' ]; then
     echo "${injectFname}${OW_JS}" > $d/_index.js
   else
     echo "${injectFname}$(cat $d/index.js)" > $d/_index.js
