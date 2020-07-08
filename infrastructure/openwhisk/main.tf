@@ -16,7 +16,7 @@ locals {
 resource "openwhisk_function" "fn" {
   for_each = local.fns
   name     = each.key
-  zip_path = each.value
+  source   = each.value
   environment = merge({
     IS_OPENWHISK                 = "true"
     FAASTERMETRICS_DEPLOYMENT_ID = local.deployment_id
