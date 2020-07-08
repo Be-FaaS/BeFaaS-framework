@@ -1,2 +1,5 @@
 infrastructure
 *.html
+.tinyfaas
+.openfaas
+.openwhisk
