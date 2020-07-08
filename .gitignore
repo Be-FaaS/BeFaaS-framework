@@ -19,3 +19,4 @@ experiments/test/functions/
 template
 build
 terraform-provider-*
+.openwhisk

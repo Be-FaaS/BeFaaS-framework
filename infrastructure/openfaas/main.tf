@@ -6,7 +6,6 @@ data "terraform_remote_state" "exp" {
   }
 }
 
-
 provider "openfaas" {
   uri       = var.OPENFAAS_GATEWAY
   user_name = var.OPENFAAS_USER

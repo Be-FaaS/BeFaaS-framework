@@ -9,4 +9,3 @@ functions:
     image: ${DOCKERHUB_USER:-DOCKERHUB_USER_MISSING}/${FUNCTION_NAME:-NO_NAME_PROVIDED}:latest
     environment:
       IS_OPENFAAS: 1
-    
