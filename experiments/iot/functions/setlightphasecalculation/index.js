@@ -27,7 +27,7 @@ const _ = require('lodash')
  */
 
 async function initialDBUpdate (ctx, condition, plan, emergency) {
-  if (condition)
+  if (typeof condition === 'number')
     await ctx.db.set('lightcalculation:condition', _.toString(condition))
 
   if (plan) {
@@ -117,7 +117,7 @@ module.exports = lib.serverless.rpcHandler(
   { db: 'redis' },
   async (event, ctx) => {
     const { plan, emergency, condition } = event
-    if (!plan && !emergency && !condition) return { error: 'Wrong payload.' }
+    if (!plan && !emergency && typeof condition !== 'number') return { error: 'Wrong payload.' }
 
     await initialDBUpdate(ctx, condition, plan, emergency)
 
