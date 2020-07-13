@@ -13,7 +13,7 @@ module.exports = lib.serverless.rpcHandler(
   { db: 'redis' },
   async (event, ctx) => {
     let { cars } = await ctx.db.get('movementplan:cars')
-
+    cars = cars || []
     if (event.objects) {
       cars = cars.slice(0, event.objects.length)
     } else if (event.carDirection) {
