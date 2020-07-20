@@ -75,4 +75,4 @@ RUN echo 'alias fmctl="npm run"' >> /root/.bashrc
 
 WORKDIR /experiments
 
-ENTRYPOINT ["/bin/bash"]
+CMD ["/bin/bash"]
