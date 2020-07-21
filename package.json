@@ -25,11 +25,11 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@faastermetrics/lib": "^8.3.0",
+    "@faastermetrics/lib": "^8.4.0",
     "@koa/multer": "^3.0.0",
-    "card-validator": "^6.2.0",
+    "card-validator": "^7.0.1",
     "jimp": "^0.14.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "multer": "^1.4.2"
   },
   "devDependencies": {
@@ -41,7 +41,7 @@
     "libnpmconfig": "^1.2.1",
     "lint-staged": "^10.2.11",
     "pacote": "^11.1.10",
-    "prettier-standard": "^16.3.0",
+    "prettier-standard": "^16.4.1",
     "standard": "^14.3.3"
   }
 }
