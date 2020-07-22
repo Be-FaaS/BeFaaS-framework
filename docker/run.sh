@@ -15,4 +15,4 @@ dOpts=""
   dOpts="-e CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=$resolvedGAC -e GOOGLE_APPLICATION_CREDENTIALS=$resolvedGAC -v $resolvedGAC:$resolvedGAC:ro"
 }
 
-docker run -it --rm --env-file $DOCKER_DIR/env.list $dOpts -v $(realpath $DOCKER_DIR/../):/experiments -v /var/run/docker.sock:/var/run/docker.sock faastermetrics/experiments
+docker run -it --rm --net host --env-file $DOCKER_DIR/env.list $dOpts -v $(realpath $DOCKER_DIR/../):/experiments -v /var/run/docker.sock:/var/run/docker.sock faastermetrics/experiments
