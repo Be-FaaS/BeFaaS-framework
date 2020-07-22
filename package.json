@@ -11,7 +11,8 @@
     "deploy": "./scripts/deploy.sh",
     "destroy": "./scripts/destroy.sh",
     "logs": "./scripts/logs.sh",
-    "workload": "./scripts/workload.sh"
+    "workload": "./scripts/workload.sh",
+    "analysis": "./scripts/analysis.sh"
   },
   "husky": {
     "hooks": {
