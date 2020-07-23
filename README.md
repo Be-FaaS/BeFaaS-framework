@@ -6,6 +6,7 @@
   - [Build and Deploy](#build-and-deploy)
   - [Setup](#setup)
     - [Create the docker image](#create-the-docker-image)
+      - [Analysis image](#analysis-image)
     - [npm-Dependencies](#npm-dependencies)
     - [Cloud setup](#cloud-setup)
       - [Google](#google)
@@ -59,11 +60,19 @@ Before you start, please make sure you have the following tools installed.
 
 First, it is necessary to create a docker image that is later used to run the experiments. To create the docker image, run the following command:
 
-```
+```shell
 ./docker/build.sh
 ```
 
 Now the `faastermetrics/experiments` image was created.
+
+#### Analysis image
+
+If you plan to run the analysis it is also required to build the `faastermetrics/analysis` image. This can be done with:
+
+```shell
+./docker/build-analysis.sh
+```
 
 ### npm-Dependencies
 
