@@ -30,6 +30,8 @@ fi
 logDir="/experiments/logs/$1/$logTimestamp"
 echo "Using log directory: $logDir" | chalk blue
 
+expDir=${HOST_EXPERIMENT_DIR:-$(realpath $SCRIPT_DIR/../)}
+
 echo "Running analysis..." | chalk blue
-docker run -it --rm -v $(realpath $SCRIPT_DIR/../):/experiments faastermetrics/analysis $logDir /experiments/analysis
+docker run -it --rm -v $expDir:/experiments faastermetrics/analysis $logDir /experiments/analysis
 echo "done." | chalk blue
