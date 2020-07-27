@@ -1,5 +1,31 @@
 const lib = require('@faastermetrics/lib')
 
+/**
+ *
+ * Returns two random ads without input.
+ *
+ * Example Request: {}
+ *
+ * Example Response: {
+ *  "ads": [{
+ *     redirect_url:
+ *       'https://commons.wikimedia.org/wiki/File:Cat_public_domain_dedication_image_0011.jpg',
+ *     image_url:
+ *       'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cat_public_domain_dedication_image_0011.jpg/800px-Cat_public_domain_dedication_image_0011.jpg',
+ *     text: 'Cute cat'
+ *   },
+ *   {
+ *     redirect_url:
+ *       'https://commons.wikimedia.org/wiki/File:Tabby_cat_with_blue_eyes-3336579.jpg',
+ *     image_url:
+ *       'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Tabby_cat_with_blue_eyes-3336579.jpg/499px-Tabby_cat_with_blue_eyes-3336579.jpg',
+ *     text: 'Cat with blue eyes'
+ *   }]}
+ *
+ */
+
+
+
 const ads = [
   {
     redirect_url:
