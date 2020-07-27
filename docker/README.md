@@ -3,16 +3,20 @@
 [![CI](https://github.com/FaaSterMetrics/experiments/workflows/CI/badge.svg)](https://github.com/FaaSterMetrics/experiments/actions?query=workflow%3ACI+branch%3Amaster)
 
 - [experiments](#experiments)
-  - [Build & Deploy](#build-and-deploy)
+  - [Build and Deploy](#build-and-deploy)
   - [Setup](#setup)
-    - [NPM-Dependencies](#npm-dependencies)
-    - [Build](#build)
+    - [Create the docker image](#create-the-docker-image)
+      - [Analysis image](#analysis-image)
+    - [npm-Dependencies](#npm-dependencies)
     - [Cloud setup](#cloud-setup)
       - [Google](#google)
       - [AWS](#aws)
       - [Azure](#azure)
+      - [TinyFaaS](#tinyfaas)
+    - [OpenFaaS](#openfaas)
+      - [OpenWhisk](#openwhisk)
     - [Environment Setup](#environment-setup)
-    - [Initlialize terraform](#initlialize-terraform)
+    - [Start the docker container](#start-the-docker-container)
 
 ## Build and Deploy
 
@@ -21,7 +25,7 @@ The standard workflow for this experiment is straight forward.
 
 ```shell
 # List possible experiments
-npm run build
+fmctl build
 [...]
 Usage: ./scripts/build.sh <experiment name>
 Choose one of:
@@ -29,44 +33,54 @@ Choose one of:
 [...]
 
 # Build the webservice experiment
-npm run build webservice
+fmctl build webservice
 
 # Deploy to the Cloud
-npm run deploy webservice
+fmctl deploy webservice
+
+# Retrieve logs
+fmctl logs webservice
+
+# Destroy created cloud ressources
+fmctl destroy
+
+# Run analysis
+fmctl analysis
 ```
 
 ## Setup
 
-Before you start please make sure you have following tools installed.
+Before you start, please make sure you have the following tools installed.
 
-| Tool          | Min. version |
-| ------------- | ------------ |
-| terraform     | v0.12.25     |
-| node          | v12          |
-| npm           | v6           |
-| awscli        | v2           |
-| gcloud        | v293         |
-| azure-cli     | v2           |
-| jq            | jq-1.6       |
-| docker        | 19.03.12     |
-| go            | 1.13.8       |
-| openwhisk-cli | 1.0.0        |
+| Tool   | Min. version |
+| ------ | ------------ |
+| docker | 19.03.8      |
 
-### NPM-Dependencies
+### Create the docker image
 
-Setup NPM to work with our private GitHub package [registry](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages).
-
-Run:
+First, it is necessary to create a docker image that is later used to run the experiments. To create the docker image, run the following command:
 
 ```shell
-npm install
+./docker/build.sh
 ```
 
-to verify that the GitHub registry works.
+Now the `faastermetrics/experiments` image was created.
 
-### Build
+#### Analysis image
 
-In order to deploy we need to build the source first. Do: `npm run build`
+If you plan to run the analysis it is also required to build the `faastermetrics/analysis` image. This can be done with:
+
+```shell
+./docker/build-analysis.sh
+```
+
+### npm-Dependencies
+
+The `@faastermetrics/lib` dependency is a private npm packaged that is used to share common functionality between different functions. It is required to create a [GitHub token](https://docs.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens) and export it to the environment to successfully install the package.
+
+```shell
+export GITHUB_TOKEN=xxx
+```
 
 ### Cloud setup
 
@@ -128,6 +142,8 @@ wsk property set \
 Get the `project_name` from the cloud provider setup.
 
 ```shell
+export GITHUB_TOKEN=xxx
+
 export AWS_ACCESS_KEY_ID=<From the web interface>
 export AWS_SECRET_ACCESS_KEY=<From the web interface>
 
@@ -146,3 +162,13 @@ export OPENFAAS_GATEWAY=http://<address of openfaas gateway>:8080
 export OPENFAAS_TOKEN=<password for openfaas, the one you also use when logging into faas-cli>
 export OPENWHISK_EXTERNAL=<address of your openwhisk api gateway eg http://localhost:3233>
 ```
+
+### Start the docker container
+
+The final step is to start, the docker container:
+
+```
+./docker/run.sh
+```
+
+Now the container should be running in the foreground, and it is possible to execute `fmctl` commands.
