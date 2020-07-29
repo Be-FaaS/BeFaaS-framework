@@ -6,7 +6,7 @@
     }
   },
   "defaults": {
-    "registry": "https://npm.pkg.github.com/",
+    "registry": "https://registry.npmjs.org/",
     "prefix": "@faastermetrics/exp-test-"
   },
   "program": {
