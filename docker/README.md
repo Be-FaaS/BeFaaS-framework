@@ -7,13 +7,13 @@
   - [Setup](#setup)
     - [Create the docker image](#create-the-docker-image)
       - [Analysis image](#analysis-image)
-    - [npm-Dependencies](#npm-dependencies)
+    - [Install npm dependencies](#install-npm-dependencies)
     - [Cloud setup](#cloud-setup)
       - [Google](#google)
       - [AWS](#aws)
       - [Azure](#azure)
       - [TinyFaaS](#tinyfaas)
-    - [OpenFaaS](#openfaas)
+      - [OpenFaaS](#openfaas)
       - [OpenWhisk](#openwhisk)
     - [Environment Setup](#environment-setup)
     - [Start the docker container](#start-the-docker-container)
@@ -74,12 +74,10 @@ If you plan to run the analysis it is also required to build the `faastermetrics
 ./docker/build-analysis.sh
 ```
 
-### npm-Dependencies
-
-The `@faastermetrics/lib` dependency is a private npm packaged that is used to share common functionality between different functions. It is required to create a [GitHub token](https://docs.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens) and export it to the environment to successfully install the package.
+### Install npm dependencies
 
 ```shell
-export GITHUB_TOKEN=xxx
+npm install
 ```
 
 ### Cloud setup
@@ -114,7 +112,7 @@ export GITHUB_TOKEN=xxx
 2. Set the `TINYFAAS_ADDRESS` environment variable. Please note that TINYFAAS_ADDRESS must be publically visible on the internet in order for other FaaS platforms to talk to it.  
    **Anyone with access to the tinyFaaS management port (8080) will be able to upload arbitrary functions, it is very advisable to configure your firewall to only let the deploying computer access that port**
 
-### OpenFaaS
+#### OpenFaaS
 
 **Warning:** this will **only** work with full openfaas **not** with faasd due to multiple bugs in faasd.  
 **The only supported setup is the one using docker swarm https://docs.openfaas.com/deployment/docker-swarm/**
@@ -142,8 +140,6 @@ wsk property set \
 Get the `project_name` from the cloud provider setup.
 
 ```shell
-export GITHUB_TOKEN=xxx
-
 export AWS_ACCESS_KEY_ID=<From the web interface>
 export AWS_SECRET_ACCESS_KEY=<From the web interface>
 
