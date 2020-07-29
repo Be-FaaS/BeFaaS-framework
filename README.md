@@ -52,17 +52,11 @@ Before you start please make sure you have following tools installed.
 | go            | 1.13.8       |
 | openwhisk-cli | 1.0.0        |
 
-### NPM-Dependencies
-
-Setup NPM to work with our private GitHub package [registry](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages).
-
-Run:
+### Install npm dependencies
 
 ```shell
 npm install
 ```
-
-to verify that the GitHub registry works.
 
 ### Build
 
@@ -151,11 +145,12 @@ export OPENWHISK_EXTERNAL=<address of your openwhisk api gateway eg http://local
 
 ## License
 
-This repository is licensed under the Apache 2.0 License. 
+This repository is licensed under the Apache 2.0 License.
 
 ### Citation
 
-If you use this software (or parts of it) in a published work, please include a citation similar to the following BibTex notice. We will update this entry once we have finished a complete software documentation for our work. 
+If you use this software (or parts of it) in a published work, please include a citation similar to the following BibTex notice. We will update this entry once we have finished a complete software documentation for our work.
+
 ```bibtex
 @Manual{faasterMetrics2020,
   title = {FaaSter Metrics: An Application-oriented Function as a Service Benchmarking Framework},

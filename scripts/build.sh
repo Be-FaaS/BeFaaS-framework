@@ -31,7 +31,7 @@ if [[ ! -f $exp_config ]]; then
 fi
 
 # Ensure updated dependencies
-npm install --ignore-scripts
+npm install
 
 echo "Installing functions from npm" | chalk cyan
 ./scripts/install-functions.js $exp_config $exp_dir
