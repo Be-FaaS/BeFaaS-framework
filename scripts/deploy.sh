@@ -137,3 +137,5 @@ done
 echo $TF_VAR_fn_env | jq
 
 chalk -t "\n{green Unique deployment id:} {green.bold $deployment_id}"
+
+./scripts/notice.sh

@@ -21,3 +21,4 @@ build
 terraform-provider-*
 .openwhisk
 analysis/
+.suppress_notice
