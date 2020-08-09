@@ -7,6 +7,14 @@ const upload = multer({
   storage: multer.memoryStorage()
 })
 
+const emergencyObject = {
+  type: 'ambulance',
+  positionx: 55,
+  positiony: 135,
+  boundx: 114,
+  boundy: 175
+}
+
 const possibleObjects = [
   {
     type: 'car',
@@ -84,13 +92,6 @@ const possibleObjects = [
     positiony: 137,
     boundx: 109,
     boundy: 170
-  },
-  {
-    type: 'ambulance',
-    positionx: 55,
-    positiony: 135,
-    boundx: 114,
-    boundy: 175
   }
 ]
 
@@ -101,7 +102,7 @@ const possibleObjects = [
  *
  * Example Payload:
  *   curl -X POST \
- *   -F "image=@/<path_to_imgfile>" \
+ *   -F "image=@<path_to_imgfile>" \
  *   -H "Content-Type: multipart/form-data" \
  *   http://localhost:3000/
  *
@@ -130,13 +131,20 @@ module.exports = lib.serverless.router(async router => {
   router.post('/', async (ctx, next) => {
     await upload.single('image')(ctx, () => {})
     const pic = await Jimp.read(ctx.file.buffer)
-    // We loaded a picture successfully and parsed it.
-    console.log(pic)
+    const color = pic.getPixelColor(0, 0);
+
+    const objects = _.sampleSize(
+      possibleObjects,
+      _.random(0, possibleObjects.length)
+    )
+
+    if(Jimp.intToRGBA(color).r > 0) {
+      objects.push(emergencyObject)
+    }
+    // We loaded a picture successfully and parsed it. 
+
     const res = {
-      objects: _.sampleSize(
-        possibleObjects,
-        _.random(0, possibleObjects.length)
-      )
+      objects: objects
     }
     await ctx.lib.call('trafficstatistics', res)
     await ctx.lib.call('movementplan', res)
