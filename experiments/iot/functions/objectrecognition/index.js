@@ -148,6 +148,7 @@ module.exports = lib.serverless.router(async router => {
     }
     await ctx.lib.call('trafficstatistics', res)
     await ctx.lib.call('movementplan', res)
+    await ctx.lib.call('emergencydetection', res)
 
     ctx.type = 'application/json'
     ctx.body = res

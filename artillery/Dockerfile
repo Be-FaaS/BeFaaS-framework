@@ -12,5 +12,7 @@ ADD run.sh ./
 ADD variables.json ./
 ADD workload.yml ./
 ADD usernames.csv ./
+ADD image-ambulance.jpg ./
+ADD image-noambulance.jpg ./
 
 CMD ["/workload/run.sh"]

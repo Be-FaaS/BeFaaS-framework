@@ -5,35 +5,36 @@
   "program": {
     "functions": {
       "trafficsensorfilter": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["movementplan"]
       },
       "weathersensorfilter": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["roadcondition"]
       },
       "roadcondition": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["setlightphasecalculation"]
       },
       "emergencydetection": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["setlightphasecalculation"]
       },
       "trafficstatistics": {
-        "provider": "aws"
+        "provider": "tinyfaas"
       },
       "setlightphasecalculation": {
-        "provider": "aws"
+        "provider": "tinyfaas"
       },
       "getlightphasecalculation": {
-        "provider": "aws"
+        "provider": "tinyfaas"
       },
       "objectrecognition": {
-        "provider": "aws"
+        "provider": "tinyfaas",
+        "calls": ["trafficstatistics", "movementplan", "emergencydetection"]
       },
       "movementplan": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["setlightphasecalculation"]
       }
     }
