@@ -1,5 +1,6 @@
 const lib = require('@faastermetrics/lib')
 const fs = require('fs')
+const path = require('path')
 const { performance } = require('perf_hooks')
 
 
@@ -64,7 +65,7 @@ function afterResponse(requestParams, response, context, ee, next) {
 const timestamp = Math.round(Date.now() / 1000);
 
 function emergencyNever(requestParams, context, ee, next) {
-  requestParams.formData.image = fs.createReadStream(__dirname + '/image-noambulance.jpg')
+  requestParams.formData.image = fs.createReadStream(path.resolve(__dirname, 'image-noambulance.jpg'))
   return beforeRequest(requestParams, context, ee, next);
 }
 
@@ -72,19 +73,19 @@ function emergencyNever(requestParams, context, ee, next) {
 function singleEmergency(requestParams, context, ee, next) {
   const now = Math.round(Date.now() / 1000);
   if (now - timestamp > 300) { // after 5 minutes (10 seconds before end of workload) send in ambulance
-    requestParams.formData.image = fs.createReadStream(__dirname + '/image-ambulance.jpg')
+    requestParams.formData.image = fs.createReadStream(path.resolve(__dirname, 'image-ambulance.jpg'))
   } else {
-    requestParams.formData.image = fs.createReadStream(__dirname + '/image-noambulance.jpg')
+    requestParams.formData.image = fs.createReadStream(path.resolve(__dirname, 'image-noambulance.jpg'))
   }
   return beforeRequest(requestParams, context, ee, next);
 }
 
 function emergencyEveryTwoMinutesFiveSecondsEach(requestParams, context, ee, next) {
   const now = Math.round(Date.now() / 1000);
-  if (((now - timestamp) % 120) < 5) { 
-    requestParams.formData.image = fs.createReadStream(__dirname + '/image-ambulance.jpg')
+  if (((now - timestamp) % 120) < 5) {
+    requestParams.formData.image = fs.createReadStream(path.resolve(__dirname, 'image-ambulance.jpg'))
   } else {
-    requestParams.formData.image = fs.createReadStream(__dirname + '/image-noambulance.jpg')
+    requestParams.formData.image = fs.createReadStream(path.resolve(__dirname, 'image-noambulance.jpg'))
   }
 
   return beforeRequest(requestParams, context, ee, next);
