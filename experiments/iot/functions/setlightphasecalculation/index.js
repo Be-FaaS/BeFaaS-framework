@@ -68,13 +68,9 @@ async function checkAndUnlock (ctx) {
   return false
 }
 
-async function wait (sec) {
-  return new Promise(resolve => setTimeout(resolve, sec * 1000))
-}
-
 async function waitAppropriately (ctx) {
   const condition = await _.toInteger(ctx.db.get('lightcalculation:condition'))
-  return new Promise(resolve => setTimeout(resolve, (condition + 2.5) * 1000))
+  return new Promise(resolve => setTimeout(resolve, ((condition / 2) + 2) * 1000))
 }
 
 async function changeLight (ctx) {
@@ -91,16 +87,16 @@ async function changeLight (ctx) {
   // const directions = ctx.db.get('lightcalculation:directions')
   // We probably really should have 4 different traffic lights
   const speeds = await ctx.db.get('lightcalculation:speeds')
-  if (_.isEmpty(plates) || !_.find(_.map(speeds, _.toFinite), x => x > 50)) {
+  if (_.isEmpty(plates) || _.find(_.map(speeds, _.toFinite), x => x > 50)) {
     await ctx.db.set('lightcalculation:lights', ['yellow'])
     await ctx.db.set('lightcalculation:blink', 'false')
-    await wait(2.5)
+    await waitAppropriately(ctx)
     await ctx.db.set('lightcalculation:lights', ['red'])
     await ctx.db.set('lightcalculation:blink', 'false')
   } else {
     await ctx.db.set('lightcalculation:lights', ['yellow', 'red'])
     await ctx.db.set('lightcalculation:blink', 'false')
-    await wait(2.5)
+    await waitAppropriately(ctx)
     await ctx.db.set('lightcalculation:lights', ['green'])
     await ctx.db.set('lightcalculation:blink', 'false')
   }
@@ -123,10 +119,9 @@ module.exports = lib.serverless.rpcHandler(
     await initialDBUpdate(ctx, condition, plan, emergency)
 
     if (await checkAndLock(ctx)) return {}
-    await waitAppropriately(ctx)
+    await changeLight(ctx)
     if (await checkAndUnlock(ctx)) return {}
 
-    await changeLight(ctx)
     return {}
   }
 )

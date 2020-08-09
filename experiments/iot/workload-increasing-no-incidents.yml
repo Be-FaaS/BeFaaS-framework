@@ -4,7 +4,10 @@ config:
     - duration: 300
       arrivalRate: 1
       rampTo: 15
-
+  variables:
+    speed:
+      - 10
+      - 800
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
   defaults:
 
@@ -24,7 +27,7 @@ scenarios:
           carDirection:
             plate: 'OD DI 98231'
             direction: 4
-            speed: 3
+            speed: {{ speed }}
         beforeRequest: 'beforeRequest'
         afterResponse: 'afterResponse'
     name: 'trafficSensorFilter'
