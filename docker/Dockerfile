@@ -71,6 +71,9 @@ RUN curl -SLO https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28
     && rm terraform_0.12.28_linux_amd64.zip \
     && terraform version
 
+# install faas-cli
+RUN curl -SL https://cli.openfaas.com | sh
+
 RUN echo 'alias fmctl="npm run"' >> /root/.bashrc
 
 WORKDIR /experiments
