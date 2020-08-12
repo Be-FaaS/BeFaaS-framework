@@ -17,4 +17,4 @@ dOpts=""
 
 expDir=$(realpath $DOCKER_DIR/../)
 
-docker run -it --rm --net host --env-file $DOCKER_DIR/env.list $dOpts -e HOST_EXPERIMENT_DIR=$expDir -v $expDir:/experiments -v /var/run/docker.sock:/var/run/docker.sock faastermetrics/experiments
+docker run -it --rm --net host --env-file $DOCKER_DIR/env.list $dOpts -e HOST_EXPERIMENT_DIR=$expDir -v $HOME/.azure:/root/.azure -v $expDir:/experiments -v /var/run/docker.sock:/var/run/docker.sock faastermetrics/experiments
