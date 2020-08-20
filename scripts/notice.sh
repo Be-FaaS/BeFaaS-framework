@@ -5,8 +5,7 @@ set -euo pipefail
 [ -f ".suppress_notice" ] && exit 0
 
 echo "
-If you use this software (or parts of it) in a published work, please include a citation similar to the following BibTex notice.
-We will update this entry once we have finished a complete software documentation for our work."
+If you use this software (or parts of it) in a published work, please include a citation similar to the following BibTex notice."
 
 chalk gray "
 @Manual{faasterMetrics2020,
@@ -15,7 +14,7 @@ chalk gray "
   organization = {FaaSter Metrics project group},
   address = {Berlin, Germany},
   year = {2020},
-  url = {https://github.com/FaaSterMetrics},
+  url = {https://github.com/FaaSterMetrics/documentation/releases},
 }
 
 "
