@@ -1,8 +1,13 @@
-# experiments
+# Experiments
 
 [![CI](https://github.com/FaaSterMetrics/experiments/workflows/CI/badge.svg)](https://github.com/FaaSterMetrics/experiments/actions?query=workflow%3ACI+branch%3Amaster)
 
-- [experiments](#experiments)
+This is the main repository of the FaaSter Metrics project. 
+It internally uses the [FaaSterMetrics library](https://github.com/FaaSterMetrics/lib).
+A full project documentation PDF can be found [here](https://github.com/FaaSterMetrics/documentation/releases).
+Tools for analyzing and exporting experiment results are within the [analysis repository](https://github.com/FaaSterMetrics/analysis).
+
+- [Experiments](#experiments)
   - [Build and Deploy](#build-and-deploy)
   - [Setup](#setup)
     - [Install npm dependencies](#install-npm-dependencies)
