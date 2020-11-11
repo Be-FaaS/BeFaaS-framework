@@ -27,7 +27,7 @@ resource "google_cloudfunctions_function" "fn" {
   trigger_http = true
 
   environment_variables = merge({
-    FAASTERMETRICS_DEPLOYMENT_ID = local.deployment_id
+    BEFAAS_DEPLOYMENT_ID = local.deployment_id
   }, var.fn_env)
 }
 

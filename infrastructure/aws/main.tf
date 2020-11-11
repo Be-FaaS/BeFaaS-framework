@@ -82,7 +82,7 @@ resource "aws_lambda_function" "fn" {
 
   environment {
     variables = merge({
-      FAASTERMETRICS_DEPLOYMENT_ID = local.deployment_id
+      BEFAAS_DEPLOYMENT_ID = local.deployment_id
     }, var.fn_env)
   }
 }

@@ -6,7 +6,7 @@ const { performance } = require('perf_hooks')
 
 const LIB_VERSION = require('@faastermetrics/lib/package.json').version
 const deploymentId =
-  process.env.FAASTERMETRICS_DEPLOYMENT_ID || 'unknownDeploymentId'
+  process.env.BEFAAS_DEPLOYMENT_ID || 'unknownDeploymentId'
 
 const fnName = 'artillery'
 
