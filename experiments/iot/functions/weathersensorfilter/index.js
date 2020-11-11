@@ -1,4 +1,4 @@
-const lib = require('@faastermetrics/lib')
+const lib = require('@befaas/lib')
 
 /*
  * Check that temperature is both valid and a number. Value is in celsius.

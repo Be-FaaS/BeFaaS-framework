@@ -1,4 +1,4 @@
-const lib = require('@faastermetrics/lib')
+const lib = require('@befaas/lib')
 
 /*
  * Filters incoming traffic sensor data, such as removing erroneous data or NaN

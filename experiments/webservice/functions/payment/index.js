@@ -1,4 +1,4 @@
-const lib = require('@faastermetrics/lib')
+const lib = require('@befaas/lib')
 const valid = require('card-validator')
 
 function sanitizeCreditCard (card) {

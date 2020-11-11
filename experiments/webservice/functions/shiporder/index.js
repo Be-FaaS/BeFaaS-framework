@@ -1,4 +1,4 @@
-const lib = require('@faastermetrics/lib')
+const lib = require('@befaas/lib')
 
 // Returns a new TrackingID for the shipment.
 function generateTrackingID () {

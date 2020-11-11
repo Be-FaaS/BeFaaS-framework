@@ -1,4 +1,4 @@
-const lib = require('@faastermetrics/lib')
+const lib = require('@befaas/lib')
 const fs = require('fs')
 const path = require('path')
 const { performance } = require('perf_hooks')

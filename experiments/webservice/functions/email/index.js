@@ -1,4 +1,4 @@
-const lib = require('@faastermetrics/lib')
+const lib = require('@befaas/lib')
 
 // https://trac.webkit.org/browser/trunk/Source/WebCore/html/EmailInputType.cpp?rev=86298
 const re = /^[a-z0-9!#$%&'*+/=?^_`{|}~.-]+@[a-z0-9-]+(\.[a-z0-9-]+)*$/i

@@ -1,4 +1,4 @@
-const lib = require('@faastermetrics/lib')
+const lib = require('@befaas/lib')
 
 // Iterates over given cart and calculates shipping cost in EUR
 function calculateShippingCost (cart) {

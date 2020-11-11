@@ -1,4 +1,4 @@
-const lib = require('@faastermetrics/lib')
+const lib = require('@befaas/lib')
 
 /*
  * Calculate road condition. With 0 being perfect condition and 5 being worst
