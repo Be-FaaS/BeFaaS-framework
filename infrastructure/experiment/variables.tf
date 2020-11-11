@@ -1,5 +1,5 @@
 variable "project_prefix" {
-  default = "faaster"
+  default = "befaas"
 }
 
 variable "build_timestamp" {
