@@ -7,7 +7,7 @@
   },
   "defaults": {
     "registry": "https://registry.npmjs.org/",
-    "prefix": "@faastermetrics/exp-test-"
+    "prefix": "@befaas/exp-test-"
   },
   "program": {
     "functions": {

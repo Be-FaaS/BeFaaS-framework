@@ -67,13 +67,13 @@ echo "Compiling logger.js" | chalk blue
 npx ncc build artillery/logger.js -o artillery/build
 
 echo "Creating docker image..." | chalk blue
-docker build -t faastermetrics/artillery artillery/
+docker build -t befaas/artillery artillery/
 
 echo "Cleaning up build files" | chalk blue
 rm -rf artillery/build
 
 echo "Exporting docker image..." | chalk blue
-docker save faastermetrics/artillery:latest | gzip > artillery/image.tar.gz
+docker save befaas/artillery:latest | gzip > artillery/image.tar.gz
 
 echo "Deploying workload..." | chalk blue
 cd infrastructure/services/workload

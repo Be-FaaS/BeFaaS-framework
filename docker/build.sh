@@ -8,4 +8,5 @@ else
   DOCKER_DIR=$(dirname "$(readlink -f "$0")")
 fi
 
-docker build -t faastermetrics/experiments $DOCKER_DIR
+# -t names the container
+docker build -t befaas/framework $DOCKER_DIR

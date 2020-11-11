@@ -33,5 +33,5 @@ echo "Using log directory: $logDir" | chalk blue
 expDir=${HOST_EXPERIMENT_DIR:-$(realpath $SCRIPT_DIR/../)}
 
 echo "Running analysis..." | chalk blue
-docker run -it --rm -v $expDir:/experiments faastermetrics/analysis $logDir /experiments/analysis
+docker run -it --rm -v $expDir:/experiments befaas/analysis $logDir /experiments/analysis
 echo "done." | chalk blue

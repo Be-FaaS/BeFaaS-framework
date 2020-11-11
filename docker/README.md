@@ -64,11 +64,11 @@ First, it is necessary to create a docker image that is later used to run the ex
 ./docker/build.sh
 ```
 
-Now the `faastermetrics/experiments` image was created.
+Now the `befaas/framework` image was created.
 
 #### Analysis image
 
-If you plan to run the analysis it is also required to build the `faastermetrics/analysis` image. This can be done with:
+If you plan to run the analysis it is also required to build the `befaas/analysis` image. This can be done with:
 
 ```shell
 ./docker/build-analysis.sh

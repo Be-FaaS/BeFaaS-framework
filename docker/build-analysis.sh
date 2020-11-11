@@ -12,6 +12,7 @@ rm -rf $analysisDir
 mkdir $analysisDir
 
 git clone git@github.com:Be-FaaS/BeFaaS-analysis.git $analysisDir
-docker build -t faastermetrics/analysis $analysisDir
+# -t names the container
+docker build -t befaas/analysis $analysisDir
 
 rm -rf $analysisDir
