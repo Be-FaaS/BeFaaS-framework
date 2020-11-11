@@ -68,7 +68,7 @@ for d in $exp_dir/*; do
   fi
 
   echo "Going to build function: ${fname}" | chalk cyan
-  injectFname="process.env.FAASTERMETRICS_FN_NAME='${fname}';"
+  injectFname="process.env.BEFAAS_FN_NAME='${fname}';"
   if [ "$fProvider" == 'openwhisk' ]; then
     echo "${injectFname}${OW_JS}" > $d/_index.js
   else
@@ -109,7 +109,7 @@ for fname in $(jq -r '.program.functions | with_entries(select(.value.provider =
     continue
   fi
   echo "Going to build function: ${fname}" | chalk cyan
-  echo "process.env.FAASTERMETRICS_FN_NAME='${fname}';$(cat $d/index.js)" > $d/_index.js
+  echo "process.env.BEFAAS_FN_NAME='${fname}';$(cat $d/index.js)" > $d/_index.js
   npx ncc build $d/_index.js -o $exp_dir/_build/azure/$fname
   rm -rf $d/_index.js
 done
