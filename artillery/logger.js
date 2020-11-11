@@ -25,7 +25,7 @@ function resolveVar(url, context) {
 
 function logEvent(event) {
   console.log(
-    'FAASTERMETRICS' +
+    'BEFAAS' +
     JSON.stringify({
       version: LIB_VERSION,
       deploymentId,

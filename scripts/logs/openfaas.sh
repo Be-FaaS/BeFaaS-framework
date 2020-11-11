@@ -7,5 +7,5 @@ set -euo pipefail
 
 for fname in $(jq -r '.program.functions | with_entries(select(.value.provider == "openfaas" )) | keys[]' $1); do
     curl --max-time 5 http://admin:$OPENFAAS_TOKEN@`echo $OPENFAAS_GATEWAY | sed 's_http://__'`/system/logs?name=$fname |
-        jq -R 'fromjson? | .text' -r | sed 's/.*stdout: //' | tr -d '\n' | sed 's/FAASTERMETRICS/\nFAASTERMETRICS/g' >>  $logdir/openfaas.log || true
+        jq -R 'fromjson? | .text' -r | sed 's/.*stdout: //' | tr -d '\n' | sed 's/BEFAAS/\nBEFAAS/g' >>  $logdir/openfaas.log || true
 done
