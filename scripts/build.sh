@@ -3,7 +3,7 @@
 set -euo pipefail
 
 PKG_JSON='{"name": "fn", "version": "1.0.0", "main": "index.js"}'
-OW_JS="module.exports.main = require('@faastermetrics/lib/openwhisk')(() => require('./index.js'))"
+OW_JS="module.exports.main = require('@befaas/lib/openwhisk')(() => require('./index.js'))"
 
 if [ -z "${1:-}" ]; then
     chalk -t "{yellow Usage: $0 }{yellow.bold <experiment name>}"

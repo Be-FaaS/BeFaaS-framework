@@ -4,7 +4,7 @@ const path = require('path')
 const { performance } = require('perf_hooks')
 
 
-const LIB_VERSION = require('@faastermetrics/lib/package.json').version
+const LIB_VERSION = require('@befaas/lib/package.json').version
 const deploymentId =
   process.env.BEFAAS_DEPLOYMENT_ID || 'unknownDeploymentId'
 

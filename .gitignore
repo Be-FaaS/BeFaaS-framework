@@ -22,3 +22,4 @@ terraform-provider-*
 .openwhisk
 analysis/
 .suppress_notice
+/package-lock.json
