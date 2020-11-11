@@ -1,6 +1,6 @@
 # experiments
 
-[![CI](https://github.com/FaaSterMetrics/experiments/workflows/CI/badge.svg)](https://github.com/FaaSterMetrics/experiments/actions?query=workflow%3ACI+branch%3Amaster)
+[![CI](https://github.com/Be-FaaS/BeFaaS-framework/workflows/CI/badge.svg)](https://github.com/Be-FaaS/BeFaaS-framework/actions?query=workflow%3ACI+branch%3Amaster)
 
 - [experiments](#experiments)
   - [Build and Deploy](#build-and-deploy)
@@ -108,7 +108,7 @@ npm install
 
 #### TinyFaaS
 
-1. If you don't have an tinyFaaS instance follow the instructions [here](https://github.com/FaaSterMetrics/tinyFaaS).
+1. If you don't have an tinyFaaS instance follow the instructions [here](https://github.com/Be-FaaS/tinyFaaS).
 2. Set the `TINYFAAS_ADDRESS` environment variable. Please note that TINYFAAS_ADDRESS must be publically visible on the internet in order for other FaaS platforms to talk to it.  
    **Anyone with access to the tinyFaaS management port (8080) will be able to upload arbitrary functions, it is very advisable to configure your firewall to only let the deploying computer access that port**
 

@@ -1,11 +1,10 @@
 # Experiments
 
-[![CI](https://github.com/FaaSterMetrics/experiments/workflows/CI/badge.svg)](https://github.com/FaaSterMetrics/experiments/actions?query=workflow%3ACI+branch%3Amaster)
+[![CI](https://github.com/Be-FaaS/BeFaaS-framework/workflows/CI/badge.svg)](https://github.com/Be-FaaS/BeFaaS-framework/actions?query=workflow%3ACI+branch%3Amaster)
 
-This is the main repository of the FaaSter Metrics project. 
-It internally uses the [FaaSterMetrics library](https://github.com/FaaSterMetrics/lib).
-A full project documentation PDF can be found [here](https://github.com/FaaSterMetrics/documentation/releases).
-Tools for analyzing and exporting experiment results are within the [analysis repository](https://github.com/FaaSterMetrics/analysis).
+This is the main repository of the BeFaaS project. 
+It internally uses the [BeFaaS library](https://github.com/Be-FaaS/BeFaaS-lib).
+Tools for analyzing and exporting experiment results are within the [analysis repository](https://github.com/Be-FaaS/BeFaaS-analysis).
 
 - [Experiments](#experiments)
   - [Build and Deploy](#build-and-deploy)
@@ -99,7 +98,7 @@ In order to deploy we need to build the source first. Do: `npm run build`
 
 #### TinyFaaS
 
-1. If you don't have an tinyFaaS instance follow the instructions [here](https://github.com/FaaSterMetrics/tinyFaaS).
+1. If you don't have an tinyFaaS instance follow the instructions [here](https://github.com/Be-FaaS/tinyFaaS).
 2. Set the `TINYFAAS_ADDRESS` environment variable. Please note that TINYFAAS_ADDRESS must be publically visible on the internet in order for other FaaS platforms to talk to it.  
    **Anyone with access to the tinyFaaS management port (8080) will be able to upload arbitrary functions, it is very advisable to configure your firewall to only let the deploying computer access that port**
 
@@ -156,17 +155,3 @@ export OPENWHISK_EXTERNAL=<address of your openwhisk api gateway eg http://local
 
 This repository is licensed under the Apache 2.0 License.
 
-### Citation
-
-If you use this software (or parts of it) in a published work, please include a citation similar to the following BibTex notice. 
-
-```bibtex
-@Manual{faasterMetrics2020,
-  title = {FaaSter Metrics: An Application-oriented Function as a Service Benchmarking Framework},
-  author = {Burchard, Luk and Schubert, Carsten and Witzko, Christoph and Zhao, Max and Dietrich, Emily},
-  organization = {FaaSter Metrics project group},
-  address = {Berlin, Germany},
-  year = {2020},
-  url = {https://github.com/FaaSterMetrics/documentation/releases},
-}
-```

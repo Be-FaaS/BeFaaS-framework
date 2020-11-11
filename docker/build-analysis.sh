@@ -11,7 +11,7 @@ analysisDir=$(realpath "$DOCKER_DIR/../.analysis")
 rm -rf $analysisDir
 mkdir $analysisDir
 
-git clone git@github.com:FaaSterMetrics/analysis.git $analysisDir
+git clone git@github.com:Be-FaaS/BeFaaS-analysis.git $analysisDir
 docker build -t faastermetrics/analysis $analysisDir
 
 rm -rf $analysisDir
