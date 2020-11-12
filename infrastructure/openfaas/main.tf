@@ -25,9 +25,9 @@ resource "openfaas_function" "funtions" {
   image = "${var.DOCKERHUB_USER}/${local.fns[count.index]}:latest"
 
   env_vars = merge({
-    IS_OPENFAAS                  = 1
+    IS_OPENFAAS          = 1
     BEFAAS_DEPLOYMENT_ID = local.deployment_id
-    write_debug                  = "true"
+    write_debug          = "true"
   }, var.fn_env)
 
   labels = {

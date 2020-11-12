@@ -18,7 +18,7 @@ resource "openwhisk_function" "fn" {
   name     = each.key
   source   = each.value
   environment = merge({
-    IS_OPENWHISK                 = "true"
+    IS_OPENWHISK         = "true"
     BEFAAS_DEPLOYMENT_ID = local.deployment_id
   }, var.fn_env)
 }
