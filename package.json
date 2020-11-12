@@ -27,7 +27,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@befaas/lib": "^8.4.2",
+    "@befaas/lib": "^8.4.3",
     "@koa/multer": "^3.0.0",
     "card-validator": "^8.0.0",
     "jimp": "^0.14.0",
