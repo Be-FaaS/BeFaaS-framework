@@ -29,8 +29,9 @@ To run benchmarks, BeFaaS requires programmatic access to the respective platfor
 ## TinyFaaS
 
 1. If you don't have an tinyFaaS instance follow the instructions [here](https://github.com/Be-FaaS/tinyFaaS).
-2. Set the `TINYFAAS_ADDRESS` environment variable. Please note that TINYFAAS_ADDRESS must be publically visible on the internet in order for other FaaS platforms to talk to it.  
+2. Start tinyFaaS instance and ensure that the tinyFaaS address is publically visible on the internet in order for other FaaS platforms to talk to it.  
    **Anyone with access to the tinyFaaS management port (8080) will be able to upload arbitrary functions, it is very advisable to configure your firewall to only let the deploying computer access that port**
+3. Note the public tinyFaaS address.
 
 ## OpenFaaS
 
@@ -41,7 +42,7 @@ To run benchmarks, BeFaaS requires programmatic access to the respective platfor
 2. Install faas-cli https://docs.openfaas.com/cli/install/ and login like the guide above details.
 3. Log your local docker into docker hub with `docker login` (other container registries are not directly supported by this project).  
    This is needed to deploy functions to openfaas. Please note that by default this will make the functions you deploy to openfaas public on your account.
-4. Set your `OPENFAAS_GATEWAY` environment variable like detailed below and `OPENFAAS_TOKEN` to the password generated during openfaas setup.
+4. Note openfaas gateway adress and the password generated during openfaas setup.
 
 ## OpenWhisk
 
