@@ -4,9 +4,9 @@ Follow the next steps to (re-) run the paper experiments:
 
 ## Setup
 
-1. To run benchmarks, BeFaaS requires programmatic access to the respective platforms. So the first step is to create access keys for the respective platforms, see [Initial provider setup](doc/providerSetup.md). 
-2. BeFaas also requires some managaing instance to orchestrate the benchmark run (Benchmark Manager). This can either be your local computer or a cloud instance. For simplicity, we limit this description to running the benchmark on an AWS EC2 cloud instance (see [Detailed setup and configuration (adv.)](doc/details.md) if you want to use your own computer as Benchmark Manager).
-	1. **Create an AWS EC2-Instance** and connect to it. The orchestration of the benchmark itself requires only a few resources, but the logs can contain several GB of data, depending on the size of the application and the duration of the experiment. We therefore recommend an **m3.medium** instance. 
+1. To run benchmarks, BeFaaS requires programmatic access to the respective platforms. So the first step is to create access keys for the respective platforms, see [Initial provider setup](providerSetup.md). 
+2. BeFaas also requires some managaing instance to orchestrate the benchmark run (Benchmark Manager). This can either be your local computer or a cloud instance. For simplicity, we limit this description to running the benchmark on an AWS EC2 cloud instance (see [Detailed setup and configuration (adv.)](details.md) if you want to use your own computer as Benchmark Manager).
+	1. **Create an AWS EC2-Instance** and connect to it. The orchestration of the benchmark itself requires only a few resources, but the logs can contain several GB of data, depending on the size of the application and the duration of the experiment. We therefore recommend an **t3.medium** instance (Amazon Linux 2 AMI (HVM), SSD Volume Type, x86). 
 	2. Install the following dependencies:
 		```
 		sudo yum install git -y
@@ -22,10 +22,14 @@ Follow the next steps to (re-) run the paper experiments:
 		sudo ./configure --enable-optimizations
 		sudo make altinstall
 		```
-	3. **Copy provider keys** to EC2 instance
+	3. (Opt.) **Copy provider keys** to EC2 instance
 	4. Adjust .bashrc and **set environment variables** (check cloud regions)
 		Example:
 		```
+		export AWS_ACCESS_KEY_ID=AAAAAA333333OOOOOBBBB
+		export AWS_SECRET_ACCESS_KEY=xxxxxxxyyyyyyyyyyyzzzzzzzzyyyyyxxxxxxxxx
+		export AWS_REGION=eu-west-1
+		
 		#Google:
 		export GOOGLE_APPLICATION_CREDENTIALS=<path/to/privatekey.json>
 		export GOOGLE_PROJECT=<project_id>
@@ -62,34 +66,46 @@ Follow the next steps to (re-) run the paper experiments:
 2. **Clone BeFaaS-framwork repository** (finally)
 	```
 	git clone https://github.com/Be-FaaS/BeFaaS-framework.git
+3. **Adjust deployment file** in the respective experiment folder (webserivce or iot)
+	Adjust the experiment.json. The default configuration of the webservice application uses AWS and Google Cloud.
 	```
-3. **Start framework** service
+4. **Build Docker container**
 	```
-	sudo -E ./experiments/docker/run.sh
+	sudo docker build -t befaas/framework BeFaaS-framework/docker/
+	```
+5. **Start framework** service
+	```
+	sudo -E ./BeFaaS-framework/docker/run.sh
 	```
 	(-E = Preserve Environments - to transfer the environment variables to the docker container)
-4. **Build experiment** (webservice or iot), see folder experiments/
+	
+	The shell now opens a new instance in the container and you can type your BeFaaS commands
+
+6. Comment line 26 (command -v faas-cli ...) in scripts/build.sh (Here's a small bug)
+6. **Build experiment** (webservice or iot), see folder experiments/
 	```
 	npm run build webservice
 	```
 	Runs the Deployment Compiler.
-5. **Deploy experiment**
+7. **Deploy experiment**
 	```
 	npm run deploy webservice
 	```
 	Deploys artifacs to the respective providers. 
-6. **Trigger Workload generation**
+	
+	The redis database creation might fail (timeout, ...), just re-run the deploy command 
+8. **Trigger Workload generation**
 	```
 	fmctl workload webservice
 	```
 	Starts the benchmark run. 
-7. **Wait** for experiment to complete ... 
-8. **Get log files** from used providers
+9. **Wait** for experiment to complete ... 
+10. **Get log files** from used providers
 	```
 	npm run logs webservice
 	```
 	All the log are now on your managing instance ().
-9. **Destroy** everything
+11. **Destroy** everything
 	```
 	npm run destroy
 	```
