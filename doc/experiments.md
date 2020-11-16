@@ -63,7 +63,7 @@ Follow the next steps to (re-) run the paper experiments:
 	```
 	sudo service docker start
 	```	
-2. **Clone BeFaaS-framwork repository** (finally)
+2. **Clone BeFaaS-framwork repository**
 	```
 	git clone https://github.com/Be-FaaS/BeFaaS-framework.git
 3. **Adjust deployment file** in the respective experiment folder (webserivce or iot)
@@ -104,14 +104,38 @@ Follow the next steps to (re-) run the paper experiments:
 	```
 	npm run logs webservice
 	```
-	All the log are now on your managing instance ().
+	All the log are now on your managing instance, see BeFaaS-framework/logs/webservice/<datetime>.
 11. **Destroy** everything
 	```
 	npm run destroy
 	```
-	This clears allallocated resources. 
+	This clears all allocated resources. 
+12. **Exit framework container**
+	```
+	exit
+	```
 
 
 ## Evaluation
 
 Tools for analyzing and exporting experiment results are within the [analysis repository](https://github.com/Be-FaaS/BeFaaS-analysis).
+
+The next steps assume that you've just collected the logs on a managing AWS EC2 instance and want to evaluate them. For more information regaring the evaluation capabilities, please swich to the [analysis repository](https://github.com/Be-FaaS/BeFaaS-analysis) documentation.
+
+1. **Clone BeFaaS-analysis repository**
+	```
+	git clone https://github.com/Be-FaaS/BeFaaS-analysis.git
+	```
+2. **Build Docker container**
+	```
+	sudo docker build -t befaas/analysis BeFaaS-analysis/
+	```
+3 **Move log files** from experiment folder run to a new results folder
+	```
+	mkdir results
+	sudo mv BeFaaS-framework/logs/webservice/<datetime> results/logs
+	```
+4. **Run analysis**
+	```
+	sudo docker run -it -v `pwd`/results:/analysis/results befaas/analysis results/logs results/
+	```
