@@ -86,7 +86,7 @@ function emergencyScaling(requestParams, context, ee, next) {
   const phases = [120, 240, 480, 960]
   let emergency = false;
 
-  for(let phase of phases) {
+  for(const phase of phases) {
     if(now - timestamp > phase && now - timestamp < phase + 5) {
       emergency = true;
     }
