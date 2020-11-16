@@ -80,6 +80,30 @@ function singleEmergency(requestParams, context, ee, next) {
   return beforeRequest(requestParams, context, ee, next);
 }
 
+
+function emergencyScaling(requestParams, context, ee, next) {
+  const now = Math.round(Date.now() / 1000);
+  const phases = [120, 240, 480, 960]
+  let emergency = false;
+
+  for(const phase of phases) {
+    if(now - timestamp > phase && now - timestamp < phase + 5) {
+      emergency = true;
+    }
+  }
+
+  if (emergency) { 
+    requestParams.formData.image = fs.createReadStream(path.resolve(__dirname, 'image-ambulance.jpg'))
+  } else {
+    requestParams.formData.image = fs.createReadStream(path.resolve(__dirname, 'image-noambulance.jpg'))
+  }
+
+  return beforeRequest(requestParams, context, ee, next);
+}
+
+
+
+
 function emergencyEveryTwoMinutesFiveSecondsEach(requestParams, context, ee, next) {
   const now = Math.round(Date.now() / 1000);
   if (((now - timestamp) % 120) < 5) {
@@ -96,5 +120,6 @@ module.exports = {
   afterResponse,
   singleEmergency,
   emergencyEveryTwoMinutesFiveSecondsEach,
-  emergencyNever
+  emergencyNever,
+  emergencyScaling
 }
