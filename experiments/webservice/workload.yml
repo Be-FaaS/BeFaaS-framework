@@ -4,7 +4,6 @@ config:
   #target will be substituted by teh Deployment Compiler
   target: ' '
   phases:
-    phases:
     #Warm up, Create a new customer every 5 secs, for 60 secs
     - duration: 60
       arrivalRate: 5
