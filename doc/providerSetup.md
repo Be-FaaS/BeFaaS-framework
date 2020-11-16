@@ -4,12 +4,13 @@ To run benchmarks, BeFaaS requires programmatic access to the respective platfor
 
 ## Google
 
-1. Create a new Google Cloud project with `<project_name>`.
-2. Go to `IAM > Service account` or `https://console.cloud.google.com/iam-admin/serviceaccounts?project=<project_name>`.
+1. Create a new Google Cloud project with `<project_id>`.
+2. Go to `IAM > Service account` or `https://console.cloud.google.com/iam-admin/serviceaccounts?project=<project_id>`.
 3. Click `Create Service account`.
 4. Add the `Project > Owner` permission.
 5. Click `Generate Private Key` and download it as `json` we need the absolute path to the file later.
-6. Visit `https://console.developers.google.com/apis/api/cloudfunctions.googleapis.com/overview?project=<project_name>` and enable the API.
+6. Visit `https://console.developers.google.com/apis/api/cloudfunctions.googleapis.com/overview?project=<project_id>` and enable the API.
+7. Visit `https://console.developers.google.com/apis/api/...` and enable the Cloud Build API.
 
 ## AWS
 
