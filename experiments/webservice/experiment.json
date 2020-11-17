@@ -2,7 +2,7 @@
   "services": {
     "redis": {},
     "workload": {
-      "config": "./workload.yml"
+      "config": "./workload-constant.yml"
     }
   },
   "program": {

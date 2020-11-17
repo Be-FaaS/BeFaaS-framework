@@ -1,0 +1,129 @@
+# Constant workload for the web shop FaaS benchmark.
+config:
+  target: ' '
+  phases:
+    #Constant load for 15min (900s), 20 flows per second
+    - duration: 900
+      arrivalRate: 20
+  processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
+  defaults:
+
+  payload:
+    path: 'usernames.csv'
+    fields:
+      - 'username'
+  variables:
+    product:
+      - 'QWERTY'
+      - 'EASYSTOOL'
+      - 'REFLECTXXX'
+scenarios:
+  # Just call frontend
+  - flow:
+      - get:
+          url: '{{ frontend }}/'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+    name: 'just frontend'
+    weight: 1
+  # Call frontend and browse two products
+  - flow:
+      - get:
+          url: '{{ frontend }}/'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ frontend }}/product/{{product}}'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ frontend }}/product/{{product}}'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+    name: 'frontend with browsing around'
+    weight: 1
+  # frontend, login, and browing two products
+  - flow:
+      - get:
+          url: '{{ frontend }}/'
+      - post:
+          url: '{{ frontend }}/setUser'
+          followRedirect: false
+          form:
+            userName: { { username } }
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ frontend }}/'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ frontend }}/product/{{product}}'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ frontend }}/product/{{product}}'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+
+    weight: 1
+    name: 'frontend with logging in, not buying anything'
+  # frontend, login, browse two products, buy one
+  - flow:
+      - get:
+          url: '{{ frontend }}/'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - post:
+          url: '{{ frontend }}/setUser'
+          followRedirect: true
+          form:
+            userName: '{{ username }}'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ frontend }}/'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ frontend }}/product/{{product}}'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ frontend }}/product/{{product}}'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - post:
+          url: '{{ frontend }}/addCartItem'
+          followRedirect: true
+          form:
+            productId: '{{ product }}'
+            quantity: 1
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ frontend }}/product/{{product}}'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ frontend }}/cart'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - post:
+          url: '{{ frontend }}/checkout'
+          followRedirect: true
+          form:
+            email: 'blubb@blubbmail.com'
+            street_address: 'awesome street'
+            zip_code: '12362'
+            city: 'nope city'
+            state: 'NY'
+            country: 'Germany GmbH'
+            credit_card_number: '4432-8015-6152-0454'
+            credit_card_expiration_month: '1'
+            credit_card_expiration_year: '2021'
+            credit_card_cvv: '123'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+    weight: 1
+    name: 'frontend with logging in, buying one thing'
