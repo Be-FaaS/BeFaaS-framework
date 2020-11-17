@@ -25,7 +25,7 @@ locals {
 
 data "aws_ami" "bitnami_redis" {
   most_recent = true
-  name_regex  = "^bitnami-redis-6.\\d.\\d-\\d-linux-debian-10-x86_64-hvm-ebs-nami$"
+  name_regex  = "^bitnami-redis-6.0.8-\\d-linux-debian-10-x86_64-hvm-ebs-nami$"
   owners      = ["979382823631"]
 }
 
@@ -59,9 +59,9 @@ resource "aws_instance" "redis" {
 
     inline = [
       "sleep 30",
-      "grep -o 'requirepass .*' /opt/bitnami/redis/etc/redis.conf | sed 's/requirepass //' > /tmp/redispass",
-      "sudo sed -i \"s/$(cat /tmp/redispass)/${random_string.redispass.result}/\" /opt/bitnami/redis/etc/redis.conf",
-      "sudo /opt/bitnami/ctlscript.sh restart redis"
+      "grep -o 'requirepass .*' /opt/bitnami/redis/conf/redis.conf | sed 's/requirepass //' > /tmp/redispass",
+      "sudo sed -i \"s/$(cat /tmp/redispass)/${random_string.redispass.result}/\" /opt/bitnami/redis/conf/redis.conf",
+      "sudo /opt/bitnami/nami/bin/nami --nami-prefix /root/.nami restart redis"
     ]
   }
 }
