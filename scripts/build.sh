@@ -23,7 +23,8 @@ exp_dir="experiments/$1/functions"
 exp_config="experiments/$1/$exp_json"
 
 export DOCKERHUB_USER=`docker info 2>/dev/null | sed '/Username:/!d;s/.* //'`
-command -v faas-cli >/dev/null && faas-cli template store pull node10-express #template pull ../node10-express-template #
+#Deactivate openFaaS (until node10-express template can be found)
+#command -v faas-cli >/dev/null && faas-cli template store pull node10-express #template pull ../node10-express-template #
 
 if [[ ! -f $exp_config ]]; then
     echo -e "Invalid experiment name\n" | chalk red
