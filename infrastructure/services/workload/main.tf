@@ -31,7 +31,7 @@ data "aws_ami" "ubuntu_bionic" {
 
 resource "aws_instance" "workload" {
   ami                                  = data.aws_ami.ubuntu_bionic.id
-  instance_type                        = "t3a.micro"
+  instance_type                        = "t3a.medium"
   associate_public_ip_address          = true
   subnet_id                            = local.default_subnet
   key_name                             = local.ssh_key_name
