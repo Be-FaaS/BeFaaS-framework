@@ -19,6 +19,7 @@ resource "random_string" "redispass" {
 resource "google_compute_instance" "redis" {
   name         = "${local.project_name}-redis"
   machine_type = "e2-micro"
+  zone         = "europe-west1-c"
 
   boot_disk {
     initialize_params {
