@@ -7,7 +7,7 @@ data "terraform_remote_state" "exp" {
 }
 
 locals {
-  project_name    = data.terraform_remote_state.exp.outputs.project_name
+  project_name = data.terraform_remote_state.exp.outputs.project_name
 }
 
 resource "random_string" "redispass" {
@@ -17,22 +17,22 @@ resource "random_string" "redispass" {
 }
 
 resource "google_compute_instance" "redis" {
-    name = "${local.project_name}-redis"
-    machine_type = "e2-micro"
+  name         = "${local.project_name}-redis"
+  machine_type = "e2-micro"
 
-    disk {
-        image = "ubuntu-1604-xenial-v20201111a"
+  disk {
+    image = "ubuntu-1604-xenial-v20201111a"
+  }
+
+  network_interface {
+    network = "default"
+    access_config {
+      # Ephemeral
     }
+  }
 
-    network_interface {
-        network = "default"
-        access_config {
-            # Ephemeral
-        }
-    }
-
-    metadata {
-        startup-script = <<SCRIPT
+  metadata {
+    startup-script = <<SCRIPT
 curl -sSL https://get.docker.com/ | sh
 # --name -> name Container befaas-redis 
 # -d -> run detachted
@@ -42,20 +42,20 @@ curl -sSL https://get.docker.com/ | sh
 # --appendonly yes -> persistent storage
 sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass "${random_string.redispass.result}"
 SCRIPT
-    }
+  }
 }
 
 resource "google_compute_firewall" "redis_firewall" {
-    name = "redis-firewall"
-    network = "default"
+  name    = "redis-firewall"
+  network = "default"
 
-    allow {
-        protocol = "tcp"
-        ports = [
-            "80", # HTTP
-            "6379"  # Redis
-        ]
-    }
+  allow {
+    protocol = "tcp"
+    ports = [
+      "80",  # HTTP
+      "6379" # Redis
+    ]
+  }
 }
 
 output "REDIS_ENDPOINT" {
