@@ -1,4 +1,4 @@
 variable "scfile" {
-  type = string
+  type    = string
   default = "init.sh"
 }

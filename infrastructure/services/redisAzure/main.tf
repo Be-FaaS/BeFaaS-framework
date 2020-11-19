@@ -56,9 +56,9 @@ resource "azurerm_network_interface" "main" {
 }
 
 resource "azurerm_network_interface" "internal" {
-  name                      = "${local.project_name}-nic2"
-  resource_group_name       = azurerm_resource_group.main.name
-  location                  = azurerm_resource_group.main.location
+  name                = "${local.project_name}-nic2"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
 
   ip_configuration {
     name                          = "internal"
@@ -112,10 +112,6 @@ resource "azurerm_linux_virtual_machine" "redis" {
   os_disk {
     storage_account_type = "Standard_LRS"
     caching              = "ReadWrite"
-  }
-
-  tags = {
-    environment = "staging"
   }
 }
 
