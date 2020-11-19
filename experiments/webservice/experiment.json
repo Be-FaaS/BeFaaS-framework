@@ -1,6 +1,6 @@
 {
   "services": {
-    "redis": {},
+    "redisAws": {},
     "workload": {
       "config": "./workload-constant.yml"
     }

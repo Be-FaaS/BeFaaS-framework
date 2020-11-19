@@ -95,7 +95,6 @@ Follow the next steps to (re-) run the paper experiments:
 	```
 	Deploys artifacs to the respective providers. 
 	
-	The redis database creation might fail (timeout, ...), just re-run the deploy command 
 8. **Trigger Workload generation**
 	```
 	fmctl workload webservice
