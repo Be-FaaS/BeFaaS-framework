@@ -101,7 +101,6 @@ resource "azurerm_virtual_machine" "redis" {
 
   network_interface_ids = [
     azurerm_network_interface.main.id,
-    azurerm_network_interface.internal.id,
   ]
 
   storage_image_reference {
