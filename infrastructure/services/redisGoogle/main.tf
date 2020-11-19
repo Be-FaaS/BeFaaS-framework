@@ -6,27 +6,8 @@ data "terraform_remote_state" "exp" {
   }
 }
 
-data "terraform_remote_state" "vpc" {
-  backend = "local"
-
-  config = {
-    path = "${path.module}/../vpc/terraform.tfstate"
-  }
-}
-
 locals {
   project_name    = data.terraform_remote_state.exp.outputs.project_name
-  default_subnet  = data.terraform_remote_state.vpc.outputs.default_subnet
-  ssh_key_name    = data.terraform_remote_state.vpc.outputs.ssh_key_name
-  security_groups = data.terraform_remote_state.vpc.outputs.security_groups
-  ssh_private_key = data.terraform_remote_state.vpc.outputs.ssh_private_key
-}
-
-
-data "aws_ami" "bitnami_redis" {
-  most_recent = true
-  name_regex  = "^bitnami-redis-6.0.6-\\d-linux-debian-10-x86_64-hvm-ebs-nami$"
-  owners      = ["979382823631"]
 }
 
 resource "random_string" "redispass" {
@@ -35,35 +16,46 @@ resource "random_string" "redispass" {
   upper   = false
 }
 
-resource "aws_instance" "redis" {
-  ami                                  = data.aws_ami.bitnami_redis.id
-  instance_type                        = "t3a.medium"
-  associate_public_ip_address          = true
-  subnet_id                            = local.default_subnet
-  key_name                             = local.ssh_key_name
-  vpc_security_group_ids               = local.security_groups
-  instance_initiated_shutdown_behavior = "terminate"
+resource "google_compute_instance" "redis" {
+    name = "${local.project_name}-redis"
+    machine_type = "e2-micro"
 
-  tags = {
-    Name = "${local.project_name}-redis"
-  }
-
-  provisioner "remote-exec" {
-    connection {
-      type        = "ssh"
-      user        = "bitnami"
-      host        = self.public_ip
-      private_key = local.ssh_private_key
-      agent       = false
+    disk {
+        image = "ubuntu-1604-xenial-v20201111a"
     }
 
-    inline = [
-      "sleep 30",
-      "grep -o 'requirepass .*' /opt/bitnami/redis/conf/redis.conf | sed 's/requirepass //' > /tmp/redispass",
-      "sudo sed -i \"s/$(cat /tmp/redispass)/${random_string.redispass.result}/\" /opt/bitnami/redis/conf/redis.conf",
-      "sudo /opt/bitnami/nami/bin/nami --nami-prefix /root/.nami restart redis"
-    ]
-  }
+    network_interface {
+        network = "default"
+        access_config {
+            # Ephemeral
+        }
+    }
+
+    metadata {
+        startup-script = <<SCRIPT
+curl -sSL https://get.docker.com/ | sh
+# --name -> name Container befaas-redis 
+# -d -> run detachted
+# -p 6379:6379 -> expose port 
+# -v redisData:/data -> share /data directory with redisData folder on host
+# Set redis.conf values:
+# --appendonly yes -> persistent storage
+sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass "${random_string.redispass.result}"
+SCRIPT
+    }
+}
+
+resource "google_compute_firewall" "redis_firewall" {
+    name = "redis-firewall"
+    network = "default"
+
+    allow {
+        protocol = "tcp"
+        ports = [
+            "80", # HTTP
+            "6379"  # Redis
+        ]
+    }
 }
 
 output "REDIS_ENDPOINT" {
