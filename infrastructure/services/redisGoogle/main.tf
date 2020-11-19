@@ -20,8 +20,10 @@ resource "google_compute_instance" "redis" {
   name         = "${local.project_name}-redis"
   machine_type = "e2-micro"
 
-  disk {
-    image = "ubuntu-1604-xenial-v20201111a"
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-1604-xenial-v20201111a"
+    }
   }
 
   network_interface {
@@ -31,7 +33,7 @@ resource "google_compute_instance" "redis" {
     }
   }
 
-  metadata {
+  metadata = {
     startup-script = <<SCRIPT
 curl -sSL https://get.docker.com/ | sh
 # --name -> name Container befaas-redis 
@@ -59,5 +61,5 @@ resource "google_compute_firewall" "redis_firewall" {
 }
 
 output "REDIS_ENDPOINT" {
-  value = "redis://user:${random_string.redispass.result}@${aws_instance.redis.public_ip}:6379"
+  value = "redis://user:${random_string.redispass.result}@${google_compute_instance.redis.network_interface.0.access_config.0.nat_ip}:6379"
 }
