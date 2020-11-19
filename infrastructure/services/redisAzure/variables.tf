@@ -1,4 +1,4 @@
-variable scfile{
+variable scfile {
   type = string
   default = "init.sh"
 }
