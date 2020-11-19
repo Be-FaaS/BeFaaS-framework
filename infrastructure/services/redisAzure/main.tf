@@ -6,27 +6,8 @@ data "terraform_remote_state" "exp" {
   }
 }
 
-data "terraform_remote_state" "vpc" {
-  backend = "local"
-
-  config = {
-    path = "${path.module}/../vpc/terraform.tfstate"
-  }
-}
-
 locals {
-  project_name    = data.terraform_remote_state.exp.outputs.project_name
-  default_subnet  = data.terraform_remote_state.vpc.outputs.default_subnet
-  ssh_key_name    = data.terraform_remote_state.vpc.outputs.ssh_key_name
-  security_groups = data.terraform_remote_state.vpc.outputs.security_groups
-  ssh_private_key = data.terraform_remote_state.vpc.outputs.ssh_private_key
-}
-
-
-data "aws_ami" "bitnami_redis" {
-  most_recent = true
-  name_regex  = "^bitnami-redis-6.0.6-\\d-linux-debian-10-x86_64-hvm-ebs-nami$"
-  owners      = ["979382823631"]
+  project_name = data.terraform_remote_state.exp.outputs.project_name
 }
 
 resource "random_string" "redispass" {
@@ -35,37 +16,130 @@ resource "random_string" "redispass" {
   upper   = false
 }
 
-resource "aws_instance" "redis" {
-  ami                                  = data.aws_ami.bitnami_redis.id
-  instance_type                        = "t3a.medium"
-  associate_public_ip_address          = true
-  subnet_id                            = local.default_subnet
-  key_name                             = local.ssh_key_name
-  vpc_security_group_ids               = local.security_groups
-  instance_initiated_shutdown_behavior = "terminate"
+resource "azurerm_resource_group" "main" {
+  name     = "${local.project_name}-resources"
+  location = "West Europe"
+}
 
-  tags = {
-    Name = "${local.project_name}-redis"
-  }
+resource "azurerm_virtual_network" "main" {
+  name                = "${local.project_name}-network"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+}
 
-  provisioner "remote-exec" {
-    connection {
-      type        = "ssh"
-      user        = "bitnami"
-      host        = self.public_ip
-      private_key = local.ssh_private_key
-      agent       = false
-    }
+resource "azurerm_subnet" "internal" {
+  name                 = "internal"
+  resource_group_name  = azurerm_resource_group.main.name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
 
-    inline = [
-      "sleep 30",
-      "grep -o 'requirepass .*' /opt/bitnami/redis/conf/redis.conf | sed 's/requirepass //' > /tmp/redispass",
-      "sudo sed -i \"s/$(cat /tmp/redispass)/${random_string.redispass.result}/\" /opt/bitnami/redis/conf/redis.conf",
-      "sudo /opt/bitnami/nami/bin/nami --nami-prefix /root/.nami restart redis"
-    ]
+resource "azurerm_public_ip" "pip" {
+  name                = "${local.project_name}-pip"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  allocation_method   = "Dynamic"
+}
+
+resource "azurerm_network_interface" "main" {
+  name                = "${local.project_name}-nic1"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+
+  ip_configuration {
+    name                          = "primary"
+    subnet_id                     = azurerm_subnet.internal.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.pip.id
   }
 }
 
+resource "azurerm_network_interface" "internal" {
+  name                      = "${local.project_name}-nic2"
+  resource_group_name       = azurerm_resource_group.main.name
+  location                  = azurerm_resource_group.main.location
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.internal.id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+resource "azurerm_network_security_group" "secgrp_redis" {
+  name                = "redis"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  security_rule {
+    access                     = "Allow"
+    direction                  = "Inbound"
+    name                       = "redis"
+    priority                   = 100
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    source_address_prefix      = "*"
+    destination_port_range     = "6379"
+    destination_address_prefix = azurerm_network_interface.main.private_ip_address
+  }
+}
+
+resource "azurerm_network_interface_security_group_association" "main" {
+  network_interface_id      = azurerm_network_interface.internal.id
+  network_security_group_id = azurerm_network_security_group.secgrp_redis.id
+}
+
+resource "azurerm_linux_virtual_machine" "redis" {
+  name                            = "${local.project_name}-vm"
+  resource_group_name             = azurerm_resource_group.main.name
+  location                        = azurerm_resource_group.main.location
+  size                            = "Standard_B1ms"
+  admin_username                  = "adminuser"
+  admin_password                  = "P@ssw0rd1234!"
+  disable_password_authentication = false
+  network_interface_ids = [
+    azurerm_network_interface.main.id,
+    azurerm_network_interface.internal.id,
+  ]
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+
+  os_disk {
+    storage_account_type = "Standard_LRS"
+    caching              = "ReadWrite"
+  }
+
+  tags = {
+    environment = "staging"
+  }
+}
+
+resource "azurerm_virtual_machine_extension" "redis_script" {
+  # https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-linux
+  # https://stackoverflow.com/questions/54088476/terraform-azurerm-virtual-machine-extension
+  name                 = "${local.project_name}-ext"
+  virtual_machine_id   = azurerm_linux_virtual_machine.redis.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
+
+  protected_settings = <<PROT
+  {
+    "script": "${base64encode(file(var.scfile))}"
+  }
+  PROT
+}
+
+data "azurerm_public_ip" "redis_ip" {
+  name                = azurerm_public_ip.pip.name
+  resource_group_name = azurerm_linux_virtual_machine.redis.resource_group_name
+}
+
 output "REDIS_ENDPOINT" {
-  value = "redis://user:${random_string.redispass.result}@${aws_instance.redis.public_ip}:6379"
+  value = "redis://user:${random_string.redispass.result}@${data.azurerm_public_ip.redis_ip.ip_address}:6379"
 }
