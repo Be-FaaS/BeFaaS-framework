@@ -136,11 +136,11 @@ resource "azurerm_virtual_machine_extension" "redis_install_docker" {
   type                 = "CustomScript"
   type_handler_version = "2.0"
 
-  settings = <<SETTINGS
-    {
-        "commandToExecute": "curl -sSL https://get.docker.com/ | sh"
-    }
-SETTINGS
+  protected_settings = <<PROT
+  {
+    "commandToExecute": "curl -sSL https://get.docker.com/ | sh"
+  }
+  PROT
 }
 
 resource "azurerm_virtual_machine_extension" "redis_run_container" {
@@ -150,11 +150,11 @@ resource "azurerm_virtual_machine_extension" "redis_run_container" {
   type                 = "CustomScript"
   type_handler_version = "2.0"
 
-  settings = <<SETTINGS
-    {
-        "commandToExecute": "sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass "${random_string.redispass.result}""
-    }
-SETTINGS
+  protected_settings = <<PROT
+  {
+    "commandToExecute": "sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass ${random_string.redispass.result}"
+  }
+  PROT
 }
 
 data "azurerm_public_ip" "redis_ip" {
