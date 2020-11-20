@@ -34,6 +34,10 @@ cd infrastructure/experiment
 export project_name=$(terraform output -json | jq -r '.project_name.value')
 cd -
 
+cd infrastructure/experiment
+export BEFAAS_DEPLOYMENT_ID=$(terraform output -json | jq -r '.deployment_id.value')
+cd -
+
 export logdir=logs/$1/$(date +%Y-%m-%d_%H-%M-%S)
 mkdir -p $logdir
 
