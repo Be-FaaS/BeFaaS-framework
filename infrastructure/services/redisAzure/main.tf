@@ -127,7 +127,7 @@ resource "azurerm_virtual_machine" "redis" {
   }
 }
 
-resource "azurerm_virtual_machine_extension" "redis_script" {
+resource "azurerm_virtual_machine_extension" "redis_install_docker" {
   # https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-linux
   # https://stackoverflow.com/questions/54088476/terraform-azurerm-virtual-machine-extension
   name                 = "${local.project_name}-ext"
@@ -136,11 +136,25 @@ resource "azurerm_virtual_machine_extension" "redis_script" {
   type                 = "CustomScript"
   type_handler_version = "2.0"
 
-  protected_settings = <<PROT
-  {
-    "script": "${base64encode(file(var.scfile))}"
-  }
-  PROT
+  settings = <<SETTINGS
+    {
+        "commandToExecute": "curl -sSL https://get.docker.com/ | sh"
+    }
+SETTINGS
+}
+
+resource "azurerm_virtual_machine_extension" "redis_run_container" {
+  name                 = "${local.project_name}-ext"
+  virtual_machine_id   = azurerm_virtual_machine.redis.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
+
+  settings = <<SETTINGS
+    {
+        "commandToExecute": "sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass "${random_string.redispass.result}""
+    }
+SETTINGS
 }
 
 data "azurerm_public_ip" "redis_ip" {
