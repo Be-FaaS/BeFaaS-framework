@@ -1,6 +1,6 @@
 {
   "services": {
-    "redis": {}
+    "redisAws": {}
   },
   "program": {
     "functions": {

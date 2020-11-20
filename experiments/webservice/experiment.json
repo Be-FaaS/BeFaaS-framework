@@ -1,6 +1,6 @@
 {
   "services": {
-    "redis": {},
+	"redisAzure": {},
     "workload": {
       "config": "./workload-constant.yml"
     }
@@ -54,7 +54,7 @@
         "provider": "aws"
       },
       "listproducts": {
-        "provider": "google"
+        "provider": "azure"
       },
       "getads": {
         "provider": "aws"
