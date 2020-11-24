@@ -1,0 +1,85 @@
+{
+  "services": {
+	"redisAws": {},
+    "workload": {
+      "config": "./workload-constant.yml"
+    }
+  },
+  "program": {
+    "functions": {
+      "frontend": {
+        "provider": "aws",
+        "calls": [
+          "getcart",
+          "getproduct",
+          "currency",
+          "listrecommendations",
+          "supportedcurrencies",
+          "getads",
+          "checkout",
+          "listproducts",
+          "shipmentquote",
+          "emptycart"
+        ]
+      },
+      "checkout": {
+        "provider": "aws",
+        "calls": [
+          "getcart",
+          "getproduct",
+          "currency",
+          "shipmentquote",
+          "payment",
+          "shiporder",
+          "email",
+          "emptycart"
+        ]
+      },
+      "email": {
+        "provider": "aws"
+      },
+      "currency": {
+        "provider": "aws"
+      },
+      "supportedcurrencies": {
+        "provider": "aws"
+      },
+      "shiporder": {
+        "provider": "aws"
+      },
+      "shipmentquote": {
+        "provider": "aws"
+      },
+      "payment": {
+        "provider": "aws"
+      },
+      "listproducts": {
+        "provider": "aws"
+      },
+      "getads": {
+        "provider": "aws"
+      },
+      "getproduct": {
+        "provider": "aws"
+      },
+      "searchproducts": {
+        "provider": "aws"
+      },
+      "listrecommendations": {
+        "provider": "aws"
+      },
+      "cartkvstorage": {
+        "provider": "aws"
+      },
+      "addcartitem": {
+        "provider": "aws"
+      },
+      "getcart": {
+        "provider": "aws"
+      },
+      "emptycart": {
+        "provider": "aws"
+      }
+    }
+  }
+}

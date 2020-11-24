@@ -1,0 +1,85 @@
+{
+  "services": {
+	"redisAzure": {},
+    "workload": {
+      "config": "./workload-constant.yml"
+    }
+  },
+  "program": {
+    "functions": {
+      "frontend": {
+        "provider": "azure",
+        "calls": [
+          "getcart",
+          "getproduct",
+          "currency",
+          "listrecommendations",
+          "supportedcurrencies",
+          "getads",
+          "checkout",
+          "listproducts",
+          "shipmentquote",
+          "emptycart"
+        ]
+      },
+      "checkout": {
+        "provider": "azure",
+        "calls": [
+          "getcart",
+          "getproduct",
+          "currency",
+          "shipmentquote",
+          "payment",
+          "shiporder",
+          "email",
+          "emptycart"
+        ]
+      },
+      "email": {
+        "provider": "azure"
+      },
+      "currency": {
+        "provider": "azure"
+      },
+      "supportedcurrencies": {
+        "provider": "azure"
+      },
+      "shiporder": {
+        "provider": "azure"
+      },
+      "shipmentquote": {
+        "provider": "azure"
+      },
+      "payment": {
+        "provider": "azure"
+      },
+      "listproducts": {
+        "provider": "azure"
+      },
+      "getads": {
+        "provider": "azure"
+      },
+      "getproduct": {
+        "provider": "azure"
+      },
+      "searchproducts": {
+        "provider": "azure"
+      },
+      "listrecommendations": {
+        "provider": "azure"
+      },
+      "cartkvstorage": {
+        "provider": "azure"
+      },
+      "addcartitem": {
+        "provider": "azure"
+      },
+      "getcart": {
+        "provider": "azure"
+      },
+      "emptycart": {
+        "provider": "azure"
+      }
+    }
+  }
+}

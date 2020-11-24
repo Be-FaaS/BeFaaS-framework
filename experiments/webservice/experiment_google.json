@@ -1,0 +1,85 @@
+{
+  "services": {
+	"redisGoogle": {},
+    "workload": {
+      "config": "./workload-constant.yml"
+    }
+  },
+  "program": {
+    "functions": {
+      "frontend": {
+        "provider": "google",
+        "calls": [
+          "getcart",
+          "getproduct",
+          "currency",
+          "listrecommendations",
+          "supportedcurrencies",
+          "getads",
+          "checkout",
+          "listproducts",
+          "shipmentquote",
+          "emptycart"
+        ]
+      },
+      "checkout": {
+        "provider": "google",
+        "calls": [
+          "getcart",
+          "getproduct",
+          "currency",
+          "shipmentquote",
+          "payment",
+          "shiporder",
+          "email",
+          "emptycart"
+        ]
+      },
+      "email": {
+        "provider": "google"
+      },
+      "currency": {
+        "provider": "google"
+      },
+      "supportedcurrencies": {
+        "provider": "google"
+      },
+      "shiporder": {
+        "provider": "google"
+      },
+      "shipmentquote": {
+        "provider": "google"
+      },
+      "payment": {
+        "provider": "google"
+      },
+      "listproducts": {
+        "provider": "google"
+      },
+      "getads": {
+        "provider": "google"
+      },
+      "getproduct": {
+        "provider": "google"
+      },
+      "searchproducts": {
+        "provider": "google"
+      },
+      "listrecommendations": {
+        "provider": "google"
+      },
+      "cartkvstorage": {
+        "provider": "google"
+      },
+      "addcartitem": {
+        "provider": "google"
+      },
+      "getcart": {
+        "provider": "google"
+      },
+      "emptycart": {
+        "provider": "google"
+      }
+    }
+  }
+}
