@@ -4,7 +4,7 @@ variable "handler" {
 
 variable "location" {
   type    = string
-  default = "westus"
+  default = "westeurope"
 }
 
 variable "fn_env" {

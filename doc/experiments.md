@@ -24,7 +24,7 @@ Follow the next steps to (re-) run the paper experiments:
 		```
 	3. (Opt.) **Copy provider keys** to EC2 instance
 	4. Adjust .bashrc and **set environment variables** (check cloud regions)
-		Example:
+		Examples:
 		```
 		export AWS_ACCESS_KEY_ID=AAAAAA333333OOOOOBBBB
 		export AWS_SECRET_ACCESS_KEY=xxxxxxxyyyyyyyyyyyzzzzzzzzyyyyyxxxxxxxxx

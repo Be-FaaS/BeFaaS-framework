@@ -97,7 +97,7 @@ resource "azurerm_virtual_machine" "redis" {
   name                = "${local.project_name}-vm"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  vm_size             = "Standard_B1ms"
+  vm_size             = "Standard_B2s"
 
   network_interface_ids = [
     azurerm_network_interface.main.id,
