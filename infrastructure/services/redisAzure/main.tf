@@ -127,9 +127,10 @@ resource "azurerm_virtual_machine" "redis" {
   }
 }
 
-resource "azurerm_virtual_machine_extension" "redis_install_docker" {
+resource "azurerm_virtual_machine_extension" "redis_run_container" {
   # https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-linux
   # https://stackoverflow.com/questions/54088476/terraform-azurerm-virtual-machine-extension
+  # https://askubuntu.com/questions/334994/which-one-is-better-using-or-to-execute-multiple-commands-in-one-line
   name                 = "${local.project_name}-ext"
   virtual_machine_id   = azurerm_virtual_machine.redis.id
   publisher            = "Microsoft.Azure.Extensions"
@@ -138,22 +139,7 @@ resource "azurerm_virtual_machine_extension" "redis_install_docker" {
 
   protected_settings = <<PROT
   {
-    "commandToExecute": "curl -sSL https://get.docker.com/ | sh"
-  }
-  PROT
-}
-
-resource "azurerm_virtual_machine_extension" "redis_run_container" {
-  name                 = "${local.project_name}-ext"
-  virtual_machine_id   = azurerm_virtual_machine.redis.id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.0"
-  depends_on           = [azurerm_virtual_machine_extension.redis_install_docker]
-
-  protected_settings = <<PROT
-  {
-    "commandToExecute": "sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass ${random_string.redispass.result}"
+    "commandToExecute": "curl -sSL https://get.docker.com/ | sh && sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass ${random_string.redispass.result}"
   }
   PROT
 }
