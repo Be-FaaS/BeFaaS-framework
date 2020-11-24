@@ -1,0 +1,55 @@
+config:
+  target: ' '
+  phases:
+    - duration: 900
+      arrivalRate: 14.1
+  variables:
+    speed:
+      - 10
+      - 800
+  processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
+  defaults:
+
+
+scenarios:
+#  - flow:
+#      - post:
+#          url: '{{ getlightphasecalculation }}/call'
+#          json:
+#          beforeRequest: 'beforeRequest'
+#          afterResponse: 'afterResponse'
+#    name: 'getlightphasecalculation'
+  - flow:
+    - post:
+        url: '{{ trafficsensorfilter }}/call'
+        json:
+          carDirection:
+            plate: 'OD DI 98231'
+            direction: 4
+            speed: {{ speed }}
+        beforeRequest: 'beforeRequest'
+        afterResponse: 'afterResponse'
+    name: 'trafficSensorFilter'
+    weight: 100
+  - flow:
+    - post:
+        url: '{{ weathersensorfilter }}/call'
+        json:
+          temperature: 10.0
+          humidity: 50.0
+          wind: 5.0
+          rain: false
+        beforeRequest: 'beforeRequest'
+        afterResponse: 'afterResponse'
+    name: 'weathersensorfilter'
+    weight: 1
+  - flow:
+    - post:
+        url: '{{ objectrecognition }}'
+        formData:
+          image: "placeholder"
+
+        beforeRequest: 'emergencyScaling'
+        afterResponse: 'afterResponse'
+    name: 'objectrecognition'
+    weight: 40

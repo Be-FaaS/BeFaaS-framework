@@ -17,7 +17,7 @@ BeFaaS is an extensible open-source benchmarking framework for FaaS environments
 * [Add/Adjust functions or applications (adv.)](doc/functions.md)
 * [Add/Adjust providers (adv.)](doc/providers.md)
 
-## Reseach Paper
+## Research Paper
 
 [BeFaaS: An Application-Centric Benchmarking Framework for FaaS Environments](https://www.google.com/search?q=BeFaaS%3A+An+Application-Centric+Benchmarking+Framework+for+FaaS+Environments).
 
