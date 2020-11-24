@@ -83,7 +83,7 @@ function singleEmergency(requestParams, context, ee, next) {
 
 function emergencyScaling(requestParams, context, ee, next) {
   const now = Math.round(Date.now() / 1000);
-  const phases = [120, 240, 480, 960]
+  const phases = [1, 2, 3, 4, 5, 6, 7].map(x => x * 120)
   let emergency = false;
 
   for(const phase of phases) {
