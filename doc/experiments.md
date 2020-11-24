@@ -59,22 +59,25 @@ Follow the next steps to (re-) run the paper experiments:
 
 ## Run
 
-1. **Start Docker**
-	```
-	sudo service docker start
-	```	
-2. **Clone BeFaaS-framwork repository**
+1. **Clone BeFaaS-framwork repository**
 	```
 	git clone https://github.com/Be-FaaS/BeFaaS-framework.git
 	```
+	
+2. **Start Docker**
+	```
+	sudo service docker start
+	```	
+	
 3. **Adjust deployment file** in the respective experiment folder (webserivce or iot)
 
-	Adjust the experiment.json. The default configuration of the webservice application uses AWS and Google Cloud.
+	Adjust the experiment.json (e.g., in experiments/webservice). The default configuration of the webservice application uses AWS, Azure, and Google Cloud.
 	
 4. **Build Docker container**
 	```
 	sudo docker build -t befaas/framework BeFaaS-framework/docker/
 	```
+	
 5. **Start framework** service
 	```
 	sudo -E ./BeFaaS-framework/docker/run.sh
@@ -82,13 +85,17 @@ Follow the next steps to (re-) run the paper experiments:
 	(-E = Preserve Environments - to transfer the environment variables to the docker container)
 	
 	The shell now opens a new instance in the container and you can type your BeFaaS commands
+6. (Opt.) **Run Azure login** if you plan to deploy resources on Azure and verify your device
+	```
+	az login
+	```
 
-6. Comment line 26 (command -v faas-cli ...) in scripts/build.sh (Here's a small bug)
 6. **Build experiment** (webservice or iot), see folder experiments/
 	```
 	npm run build webservice
 	```
 	Runs the Deployment Compiler.
+	
 7. **Deploy experiment**
 	```
 	npm run deploy webservice
@@ -100,17 +107,21 @@ Follow the next steps to (re-) run the paper experiments:
 	fmctl workload webservice
 	```
 	Starts the benchmark run. 
+	
 9. **Wait** for experiment to complete ... 
+
 10. **Get log files** from used providers
 	```
 	npm run logs webservice
 	```
 	All the log are now on your managing instance, see BeFaaS-framework/logs/webservice/<datetime>.
+	
 11. **Destroy** everything
 	```
 	npm run destroy
 	```
 	This clears all allocated resources. 
+	
 12. **Exit framework container**
 	```
 	exit
@@ -137,7 +148,10 @@ The next steps assume that you've just collected the logs on a managing AWS EC2 
 	sudo mv BeFaaS-framework/logs/webservice/<datetime> results/logs
 	```
 	
-4. **Run analysis**
+4. **Run analysis** and create a smaller logdump.json
 	```
 	sudo docker run -it -v `pwd`/results:/analysis/results befaas/analysis results/logs results/
 	```
+	This will create a (smaller) logdump.json file with all results and which can be exported for further analysis.  
+	
+5. (Opt.) **Copy logdump.json** as result file and terminate the benchmark manager instance 
