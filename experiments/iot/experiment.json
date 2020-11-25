@@ -1,11 +1,14 @@
 {
   "services": {
-    "redisAws": {}
+    "redisAws": {},
+	"workload": {
+      "config": "./workload.yml"
+    }
   },
   "program": {
     "functions": {
       "trafficsensorfilter": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["movementplan"]
       },
       "weathersensorfilter": {
@@ -17,7 +20,7 @@
         "calls": ["setlightphasecalculation"]
       },
       "emergencydetection": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["setlightphasecalculation"]
       },
       "trafficstatistics": {
@@ -30,11 +33,11 @@
         "provider": "aws"
       },
       "objectrecognition": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["trafficstatistics", "movementplan", "emergencydetection"]
       },
       "movementplan": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["setlightphasecalculation"]
       }
     }
