@@ -4,6 +4,17 @@ const _ = require('lodash')
 const fs = require('fs')
 const path = require('path')
 
+let storageObj = {}
+
+function getCookies(ctx) {
+  let newMockedCookies = ctx.cookies.get('storageObj')
+  if(newMockedCookies) storageObj = JSON.parse(newMockedCookies)
+}
+
+function storeCookies(ctx) {
+  ctx.cookies.set('storageObj', JSON.stringify(storageObj), {overwrite: true});
+}
+
 const templates = {
   home: _.template(
     fs.readFileSync(path.join(__dirname, 'html_templates', 'home.html'))
@@ -20,30 +31,30 @@ const templates = {
 }
 
 function getSessionID (ctx) {
-  if (!ctx.cookies.get('sessionId')) {
-    ctx.cookies.set('sessionId', lib.helper.generateRandomID())
+  if (!storageObj.sessionId) {
+    storageObj.sessionId = lib.helper.generateRandomID()
   }
-  return ctx.cookies.get('sessionId')
+  return storageObj.sessionId;
 }
 
 function getUserCurrency (ctx) {
-  return ctx.cookies.get('userCurrency') || 'EUR'
+  return storageObj.userCurrency || 'EUR'
 }
 
 function getUserName (ctx) {
-  return ctx.cookies.get('userName') || ''
+  return storageObj.userName || ''
 }
 
 function getCartSize (ctx) {
-  return _.parseInt(ctx.cookies.get('cartSize')) || 0
+  return _.parseInt(storageObj.cartSize) || 0
 }
 
 function increaseCartSize (ctx, inc) {
-  ctx.cookies.set('cartSize', getCartSize(ctx) + inc, { overwrite: true })
+  storageObj.cartSize = getCartSize(ctx) + inc
 }
 
 function emptyCartSize (ctx) {
-  ctx.cookies.set('cartSize', 0, { overwrite: true })
+  storageObj.cartSize = 0
 }
 
 async function convertPrice (ctx, priceUsd) {
@@ -89,6 +100,7 @@ function printPrice (price) {
 
 module.exports = lib.serverless.router(async router => {
   router.get('/', async (ctx, next) => {
+    getCookies(ctx)
     const requestId = lib.helper.generateRandomID()
     const [supportedCurrencies, productList, cats] = await Promise.all([
       ctx.lib.call('supportedcurrencies', {}),
@@ -115,11 +127,13 @@ module.exports = lib.serverless.router(async router => {
     }
     ctx.type = 'text/html'
     ctx.body = templates.home(options)
+    storeCookies(ctx)
   })
 
   // TODO make recommendations more meaningful? --> use categories?
   // Yes, IDs are required to be word shaped here
   router.get('/product/:productId', async (ctx, next) => {
+    getCookies(ctx)
     const productId = ctx.params.productId
 
     const requestId = lib.helper.generateRandomID()
@@ -159,9 +173,11 @@ module.exports = lib.serverless.router(async router => {
     }
     ctx.type = 'text/html'
     ctx.body = templates.product(options)
+    storeCookies(ctx)
   })
 
   router.get('/cart', async (ctx, next) => {
+    getCookies(ctx)
     const requestId = lib.helper.generateRandomID()
 
     const cart =
@@ -221,9 +237,11 @@ module.exports = lib.serverless.router(async router => {
 
     ctx.type = 'text/html'
     ctx.body = templates.cart(options)
+    storeCookies(ctx)
   })
 
   router.post('/checkout', async (ctx, next) => {
+    getCookies(ctx)
     emptyCartSize(ctx)
     const requestId = lib.helper.generateRandomID()
 
@@ -269,47 +287,57 @@ module.exports = lib.serverless.router(async router => {
 
     ctx.type = 'text/html'
     ctx.body = templates.order(options)
+    storeCookies(ctx)
   })
 
   router.post('/setUser', async (ctx, next) => {
+    getCookies(ctx)
     const userName = ctx.request.body.userName
-    ctx.cookies.set('userName', userName, { overwrite: true })
     emptyCartSize(ctx)
+    storageObj.userName = userName
     ctx.type = 'application/json'
     ctx.response.redirect('back')
+    storeCookies(ctx)
   })
 
   router.post('/logout', async (ctx, next) => {
-    ctx.cookies.set('userName', '', { overwrite: true })
+    getCookies(ctx)
     emptyCartSize(ctx)
+    storageObj.userName = ''
     ctx.type = 'application/json'
     ctx.response.redirect('back')
+    storeCookies(ctx)
   })
 
   router.post('/logoutAndLeave', async (ctx, next) => {
-    ctx.cookies.set('userName', '', { overwrite: true })
+    getCookies(ctx)
+    storageObj.userName = ''
     emptyCartSize(ctx)
     ctx.type = 'application/json'
     ctx.response.redirect('./')
+    storeCookies(ctx)
   })
 
   router.post('/setCurrency', async (ctx, next) => {
-    ctx.cookies.set('userCurrency', ctx.request.body.currencyCode, {
-      overwrite: true
-    })
+    getCookies(ctx)
+    storageObj.userCurrency = ctx.request.body.currencyCode
     ctx.type = 'application/json'
     ctx.response.redirect('back')
+    storeCookies(ctx)
   })
 
   router.post('/emptyCart', async (ctx, next) => {
+    getCookies(ctx)
     const userId = getUserName(ctx)
     await ctx.lib.call('emptycart', { userId: userId })
     emptyCartSize(ctx)
     ctx.type = 'application/json'
     ctx.response.redirect('back')
+    storeCookies(ctx)
   })
 
   router.post('/addCartItem', async (ctx, next) => {
+    getCookies(ctx)
     const userName = getUserName(ctx)
     const productId = ctx.request.body.productId
     const quantity = _.parseInt(ctx.request.body.quantity)
@@ -326,5 +354,6 @@ module.exports = lib.serverless.router(async router => {
     }
     ctx.type = 'application/json'
     ctx.response.redirect('back')
+    storeCookies(ctx)
   })
 })
