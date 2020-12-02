@@ -7,7 +7,7 @@ const path = require('path')
 let storageObj = {}
 
 function getCookies(ctx) {
-  let newMockedCookies = ctx.cookies.get('storageObj')
+  const newMockedCookies = ctx.cookies.get('storageObj')
   if(newMockedCookies) storageObj = JSON.parse(newMockedCookies)
 }
 
