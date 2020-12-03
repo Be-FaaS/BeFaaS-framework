@@ -34,6 +34,7 @@
                   <a class="btn btn-primary btn-light mr-auto my-2" href="./cart" role="button">View Cart (<%= cart_size %>)</a>
                   <li class="nav-item pt-2 mx-1 text-light">Hello, <%= user_id %></p></li>
                   <form class="form-inline ml-auto pl-2" method="post" action="./logout" id="logout_form">
+                    <input class="form-control mr-2" type="hidden" name="userName" placeholder="User Name">
                     <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" 
                     onchange="document.getElementById('logout_form').submit();">Logout</button>
                   </form>
@@ -71,6 +72,7 @@
                         </div>
                         <div class="col text-right">
                             <form method="post" action="./emptyCart">
+                                <input class="form-control mr-2" type="hidden" name="userName" placeholder="User Name">
                                 <button class="btn btn-secondary" type="submit">Empty cart</button>
                                 <a class="btn btn-info" href="./" role="button">Browse more products &rarr; </a>
                             </form>
