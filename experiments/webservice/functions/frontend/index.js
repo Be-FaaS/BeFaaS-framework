@@ -12,7 +12,7 @@ function getCookies(ctx) {
 }
 
 function storeCookies(ctx) {
-  ctx.cookies.set('storageObj', JSON.stringify(storageObj), {overwrite: true});
+  ctx.cookies.set('storageObj', JSON.stringify(storageObj), {overwrite: true, sameSite: true});
 }
 
 const templates = {
