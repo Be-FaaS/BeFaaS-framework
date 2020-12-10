@@ -2,15 +2,15 @@
 config:
   target: ' '
   phases:
-    #Constant load for 5min (300s), 5 flows per second
+    #Constant load for 5min (300s), 3.5 flows per second
     - duration: 300
-      arrivalRate: 5
+      arrivalRate: 3.5
     #Constant hith load (spike) for 10min (600s), 20 flows per second
     - duration: 600
       arrivalRate: 20
-    #Constant load for 5min (300s), 5 flows per second
+    #Constant load for 5min (300s), 3.5 flows per second
     - duration: 300
-      arrivalRate: 5
+      arrivalRate: 3.5
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
   defaults:
 
