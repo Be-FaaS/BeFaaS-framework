@@ -2,10 +2,10 @@
 config:
   target: ' '
   phases:
-    #Starting with 0 flows per second, linear increase over 15min (900s) up to 50 flows per second
+    #Starting with 0 flows per second, linear increase over 15min (900s) up to 20 flows per second
     - duration: 900
       arrivalRate: 0
-      rampTo: 50
+      rampTo: 20
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
   defaults:
 
