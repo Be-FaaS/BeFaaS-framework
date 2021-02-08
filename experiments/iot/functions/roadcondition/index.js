@@ -48,7 +48,7 @@ module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
 
   const condition = calculateRoadCondition(temperature, humidity, wind, rain)
 
-  ctx.call('setlightphasecalculation', {
+  await ctx.call('setlightphasecalculation', {
     condition: condition
   })
   return {}
