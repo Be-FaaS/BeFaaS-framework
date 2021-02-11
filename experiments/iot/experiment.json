@@ -1,6 +1,6 @@
 {
   "services": {
-    "redisAws": {},
+    "redisGoogle": {},
 	"workload": {
       "config": "./workload.yml"
     }
@@ -12,11 +12,11 @@
         "calls": ["movementplan"]
       },
       "weathersensorfilter": {
-        "provider": "aws",
+        "provider": "google",
         "calls": ["roadcondition"]
       },
       "roadcondition": {
-        "provider": "aws",
+        "provider": "google",
         "calls": ["setlightphasecalculation"]
       },
       "emergencydetection": {
@@ -24,13 +24,13 @@
         "calls": ["setlightphasecalculation"]
       },
       "trafficstatistics": {
-        "provider": "aws"
+        "provider": "google"
       },
       "setlightphasecalculation": {
-        "provider": "aws"
+        "provider": "google"
       },
       "getlightphasecalculation": {
-        "provider": "aws"
+        "provider": "google"
       },
       "objectrecognition": {
         "provider": "tinyfaas",
