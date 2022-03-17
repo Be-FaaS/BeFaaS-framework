@@ -24,20 +24,20 @@ BeFaaS is an extensible open-source benchmarking framework for FaaS environments
 If you use this software in a publication, please cite it as:
 
 ### Text
-Martin Grambow, Tobias Pfandzelter, Luk Burchard, Carsten Schubert, Max Zhao, David Bermbach. **BeFaaS: An Application-Centric Benchmarking Framework for FaaS Environments**. In: Proceedings of $Conf name$. $Publisher$ $Year$.
+Martin Grambow, Tobias Pfandzelter, Luk Burchard, Carsten Schubert, Max Zhao, David Bermbach. **BeFaaS: An Application-Centric Benchmarking Framework for FaaS Environments**. In: Proceedings of the 9th IEEE International Conference on Cloud Engineering (IC2E 2021), 2021.
 
 ### BibTeX
 ```TeX
 @inproceedings{paper_grambow_befaas,
-	title = {{BeFaaS: An Application-Centric Benchmarking Framework for FaaS Environments}},
-	booktitle = {Proceedings of $Conf name$},
-	publisher = {$Publisher$},
-	author = {Martin Grambow, Tobias Pfandzelter, Luk Burchard, Carsten Schubert, Max Zhao, David Bermbach},
-	year = {$YEAR$}
+	title = "{BeFaaS}: An Application-Centric Benchmarking Framework for FaaS Environments",
+	booktitle = "Proceedings of the 9th IEEE International Conference on Cloud Engineering (IC2E 2021)",
+	author = Grambow, Martin and Pfandzelter, Tobias and Burchard, Luk and Schubert, Carsten and Zhao, Max and Bermbach, David",
+	pages = "1--8"
+	year = 2021
 }
 ```
 
-A full list of our [publications](https://www.mcc.tu-berlin.de/menue/forschung/publikationen/parameter/en/) and [prototypes](https://www.mcc.tu-berlin.de/menue/forschung/prototypes/parameter/en/) is available on our group website.
+A full list of our [publications](https://www.tu.berlin/en/mcc/research/publications/) and [prototypes](https://www.tu.berlin/en/mcc/research/projects/) is available on our group website.
 
 
 ## Acknowledgment
