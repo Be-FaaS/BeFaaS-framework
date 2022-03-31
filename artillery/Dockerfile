@@ -1,6 +1,6 @@
 FROM node:12-alpine
 
-RUN npm i -g artillery@1 --allow-root --unsafe-perm=true
+RUN npm i -g artillery@1.6.1 --allow-root --unsafe-perm=true
 
 WORKDIR /workload
 
