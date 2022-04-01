@@ -1,0 +1,20 @@
+{
+  "services": {
+    "workload": {
+      "config": "./workload.yml"
+    }
+  },
+  "program": {
+    "functions": {
+      "function1aws": {
+        "provider": "aws",
+        "calls": [
+          "function2aws"
+        ]
+      },
+      "function2aws": {
+        "provider": "aws"
+      }
+    }
+  }
+}

@@ -96,3 +96,25 @@ resource "aws_lambda_permission" "apigw" {
 
   source_arn = "${data.terraform_remote_state.ep.outputs.aws_api_gateway_rest_api.execution_arn}/*/*"
 }
+
+resource "aws_sns_topic" "function2aws" {
+  name                        = "function2aws"
+}
+
+resource "aws_lambda_permission" "allow_function2_invocation" {
+  statement_id  = "AllowExecutionFromSNS"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.fn["function2aws"].function_name
+  principal     = "sns.amazonaws.com"
+  source_arn    = aws_sns_topic.function2aws.arn
+  
+  depends_on = [aws_lambda_function.fn]
+}
+
+resource "aws_sns_topic_subscription" "functionaws2_subscr" {
+  topic_arn = aws_sns_topic.function2aws.arn
+  protocol  = "lambda"
+  endpoint  = aws_lambda_function.fn["function2aws"].arn
+  
+  depends_on = [aws_lambda_function.fn]
+}
