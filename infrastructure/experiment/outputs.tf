@@ -14,6 +14,10 @@ output "aws_fns" {
   value = local.aws_fns
 }
 
+output "aws_fns_async" {
+  value = local.aws_fn_names_async
+}
+
 output "google_fns" {
   value = local.google_fns
 }

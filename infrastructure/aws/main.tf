@@ -11,6 +11,7 @@ locals {
   build_id      = data.terraform_remote_state.exp.outputs.build_id
   deployment_id = data.terraform_remote_state.exp.outputs.deployment_id
   fns           = data.terraform_remote_state.exp.outputs.aws_fns
+  fns_async     = data.terraform_remote_state.exp.outputs.aws_fns_async
 }
 
 resource "aws_iam_role" "lambda_exec" {
@@ -97,24 +98,27 @@ resource "aws_lambda_permission" "apigw" {
   source_arn = "${data.terraform_remote_state.ep.outputs.aws_api_gateway_rest_api.execution_arn}/*/*"
 }
 
-resource "aws_sns_topic" "function2aws" {
-  name                        = "function2aws"
+resource "aws_sns_topic" "fn_topic" {
+  for_each      = toset(local.fns_async)
+  name          = aws_lambda_function.fn[each.key].function_name
 }
 
-resource "aws_lambda_permission" "allow_function2_invocation" {
+resource "aws_lambda_permission" "allow_fn_invocation" {
+  for_each      = toset(local.fns_async)
   statement_id  = "AllowExecutionFromSNS"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.fn["function2aws"].function_name
+  function_name = aws_lambda_function.fn[each.key].function_name
   principal     = "sns.amazonaws.com"
-  source_arn    = aws_sns_topic.function2aws.arn
+  source_arn    = aws_sns_topic.fn_topic[each.key].arn
   
   depends_on = [aws_lambda_function.fn]
 }
 
-resource "aws_sns_topic_subscription" "functionaws2_subscr" {
-  topic_arn = aws_sns_topic.function2aws.arn
+resource "aws_sns_topic_subscription" "function_subscr" {
+  for_each  = toset(local.fns_async)
+  topic_arn = aws_sns_topic.fn_topic[each.key].arn
   protocol  = "lambda"
-  endpoint  = aws_lambda_function.fn["function2aws"].arn
+  endpoint  = aws_lambda_function.fn[each.key].arn
   
   depends_on = [aws_lambda_function.fn]
 }

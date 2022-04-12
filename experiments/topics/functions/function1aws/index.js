@@ -32,3 +32,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   return { result: 'Im done 1.' }
   
 })
+
+module.exports = lib.serverless.snsHandler(undefined, async (event, ctx) => {
+	console.log("EVENT: \n" + JSON.stringify(event, null, 2));
+});

@@ -8,12 +8,14 @@
     "functions": {
       "function1aws": {
         "provider": "aws",
+		"call": "async",
         "calls": [
           "function2aws"
         ]
       },
       "function2aws": {
-        "provider": "aws"
+        "provider": "aws",
+		"call": "async"
       }
     }
   }
