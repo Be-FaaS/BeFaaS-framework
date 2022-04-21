@@ -119,3 +119,11 @@ rm -rf $exp_dir/_build/azure
 
 echo -n $(date) > .build_timestamp
 echo "Build done" | chalk cyan bold
+
+echo "Going to build services" | chalk cyan
+for service in $(jq -r ".services | keys[] " $exp_config); do
+  echo $service
+  if [[ $service == publisher* ]]; then
+    echo "Going to build service: $service" | chalk cyan
+  fi
+done
