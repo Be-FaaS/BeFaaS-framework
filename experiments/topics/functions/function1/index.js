@@ -21,6 +21,7 @@ function isPrime( n ) {
 }
 
 module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
+  console.log("All Vars:" +  JSON.stringify(process.env, null, 2))
   listPrimes(100)
 	
   const resp = await ctx.call('function2',{
@@ -37,5 +38,6 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
 })
 
 module.exports = lib.serverless.snsHandler(undefined, async (event, ctx) => {
+	console.log("All Vars:" +  JSON.stringify(process.env, null, 2))
 	console.log("EVENT: \n" + JSON.stringify(event, null, 2));
 });

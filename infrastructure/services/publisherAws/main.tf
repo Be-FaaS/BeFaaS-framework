@@ -105,3 +105,9 @@ resource "aws_lambda_permission" "apigw" {
 
   source_arn = "${local.gateway}/*/*"
 }
+
+data "aws_region" "current" {}
+
+output "PUBLISHER_AWS_ENDPOINT" {
+  value = "https://${data.terraform_remote_state.endpoint.outputs.aws_api_gateway_rest_api.id}.execute-api.${data.aws_region.current.name}.amazonaws.com/dev/publisher"
+}
