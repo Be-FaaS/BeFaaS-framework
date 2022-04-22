@@ -11,6 +11,6 @@ variable "timeout" {
 }
 
 variable "fn_env" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }

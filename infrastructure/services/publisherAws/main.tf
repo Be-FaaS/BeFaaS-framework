@@ -80,15 +80,15 @@ resource "aws_iam_role_policy_attachment" "lambda_pub_exec" {
 resource "aws_lambda_function" "publisherAWS" {
   function_name = "${local.project_name}-publisherAWS"
 
-  s3_bucket = aws_s3_bucket.pub_bucket.id
-  s3_key    = aws_s3_bucket_object.lambda_publisher.key
+  s3_bucket     = aws_s3_bucket.pub_bucket.id
+  s3_key        = aws_s3_bucket_object.lambda_publisher.key
 
-  handler     = var.handler
-  runtime     = "nodejs12.x"
-  timeout     = var.timeout
-  memory_size = var.memory_size
+  handler       = var.handler
+  runtime       = "nodejs12.x"
+  timeout       = var.timeout
+  memory_size   = var.memory_size
 
-  role = aws_iam_role.lambda_pub_exec.arn
+  role          = aws_iam_role.lambda_pub_exec.arn
 
   environment {
     variables = merge({
@@ -103,5 +103,5 @@ resource "aws_lambda_permission" "apigw" {
   function_name = aws_lambda_function.publisherAWS.function_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${local.gateway}/*/*"
+  source_arn    = "${local.gateway}/*/*"
 }
