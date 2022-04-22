@@ -99,8 +99,8 @@ resource "aws_lambda_permission" "apigw" {
 }
 
 resource "aws_sns_topic" "fn_topic" {
-  for_each      = toset(local.fns_async)
-  name          = aws_lambda_function.fn[each.key].function_name
+  for_each = toset(local.fns_async)
+  name     = aws_lambda_function.fn[each.key].function_name
 }
 
 resource "aws_lambda_permission" "allow_fn_invocation" {
