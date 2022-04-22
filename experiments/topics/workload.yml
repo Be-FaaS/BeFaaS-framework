@@ -2,22 +2,23 @@
 config:
   target: ' '
   phases:
-    #Constant load for 15min (900s), 3.5 flows per second
-    - duration: 100
-      arrivalRate: 3.5
+    #Constant load for 10 sec, 1 flows per second
+    - duration: 10
+      arrivalRate: 1
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
   defaults:
 
 scenarios:
-  # Just call awsfunction1
+  # Just call publisher which sends events to awsfunction1
   - flow:
       - post:
-          url: '{{ function1aws }}/call'
+          url: '{{ publisherAws }}/call'
           json:
-              pudding:
-                name: 'Schokopudding'
+              function: 'function1aws'
+              event: 
+                name: 'Some Schokopudding'
                 zucker: 4
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
-    name: 'just function1aws'
+    name: 'just publisher which forwrds to function1aws'
     weight: 100

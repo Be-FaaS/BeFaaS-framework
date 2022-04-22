@@ -55,7 +55,22 @@ var_json="{}"
 for fname in $(jq -r '.program.functions | keys[]' "$exp_json"); do
   provider=$(jq -r --arg f $fname '.program.functions[$f].provider' "$exp_json")
   f_ep=$(echo $endpoints | jq -r --arg p $provider 'with_entries(select(.key | ascii_downcase | startswith($p))) | to_entries[0].value')/$fname
- var_json=`echo $var_json | jq ". + {$fname: [\"$f_ep\"]}"`
+  echo "Matched $fname endpoint: $f_ep" | chalk blue
+  var_json=`echo $var_json | jq ". + {$fname: [\"$f_ep\"]}"`
+done
+
+echo "Matching publisher endpoints..." | chalk blue
+for service in $(jq -r '.services | keys[]' "$exp_json"); do
+  echo $service
+  if [[ $service == publisher* ]]; then
+    echo "Going to match $service endpoint" | chalk cyan
+	if [[ $service == *Aws ]]; then
+	  provider="aws"
+	  s_ep=$(echo $endpoints | jq -r --arg p $provider 'with_entries(select(.key | ascii_downcase | startswith($p))) | to_entries[0].value')/publisher
+	  echo "Matched $service endpoint: $s_ep" | chalk blue
+      var_json=`echo $var_json | jq ". + {$service: [\"$s_ep\"]}"`
+	fi
+  fi
 done
 
 
