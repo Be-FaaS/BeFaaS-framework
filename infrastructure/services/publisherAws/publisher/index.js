@@ -30,10 +30,18 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   console.log("Msg: " + JSON.stringify(msg, null, 2))
   
   //Send event to topic
-  sns.publish(msg, function(err, data) {
-    if (err) console.log(err, err.stack); // an error occurred
-    else     console.log(data);           // successful response
-  });
+  let result = await sns.publish(msg, async function(err, data) {
+    if (err) {
+		console.log(err, err.stack); // an error occurred
+		return err;
+	}
+    else {
+		console.log(data);           // successful response
+		return data;
+	}
+  }).promise();
+  
+  console.log("Message published (or not)" + result)
   
   //Respond ok  
   return {

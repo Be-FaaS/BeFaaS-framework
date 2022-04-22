@@ -47,8 +47,8 @@ resource "aws_iam_role" "lambda_pub_exec" {
 EOF
 }
 
-resource "aws_iam_policy" "pub_policy" {
-  name = "${local.project_name}-publisher"
+resource "aws_iam_policy" "log_policy" {
+  name = "${local.project_name}-logger"
 
   policy = <<EOF
 {
@@ -73,6 +73,31 @@ resource "aws_iam_policy" "pub_policy" {
   ]
 }
 EOF
+}
+
+resource "aws_iam_policy" "pub_policy" {
+  name = "${local.project_name}-publisher"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [  
+    {
+      "Action": [
+        "sns:Publish",
+        "sns:Subscribe"
+      ],
+      "Effect": "Allow",
+	  "Resource": "arn:aws:sns:*:*:*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_log_exec" {
+  role       = aws_iam_role.lambda_pub_exec.name
+  policy_arn = aws_iam_policy.log_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_pub_exec" {
