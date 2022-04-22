@@ -110,7 +110,7 @@ resource "aws_lambda_permission" "allow_fn_invocation" {
   function_name = aws_lambda_function.fn[each.key].function_name
   principal     = "sns.amazonaws.com"
   source_arn    = aws_sns_topic.fn_topic[each.key].arn
-  
+
   depends_on = [aws_lambda_function.fn]
 }
 
@@ -119,6 +119,6 @@ resource "aws_sns_topic_subscription" "function_subscr" {
   topic_arn = aws_sns_topic.fn_topic[each.key].arn
   protocol  = "lambda"
   endpoint  = aws_lambda_function.fn[each.key].arn
-  
+
   depends_on = [aws_lambda_function.fn]
 }

@@ -1,6 +1,6 @@
 data "terraform_remote_state" "exp" {
   backend = "local"
-  
+
   config = {
     path = "${path.module}/../../experiment/terraform.tfstate"
   }
@@ -20,7 +20,7 @@ locals {
   deployment_id = data.terraform_remote_state.exp.outputs.deployment_id
   fns           = data.terraform_remote_state.exp.outputs.aws_fns
   fns_async     = data.terraform_remote_state.exp.outputs.aws_fns_async
-  
+
   gateway = data.terraform_remote_state.endpoint.outputs.aws_api_gateway_rest_api.execution_arn
 }
 
