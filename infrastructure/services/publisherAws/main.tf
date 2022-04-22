@@ -14,8 +14,11 @@ data "terraform_remote_state" "endpoint" {
   }
 }
 
+data "aws_caller_identity" "current" {}
+
 locals {
   project_name  = data.terraform_remote_state.exp.outputs.project_name
+  project_id    = data.terraform_remote_state.exp.outputs.project_id
   build_id      = data.terraform_remote_state.exp.outputs.build_id
   deployment_id = data.terraform_remote_state.exp.outputs.deployment_id
   fns           = data.terraform_remote_state.exp.outputs.aws_fns
@@ -93,6 +96,9 @@ resource "aws_lambda_function" "publisherAWS" {
   environment {
     variables = merge({
       BEFAAS_DEPLOYMENT_ID = local.deployment_id
+      BEFAAS_BUILD_ID = local.build_id
+	  BEFAAS_PROJECT_ID = local.project_id
+	  AWS_ID = data.aws_caller_identity.current.account_id
     }, var.fn_env)
   }
 }

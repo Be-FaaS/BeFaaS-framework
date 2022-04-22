@@ -6,6 +6,10 @@ output "build_id" {
   value = random_string.build_id.result
 }
 
+output "project_id" {
+  value = random_string.project_id.result
+}
+
 output "deployment_id" {
   value = random_string.deployment_id.result
 }

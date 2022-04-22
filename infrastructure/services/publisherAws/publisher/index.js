@@ -9,7 +9,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   //Build event
   console.log("All Vars:" +  JSON.stringify(process.env, null, 2))
   
-  var arn = "arn:aws:sns:" + process.env.AWS_REGION + ":019736690672:befaas-" + process.env.BEFAAS_DEPLOYMENT_ID + "-function1"
+  var arn = "arn:aws:sns:" + process.env.AWS_REGION + ":" + process.env.AWS_ID + ":befaas-" + process.env.BEFAAS_PROJECT_ID + "-function1"
   
   console.log("arn is: " + arn)
   
