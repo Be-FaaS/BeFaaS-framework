@@ -14,9 +14,9 @@ scenarios:
       - post:
           url: '{{ publisherAws }}/call'
           json:
-              function: 'function1aws'
+              function: 'function1'
               event: 
-                name: 'Some Schokopudding'
+                name: 'Pudding'
                 zucker: 4
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'

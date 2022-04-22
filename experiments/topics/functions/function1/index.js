@@ -20,6 +20,22 @@ function isPrime( n ) {
     return true;
 }
 
+module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
+  listPrimes(100)
+	
+  const resp = await ctx.call('function2',{
+	  item: "Pudding",
+	  item2: "Sahne"
+  })
+  
+  listPrimes(100)
+  return { 
+    "result": 'Im done 1.', 
+    "resp": resp 
+  }
+  
+})
+
 module.exports = lib.serverless.snsHandler(undefined, async (event, ctx) => {
 	console.log("EVENT: \n" + JSON.stringify(event, null, 2));
 });

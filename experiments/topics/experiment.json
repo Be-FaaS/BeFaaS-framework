@@ -7,14 +7,14 @@
   },
   "program": {
     "functions": {
-      "function1aws": {
+      "function1": {
         "provider": "aws",
 		"call": "async",
         "calls": [
-          "function2aws"
+          "function2"
         ]
       },
-      "function2aws": {
+      "function2": {
         "provider": "aws",
 		"call": "async"
       }
