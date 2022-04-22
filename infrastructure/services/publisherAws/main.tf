@@ -96,9 +96,9 @@ resource "aws_lambda_function" "publisherAWS" {
   environment {
     variables = merge({
       BEFAAS_DEPLOYMENT_ID = local.deployment_id
-      BEFAAS_BUILD_ID = local.build_id
-	  BEFAAS_PROJECT_ID = local.project_id
-	  AWS_ID = data.aws_caller_identity.current.account_id
+      BEFAAS_BUILD_ID      = local.build_id
+	  BEFAAS_PROJECT_ID    = local.project_id
+	  AWS_ID               = data.aws_caller_identity.current.account_id
     }, var.fn_env)
   }
 }
