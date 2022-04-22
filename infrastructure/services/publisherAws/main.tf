@@ -72,20 +72,13 @@ resource "aws_iam_policy" "pub_policy" {
 EOF
 }
 
-data "archive_file" "lambda_publisher" {
-  type = "zip"
-
-  source_dir  = "${path.module}/publisher"
-  output_path = "${path.module}/publisher.zip"
-}
-
 resource "aws_iam_role_policy_attachment" "lambda_pub_exec" {
   role       = aws_iam_role.lambda_pub_exec.name
   policy_arn = aws_iam_policy.pub_policy.arn
 }
 
 resource "aws_lambda_function" "publisherAWS" {
-  function_name = "publisherAWS"
+  function_name = "${local.project_name}-publisherAWS"
 
   s3_bucket = aws_s3_bucket.pub_bucket.id
   s3_key    = aws_s3_bucket_object.lambda_publisher.key

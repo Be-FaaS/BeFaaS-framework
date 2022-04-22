@@ -5,8 +5,7 @@ resource "aws_s3_bucket" "pub_bucket" {
 }
 
 resource "aws_s3_bucket_object" "lambda_publisher" {
-  bucket = aws_s3_bucket.pub_bucket.id
-  key    = "publisher.zip"
-  source = data.archive_file.lambda_publisher.output_path
-  etag = filemd5(data.archive_file.lambda_publisher.output_path)
+  bucket   = aws_s3_bucket.pub_bucket.id
+  key      = "${local.build_id}/publisherAws.zip"
+  source   = "${path.module}/publisher/_build/publisherAws.zip"
 }
