@@ -5,22 +5,27 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   //null -> include all attributes; 2 -> format using 2 spaces
   console.log("Request: \n" + JSON.stringify(request, null, 2));
   console.log("Context: \n" + JSON.stringify(ctx, null, 2));
-  
-  //Build event
   console.log("All Vars:" +  JSON.stringify(process.env, null, 2))
   
-  var arn = "arn:aws:sns:" + process.env.AWS_REGION + ":" + process.env.AWS_ID + ":befaas-" + process.env.BEFAAS_PROJECT_ID + "-function1"
-  
+  //Build event  
+  var arn = "arn:aws:sns:" + process.env.AWS_REGION + ":" + process.env.AWS_ID + ":befaas-" + process.env.BEFAAS_PROJECT_ID + "-function1"  
   console.log("arn is: " + arn)
   
   var sns = new aws.SNS();
+  var txt = JSON.stringify(request.event, null, 2);
+  if (txt.length == 0) {
+	  txt = "no message"
+  }
   var msg = {
-    //Message: JSON.stringify(request.event, null, 2),
-    Message: 'Some Pudding',
+    Message: txt,
     MessageAttributes: {
-      'context': {
+      'contextId': {
         DataType: 'String',
-        StringValue: JSON.stringify(ctx, null, 2)
+        StringValue: ctx.contextId
+      },
+	  'XPair': {
+        DataType: 'String',
+        StringValue: ctx.XPair
       }
     },
     Subject: JSON.stringify(request.function, null, 2),
