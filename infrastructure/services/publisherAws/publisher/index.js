@@ -23,9 +23,9 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
         DataType: 'String',
         StringValue: ctx.contextId
       },
-	  'XPair': {
+	  'x-pair': {
         DataType: 'String',
-        StringValue: ctx.XPair
+        StringValue: ctx.xPair
       }
     },
     Subject: JSON.stringify(request.function, null, 2),
