@@ -8,7 +8,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   console.log("All Vars:" +  JSON.stringify(process.env, null, 2))
   
   //Build event  
-  var arn = "arn:aws:sns:" + process.env.AWS_REGION + ":" + process.env.AWS_ID + ":befaas-" + process.env.BEFAAS_PROJECT_ID + "-function1"  
+  var arn = "arn:aws:sns:" + process.env.AWS_REGION + ":" + process.env.AWS_ID + ":befaas-" + process.env.BEFAAS_PROJECT_ID + "-" + request.fun
   console.log("arn is: " + arn)
   
   var sns = new aws.SNS();
@@ -28,7 +28,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
         StringValue: ctx.xPair
       }
     },
-    Subject: JSON.stringify(request.function, null, 2),
+    Subject: JSON.stringify(request.fun, null, 2),
     TargetArn: arn,
   };
   
@@ -46,7 +46,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
 	}
   }).promise();
   
-  console.log("Message published (or not)" + result)
+  console.log("Message published (or not)" + JSON.stringify(result, null, 2))
   
   //Respond ok  
   return {

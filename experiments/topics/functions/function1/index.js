@@ -28,4 +28,15 @@ module.exports = lib.serverless.snsHandler(undefined, async (event, ctx) => {
 	listPrimes(100);
 	
 	console.log("Found some primes");
+	
+	var result = await ctx.lib.call('publisher', {
+		fun: 'function2',
+		event: {
+			name: 'Schokolade',
+			zucker: 10
+		}
+    })
+	
+	console.log("Result from calling function2: " + JSON.stringify(result, null, 2))
+	
 });

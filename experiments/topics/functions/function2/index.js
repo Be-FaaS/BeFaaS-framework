@@ -21,6 +21,11 @@ function isPrime( n ) {
 }
 
 module.exports = lib.serverless.snsHandler(undefined, async (event, ctx) => {
-	listPrimes(100)
-	console.log("EVENT: \n" + JSON.stringify(event, null, 2));
+	console.log("All Vars:" +  JSON.stringify(process.env, null, 2));
+	console.log("event: \n" + JSON.stringify(event, null, 2));
+	console.log("ctx: \n" + JSON.stringify(ctx, null, 2));
+	
+	listPrimes(100);
+	
+	console.log("Found some primes");
 });

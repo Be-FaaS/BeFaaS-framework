@@ -14,7 +14,7 @@ scenarios:
       - post:
           url: '{{ publisherAws }}/call'
           json:
-              function: 'function1'
+              fun: 'function1'
               event: 
                 name: 'Pudding'
                 zucker: 4
