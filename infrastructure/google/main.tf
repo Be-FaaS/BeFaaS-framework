@@ -11,6 +11,7 @@ locals {
   build_id      = data.terraform_remote_state.exp.outputs.build_id
   deployment_id = data.terraform_remote_state.exp.outputs.deployment_id
   fns           = data.terraform_remote_state.exp.outputs.google_fns
+  fns_async     = data.terraform_remote_state.exp.outputs.google_fns_async
 }
 
 resource "google_cloudfunctions_function" "fn" {
@@ -39,4 +40,26 @@ resource "google_cloudfunctions_function_iam_member" "invoker" {
 
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
+}
+
+resource "google_pubsub_topic" "fn_topic" {
+  for_each = toset(local.fns_async)
+  name     = google_cloudfunctions_function.fn[each.key].name
+  project  = google_cloudfunctions_function.fn[each.key].project
+}
+
+resource "google_pubsub_subscription" "function_subscr" {
+  for_each = toset(local.fns_async)
+  name     = google_cloudfunctions_function.fn[each.key].name
+  topic    = google_pubsub_topic.fn_topic[each.key].name
+
+  push_config {
+    push_endpoint = google_cloudfunctions_function.fn[each.key].https_trigger_url
+
+    attributes = {
+      x-goog-version = "v1"
+    }
+  }
+  
+  depends_on = [google_cloudfunctions_function.fn]
 }

@@ -1,6 +1,7 @@
 {
   "services": {
 	"publisherAws": {},
+	"publisherGoogle": {},
     "workload": {
       "config": "./workload.yml"
     }
@@ -15,7 +16,7 @@
         ]
       },
       "function2": {
-        "provider": "aws",
+        "provider": "google",
 		"call": "async"
       }
     }
