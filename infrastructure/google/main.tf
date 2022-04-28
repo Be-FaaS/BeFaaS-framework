@@ -60,6 +60,6 @@ resource "google_pubsub_subscription" "function_subscr" {
       x-goog-version = "v1"
     }
   }
-  
+
   depends_on = [google_cloudfunctions_function.fn]
 }
