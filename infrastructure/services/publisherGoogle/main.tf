@@ -6,6 +6,14 @@ data "terraform_remote_state" "exp" {
   }
 }
 
+data "terraform_remote_state" "endpoint" {
+  backend = "local"
+
+  config = {
+    path = "${path.module}/../../google/endpoint/terraform.tfstate"
+  }
+}
+
 locals {
   project_name  = data.terraform_remote_state.exp.outputs.project_name
   build_id      = data.terraform_remote_state.exp.outputs.build_id
@@ -15,7 +23,7 @@ locals {
 }
 
 resource "google_cloudfunctions_function" "publisherGoogle" {
-  name                = "${local.project_name}-publisherAWS"
+  name                = "publisher"
   runtime             = "nodejs10"
   entry_point         = var.entry_point
   timeout             = var.timeout
@@ -38,4 +46,8 @@ resource "google_cloudfunctions_function_iam_member" "invoker" {
 
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
+}
+
+output "PUBLISHER_GOOGLE_ENDPOINT" {
+  value = "${data.terraform_remote_state.endpoint.outputs.GOOGLE_CLOUDFUNCTION_ENDPOINT}/publisher"  
 }

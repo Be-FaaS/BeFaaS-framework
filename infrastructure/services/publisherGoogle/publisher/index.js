@@ -4,12 +4,12 @@ const {PubSub} = require('@google-cloud/pubsub');
 
 module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   //null -> include all attributes; 2 -> format using 2 spaces
-  console.log("Request: \n" + JSON.stringify(request, null, 2));
-  console.log("Context: \n" + JSON.stringify(ctx, null, 2));
-  console.log("All Vars:" +  JSON.stringify(process.env, null, 2))
+  console.log("Request: \n" + JSON.stringify(request));
+  console.log("Context: \n" + JSON.stringify(ctx));
+  console.log("All Vars:" +  JSON.stringify(process.env))
   
   //Build event 
-  var topicName = 'YOUR_TOPIC_NAME_OR_ID'  
+  var topicName = request.fun  
   console.log("topic name is: " + topicName)
   
   var data = JSON.stringify(request.event, null, 2);
@@ -23,7 +23,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
     const dataBuffer = Buffer.from(data);
     try {
       const messageId = await pubSubClient
-        .topic(topicNameOrId)
+        .topic(topicName)
         .publishMessage({data: dataBuffer});
       console.log(`Message ${messageId} published.`);
     } catch (error) {

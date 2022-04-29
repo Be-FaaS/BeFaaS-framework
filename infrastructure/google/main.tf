@@ -26,16 +26,16 @@ resource "google_cloudfunctions_function" "fn" {
   source_archive_object = google_storage_bucket_object.source[each.key].name
 
   trigger_http = contains(local.fns_async, each.key) ? null : true
-  
+
   dynamic "event_trigger" {
     for_each = contains(local.fns_async, each.key) ? [each.key] : []
 
     content {
       event_type = "google.pubsub.topic.publish"
-      resource   = "${google_pubsub_topic.fn_topic[each.key].name}"
+      resource   = google_pubsub_topic.fn_topic[each.key].name
     }
   }
-  
+
   depends_on = [google_pubsub_topic.fn_topic]
 
   environment_variables = merge({
@@ -55,5 +55,5 @@ resource "google_cloudfunctions_function_iam_member" "invoker" {
 
 resource "google_pubsub_topic" "fn_topic" {
   for_each = toset(local.fns_async)
-  name     = local.fns[each.key]
+  name     = each.key
 }
