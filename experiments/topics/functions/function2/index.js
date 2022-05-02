@@ -28,4 +28,15 @@ module.exports = lib.serverless.msgHandler(undefined, async (event, ctx) => {
 	listPrimes(100);
 	
 	console.log("Found some primes");
+	
+	//Respond ok  
+  return {
+    statusCode: 200,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      result: 'ok',
+    }),
+  }  
 });

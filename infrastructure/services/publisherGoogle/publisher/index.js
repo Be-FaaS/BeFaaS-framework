@@ -21,10 +21,16 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   
   async function publishMessage() {
     const dataBuffer = Buffer.from(data);
+    const customAttributes = {
+      contextId: ctx.contextId,
+      xPair: ctx.xPair,
+    };
+
+	
     try {
       const messageId = await pubSubClient
         .topic(topicName)
-        .publishMessage({data: dataBuffer});
+        .publish(dataBuffer, customAttributes);
       console.log(`Message ${messageId} published.`);
     } catch (error) {
       console.error(`Received error while publishing: ${error.message}`);
