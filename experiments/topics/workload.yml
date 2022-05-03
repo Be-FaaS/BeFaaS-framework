@@ -20,5 +20,5 @@ scenarios:
                 zucker: 4
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
-    name: 'just publisher which forwrds to function1aws'
+    name: 'just publisher which forwrds to function1'
     weight: 100

@@ -37,7 +37,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
       process.exitCode = 1;
     }
   }
-  publishMessage();
+  await publishMessage();
   
   //Respond ok  
   return {

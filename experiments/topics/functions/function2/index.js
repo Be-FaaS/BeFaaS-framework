@@ -29,7 +29,7 @@ module.exports = lib.serverless.msgHandler(undefined, async (event, ctx) => {
 	
 	console.log("Found some primes");
 	
-	//Respond ok  
+	// Respond ok  
   return {
     statusCode: 200,
     headers: {
