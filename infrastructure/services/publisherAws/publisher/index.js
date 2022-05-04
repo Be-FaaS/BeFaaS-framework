@@ -11,7 +11,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   var arn = "arn:aws:sns:" + process.env.AWS_REGION + ":" + process.env.AWS_ID + ":befaas-" + process.env.BEFAAS_PROJECT_ID + "-" + request.fun
   console.log("arn is: " + arn)
   
-  var sns = new aws.SNS();
+  var sns = new aws.SNS({apiVersion: '2010-03-31'});
   var txt = JSON.stringify(request.event, null, 2);
   if (txt.length == 0) {
 	  txt = "no message"
@@ -35,18 +35,15 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   console.log("Msg: " + JSON.stringify(msg, null, 2))
   
   //Send event to topic
-  let result = await sns.publish(msg, async function(err, data) {
-    if (err) {
-		console.log(err, err.stack); // an error occurred
-		return err;
-	}
-    else {
-		console.log(data);           // successful response
-		return data;
-	}
-  }).promise();
-  
-  console.log("Message published (or not)" + JSON.stringify(result, null, 2))
+  msgPromise = await sns.publish(msg).promise()  
+  msgPromise.then(
+  function(data) {
+    console.log(`Message ${msg.Message} sent to the topic ${msg.TopicArn}`);
+    console.log("MessageID is " + data.MessageId);
+  }).catch(
+    function(err) {
+    console.error(err, err.stack);
+  });
   
   //Respond ok  
   return {

@@ -49,5 +49,5 @@ resource "google_cloudfunctions_function_iam_member" "invoker" {
 }
 
 output "PUBLISHER_GOOGLE_ENDPOINT" {
-  value = "${data.terraform_remote_state.endpoint.outputs.GOOGLE_CLOUDFUNCTION_ENDPOINT}/publisher"  
+  value = "${data.terraform_remote_state.endpoint.outputs.GOOGLE_CLOUDFUNCTION_ENDPOINT}/publisher"
 }
