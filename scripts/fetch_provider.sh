@@ -8,6 +8,9 @@ mkdir -p .$2
 cd .$2
 git clone $1 . 2>/dev/null || git pull 
 go build -o ../infrastructure/$2/terraform-provider-$2
+if [[ $2 == tinyfaas ]]; then
+	go build -o ../infrastructure/services/publisherTinyfaas/terraform-provider-$2
+fi
 cd ..
 
 echo "Done building terraform provider!"

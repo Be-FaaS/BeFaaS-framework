@@ -32,13 +32,14 @@ locals {
 }
 
 locals {
-  aws_fn_names          = [for i, z in local.expconfig.program.functions : i if z.provider == "aws"]
-  aws_fn_names_async    = [for i, z in local.expconfig.program.functions : i if z.provider == "aws" && try(z.call, "sync") == "async"]
-  google_fn_names       = [for i, z in local.expconfig.program.functions : i if z.provider == "google"]
-  google_fn_names_async = [for i, z in local.expconfig.program.functions : i if z.provider == "google" && try(z.call, "sync") == "async"]
-  tinyfaas_fn_names     = [for i, z in local.expconfig.program.functions : i if z.provider == "tinyfaas"]
-  openfaas_fn_names     = [for i, z in local.expconfig.program.functions : i if z.provider == "openfaas"]
-  openwhisk_fn_names    = [for i, z in local.expconfig.program.functions : i if z.provider == "openwhisk"]
+  aws_fn_names            = [for i, z in local.expconfig.program.functions : i if z.provider == "aws"]
+  aws_fn_names_async      = [for i, z in local.expconfig.program.functions : i if z.provider == "aws" && try(z.call, "sync") == "async"]
+  google_fn_names         = [for i, z in local.expconfig.program.functions : i if z.provider == "google"]
+  google_fn_names_async   = [for i, z in local.expconfig.program.functions : i if z.provider == "google" && try(z.call, "sync") == "async"]
+  tinyfaas_fn_names       = [for i, z in local.expconfig.program.functions : i if z.provider == "tinyfaas"]
+  tinyfaas_fn_names_async = [for i, z in local.expconfig.program.functions : i if z.provider == "tinyfaas" && try(z.call, "sync") == "async"]
+  openfaas_fn_names       = [for i, z in local.expconfig.program.functions : i if z.provider == "openfaas"]
+  openwhisk_fn_names      = [for i, z in local.expconfig.program.functions : i if z.provider == "openwhisk"]
 }
 
 locals {

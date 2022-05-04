@@ -70,6 +70,18 @@ for service in $(jq -r '.services | keys[]' "$exp_json"); do
 	  echo "Matched $service endpoint: $s_ep" | chalk blue
       var_json=`echo $var_json | jq ". + {$service: [\"$s_ep\"]}"`
 	fi
+	if [[ $service == *Google ]]; then
+	  provider="google"
+	  s_ep=$(echo $endpoints | jq -r --arg p $provider 'with_entries(select(.key | ascii_downcase | startswith($p))) | to_entries[0].value')/publisher
+	  echo "Matched $service endpoint: $s_ep" | chalk blue
+      var_json=`echo $var_json | jq ". + {$service: [\"$s_ep\"]}"`
+	fi
+	if [[ $service == *Tinyfaas ]]; then
+	  provider="tinyfaas"
+	  s_ep=$(echo $endpoints | jq -r --arg p $provider 'with_entries(select(.key | ascii_downcase | startswith($p))) | to_entries[0].value')/publisher
+	  echo "Matched $service endpoint: $s_ep" | chalk blue
+      var_json=`echo $var_json | jq ". + {$service: [\"$s_ep\"]}"`
+	fi
   fi
 done
 

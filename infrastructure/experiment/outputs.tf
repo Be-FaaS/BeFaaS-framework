@@ -34,6 +34,10 @@ output "tinyfaas_fns" {
   value = local.tinyfaas_fns
 }
 
+output "tinyfaas_fns_async" {
+  value = local.tinyfaas_fn_names_async
+}
+
 output "openfaas_fns" {
   value = local.openfaas_fn_names
 }
