@@ -91,6 +91,35 @@ for d in $exp_dir/*; do
   rm -rf $d/build $d/_index.js
 done
 
+echo "Going to build services" | chalk cyan
+hasAzurePublisher=false
+srv_dir="infrastructure/services"
+for service in $(jq -r ".services | keys[] " $exp_config); do
+  echo $service
+  if [[ $service == publisher* ]]; then
+    if [[ $service == *Azure ]]; then 
+	  hasAzurePublisher=true
+	  continue
+	fi
+    echo "Going to build service: $service" | chalk cyan
+	fct_dir=$srv_dir/$service/publisher
+
+    rm -rf $fct_dir/_build
+    mkdir $fct_dir/_build
+	
+	injectFname="process.env.BEFAAS_FN_NAME='${service}';"
+    echo "${injectFname}$(cat $fct_dir/index.js)" > $fct_dir/_index.js    
+
+    npx ncc build $fct_dir/_index.js -o $fct_dir/build
+    echo $PKG_JSON > $fct_dir/build/package.json
+    cp $exp_config $fct_dir/build/
+    cd $fct_dir/build && zip -r ../_build/$service.zip * && cd -	
+	
+	rm -rf $fct_dir/build $fct_dir/_index.js
+	
+  fi
+done
+
 echo "Building azure functions" | chalk cyan
 
 rm -rf $exp_dir/_build/azure
@@ -114,33 +143,25 @@ for fname in $(jq -r '.program.functions | with_entries(select(.value.provider =
   npx ncc build $d/_index.js -o $exp_dir/_build/azure/$fname
   rm -rf $d/_index.js
 done
+# Include publisherAzure if there is one
+if $hasAzurePublisher ; then
+  echo "Will copy and build publisherAzure" | chalk cyan
+  
+  d=$srv_dir/publisherAzure/publisher
+  rm -rf $exp_dir/_build/azure/publisher
+  mkdir $exp_dir/_build/azure/publisher
+	
+  cat misc/azure/function.json | jq --argjson fn "\"publisher/{*path}\"" '.bindings[0].route = $fn' > $exp_dir/_build/azure/publisher/function.json
+  echo "process.env.BEFAAS_FN_NAME='publisher';$(cat $d/index.js)" > $d/_index.js
+  npx ncc build $d/_index.js -o $exp_dir/_build/azure/publisher
+  rm -rf $d/_index.js
+  
+fi
+
 cd $exp_dir/_build/azure && zip -r ../azure_dist.zip * && cd -
 rm -rf $exp_dir/_build/azure
 
 echo -n $(date) > .build_timestamp
 echo "Build done" | chalk cyan bold
 
-echo "Going to build services" | chalk cyan
-srv_dir="infrastructure/services"
-for service in $(jq -r ".services | keys[] " $exp_config); do
-  echo $service
-  if [[ $service == publisher* ]]; then
-    echo "Going to build service: $service" | chalk cyan
-	fct_dir=$srv_dir/$service/publisher
 
-    rm -rf $fct_dir/_build
-    mkdir $fct_dir/_build
-	
-	injectFname="process.env.BEFAAS_FN_NAME='${service}';"
-    echo "${injectFname}$(cat $fct_dir/index.js)" > $fct_dir/_index.js
-    
-
-    npx ncc build $fct_dir/_index.js -o $fct_dir/build
-    echo $PKG_JSON > $fct_dir/build/package.json
-    cp $exp_config $fct_dir/build/
-    cd $fct_dir/build && zip -r ../_build/$service.zip * && cd -	
-	
-	rm -rf $fct_dir/build $fct_dir/_index.js
-	
-  fi
-done

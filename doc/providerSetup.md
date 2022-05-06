@@ -22,7 +22,7 @@ To run benchmarks, BeFaaS requires programmatic access to the respective platfor
 
 ## Azure
 
-1. Install the [azure-cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
+1. Install the [azure-cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest): `curl -L https://aka.ms/InstallAzureCli | bash`
 2. Run `az login`.
 3. Run `az account list`.
 4. Choose your subscription you want to use for the deployment.

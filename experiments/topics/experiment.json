@@ -1,7 +1,7 @@
 {
   "services": {
 	"publisherGoogle": {},
-	"publisherTinyfaas": {},
+	"publisherAzure": {},
     "workload": {
       "config": "./workload.yml"
     }
@@ -16,7 +16,7 @@
         ]
       },
       "function2": {
-        "provider": "tinyfaas",
+        "provider": "azure",
 		"call": "async"
       }
     }
