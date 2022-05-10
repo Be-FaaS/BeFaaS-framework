@@ -20,7 +20,7 @@ function isPrime( n ) {
     return true;
 }
 
-module.exports = lib.serverless.msgHandler(undefined, async (event, ctx) => {
+module.exports = lib.serverless.msgHandler(async (event, ctx) => {
   console.log("All Vars:" +  JSON.stringify(process.env));
   console.log("event: " + JSON.stringify(event) + "\n");
   // console.log("ctx: " + JSON.stringify(ctx) + "\n");

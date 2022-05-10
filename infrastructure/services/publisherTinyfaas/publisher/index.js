@@ -20,7 +20,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   console.log("fnName: " + functionName);
   
   try {  
-    fetch(`http://ec2-18-193-114-56.eu-central-1.compute.amazonaws.com:80/${functionName}/call`, {
+    fetch(`http://ec2-18-197-7-192.eu-central-1.compute.amazonaws.com:80/${functionName}/call`, {
         method: 'post',
         body: JSON.stringify(request.event || {}),
         headers: {
