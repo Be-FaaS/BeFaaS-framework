@@ -28,6 +28,7 @@ resource "tinyfaas_function" "publisherTinyfaas" {
   zip_path    = "${path.module}/publisher/_build/publisherTinyfaas.zip"
   environment = merge({
     BEFAAS_DEPLOYMENT_ID = local.deployment_id
+    TINYFAAS_ENDPOINT    = "${data.terraform_remote_state.endpoint.outputs.TINYFAAS_ENDPOINT}"
   }, var.fn_env)
 }
 

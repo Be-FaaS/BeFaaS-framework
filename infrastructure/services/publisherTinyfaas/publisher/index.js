@@ -15,12 +15,14 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   var contextId = ctx.contextId;
   var xPair = ctx.xPair;
   var functionName = request.fun;
+  var endpoint = process.env.TINYFAAS_ENDPOINT
   
   console.log("txt: " + txt);
   console.log("fnName: " + functionName);
-  
+  console.log("endpoint: " + endpoint);
+
   try {  
-    fetch(`http://ec2-18-197-7-192.eu-central-1.compute.amazonaws.com:80/${functionName}/call`, {
+    fetch(`${endpoint}/${functionName}/call`, {
         method: 'post',
         body: JSON.stringify(request.event || {}),
         headers: {
