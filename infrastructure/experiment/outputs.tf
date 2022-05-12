@@ -30,6 +30,10 @@ output "google_fns_async" {
   value = local.google_fn_names_async
 }
 
+output "azure_fns_async" {
+  value = local.azure_fn_names_async
+}
+
 output "tinyfaas_fns" {
   value = local.tinyfaas_fns
 }

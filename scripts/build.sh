@@ -132,7 +132,13 @@ for fname in $(jq -r '.program.functions | with_entries(select(.value.provider =
   echo "Going to build azure function: $fname" | chalk cyan
   d=$exp_dir/$fname
   mkdir $exp_dir/_build/azure/$fname
-  cat misc/azure/function.json | jq --argjson fn "\"${fname}/{*path}\"" '.bindings[0].route = $fn' > $exp_dir/_build/azure/$fname/function.json
+  
+  if [[ $(jq -r ".program.functions | with_entries(select(.key == \"$fname\" and .value.call == \"async\")) | keys[]" $exp_config) ]]; then
+    cat misc/azure/function_event.json > $exp_dir/_build/azure/$fname/function.json
+  else
+    cat misc/azure/function.json | jq --argjson fn "\"${fname}/{*path}\"" '.bindings[0].route = $fn' > $exp_dir/_build/azure/$fname/function.json
+  fi
+  
   if [[ -f "$d/.installed" ]]; then
     echo "Function already built: ${fname}" | chalk cyan
     cp -r $d/* $exp_dir/_build/azure/$fname/

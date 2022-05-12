@@ -1,0 +1,10 @@
+{
+  "entryPoint": "azureHandler",
+  "bindings": [
+    {
+      "type": "eventGridTrigger",
+      "direction": "in",
+      "name": "req",
+    }
+  ]
+}

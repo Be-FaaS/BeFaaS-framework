@@ -11,6 +11,7 @@ locals {
   build_id      = data.terraform_remote_state.exp.outputs.build_id
   deployment_id = data.terraform_remote_state.exp.outputs.deployment_id
   fn_file       = data.terraform_remote_state.exp.outputs.azure_fn_file
+  fns_async     = data.terraform_remote_state.exp.outputs.azure_fns_async
 }
 
 provider "azurerm" {
@@ -99,6 +100,8 @@ resource "azurerm_function_app" "functions" {
   storage_account_name       = azurerm_storage_account.storage.name
   storage_account_access_key = azurerm_storage_account.storage.primary_access_key
   version                    = "~3"
+  
+  depends_on = [azurerm_eventgrid_topic.fn_topic]
 
   app_settings = merge({
     https_only                     = true
@@ -112,4 +115,26 @@ resource "azurerm_function_app" "functions" {
     WEBSITE_RUN_FROM_PACKAGE       = "https://${azurerm_storage_account.storage.name}.blob.core.windows.net/${azurerm_storage_container.deployments.name}/${azurerm_storage_blob.appcode.name}${data.azurerm_storage_account_sas.sas.sas}"
     BEFAAS_DEPLOYMENT_ID           = local.deployment_id
   }, var.fn_env)
+}
+
+resource "azurerm_eventgrid_topic" "fn_topic" {
+  for_each            = toset(local.fns_async)
+  name                = each.key
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  tags = {
+    environment = "Production"
+  }
+}
+
+resource "azurerm_eventgrid_event_subscription" "subscr" {
+  for_each              = toset(local.fns_async)
+  name                  = "defaultEventSubscription"
+  scope                 = azurerm_eventgrid_topic.fn_topic[each.key].id
+  event_delivery_schema = "EventGridSchema"
+
+  azure_function_endpoint {
+    function_id = "${azurerm_function_app.functions.id}/functions/${each.key}"
+  }
 }
