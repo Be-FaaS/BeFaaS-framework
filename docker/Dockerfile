@@ -65,10 +65,10 @@ RUN curl -SLO https://download.docker.com/linux/static/stable/x86_64/docker-19.0
     && docker -v
 
 # install terraform
-RUN curl -SLO https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip \
-    && unzip terraform_0.12.28_linux_amd64.zip \
+RUN curl -SLO https://releases.hashicorp.com/terraform/1.1.9/terraform_1.1.9_linux_amd64.zip \
+    && unzip terraform_1.1.9_linux_amd64.zip \
     && mv terraform /usr/local/bin/ \
-    && rm terraform_0.12.28_linux_amd64.zip \
+    && rm terraform_1.1.9_linux_amd64.zip \
     && terraform version
 
 # install faas-cli

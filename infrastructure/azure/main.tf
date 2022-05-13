@@ -70,18 +70,17 @@ data "azurerm_storage_account_sas" "sas" {
     create  = false
     update  = false
     process = false
+    tag     = false
+    filter  = false
   }
 }
 
-resource "azurerm_app_service_plan" "asp" {
+resource "azurerm_service_plan" "asp" {
   name                = local.project_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
-  kind                = "FunctionApp"
-  sku {
-    tier = "Dynamic"
-    size = "Y1"
-  }
+  os_type             = "Windows"
+  sku_name            = "Y1"
 }
 
 resource "azurerm_application_insights" "ai" {
@@ -96,11 +95,11 @@ resource "azurerm_function_app" "functions" {
   name                       = local.project_name
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
-  app_service_plan_id        = azurerm_app_service_plan.asp.id
+  app_service_plan_id        = azurerm_service_plan.asp.id
   storage_account_name       = azurerm_storage_account.storage.name
   storage_account_access_key = azurerm_storage_account.storage.primary_access_key
   version                    = "~3"
-  
+
   depends_on = [azurerm_eventgrid_topic.fn_topic]
 
   app_settings = merge({
@@ -122,6 +121,7 @@ resource "azurerm_eventgrid_topic" "fn_topic" {
   name                = each.key
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
+  local_auth_enabled  = false
 
   tags = {
     environment = "Production"
