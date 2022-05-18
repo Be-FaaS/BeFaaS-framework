@@ -113,6 +113,8 @@ resource "azurerm_function_app" "functions" {
     HASH                           = base64sha256(local.fn_file)
     WEBSITE_RUN_FROM_PACKAGE       = "https://${azurerm_storage_account.storage.name}.blob.core.windows.net/${azurerm_storage_container.deployments.name}/${azurerm_storage_blob.appcode.name}${data.azurerm_storage_account_sas.sas.sas}"
     BEFAAS_DEPLOYMENT_ID           = local.deployment_id
+    ACCESS_KEYS                    = join("; ", values(azurerm_eventgrid_topic.fn_topic)[*].primary_access_key)
+    TOPIC_ENDPOINTS                = join("; ", values(azurerm_eventgrid_topic.fn_topic)[*].endpoint)
   }, var.fn_env)
 }
 
@@ -126,6 +128,14 @@ resource "azurerm_eventgrid_topic" "fn_topic" {
   tags = {
     environment = "Production"
   }
+}
+
+output "topic_access_keys" {
+  value = values(azurerm_eventgrid_topic.fn_topic)[*].primary_access_key
+  sensitive = true
+}
+output "topic_endpoints" {
+  value = values(azurerm_eventgrid_topic.fn_topic)[*].endpoint
 }
 
 resource "azurerm_eventgrid_event_subscription" "subscr" {
