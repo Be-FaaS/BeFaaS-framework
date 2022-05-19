@@ -32,7 +32,7 @@ Martin Grambow, Tobias Pfandzelter, Luk Burchard, Carsten Schubert, Max Zhao, Da
 	title = "{BeFaaS}: An Application-Centric Benchmarking Framework for FaaS Environments",
 	booktitle = "Proceedings of the 9th IEEE International Conference on Cloud Engineering (IC2E 2021)",
 	author = Grambow, Martin and Pfandzelter, Tobias and Burchard, Luk and Schubert, Carsten and Zhao, Max and Bermbach, David",
-	pages = "1--8"
+	publisher = "IEEE"
 	year = 2021
 }
 ```

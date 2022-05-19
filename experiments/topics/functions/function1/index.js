@@ -21,9 +21,8 @@ function isPrime( n ) {
 }
 
 module.exports = lib.serverless.msgHandler(async (event, ctx) => {
-	console.log("All Vars:" +  JSON.stringify(process.env, null, 2));
-	console.log("event: \n" + JSON.stringify(event, null, 2));
-	console.log("ctx: \n" + JSON.stringify(ctx, null, 2));	
+	console.log("event: " + JSON.stringify(event));
+	console.log("ctx: " + JSON.stringify(ctx));	
 	listPrimes(110);	
 	console.log("Found 110 primes");	
 	var result = await ctx.lib.call('publisher', {
@@ -33,7 +32,7 @@ module.exports = lib.serverless.msgHandler(async (event, ctx) => {
 			zucker: 10
 		}
     })	
-	console.log("Result from calling function2: " + JSON.stringify(result, null, 2))
+	console.log("Result from calling function2: " + JSON.stringify(result))
 	return {
 		statusCode: 200,
 		headers: {
@@ -42,6 +41,5 @@ module.exports = lib.serverless.msgHandler(async (event, ctx) => {
 	body: JSON.stringify({
 		result: 'ok',
 	}),
-}
-	
+	}	
 });

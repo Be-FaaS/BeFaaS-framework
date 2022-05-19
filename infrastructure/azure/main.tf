@@ -130,7 +130,7 @@ resource "azurerm_eventgrid_topic" "fn_topic" {
 }
 
 output "topic_access_keys" {
-  value = values(azurerm_eventgrid_topic.fn_topic)[*].primary_access_key
+  value     = values(azurerm_eventgrid_topic.fn_topic)[*].primary_access_key
   sensitive = true
 }
 

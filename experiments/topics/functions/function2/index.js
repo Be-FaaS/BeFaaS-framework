@@ -21,9 +21,8 @@ function isPrime( n ) {
 }
 
 module.exports = lib.serverless.msgHandler(async (event, ctx) => {
-  console.log("All Vars:" +  JSON.stringify(process.env));
-  console.log("event: " + JSON.stringify(event) + "\n");
-  // console.log("ctx: " + JSON.stringify(ctx) + "\n");
+  console.log("event: " + JSON.stringify(event));
+  console.log("ctx: " + JSON.stringify(ctx));
   listPrimes(112);
   console.log("Found 112 primes");
   // Respond ok  

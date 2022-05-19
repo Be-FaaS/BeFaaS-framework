@@ -2,10 +2,8 @@ const lib = require('@befaas/lib')
 const fetch = require('node-fetch')
 
 module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
-  //null -> include all attributes; 2 -> format using 2 spaces
   console.log("Request: " + JSON.stringify(request));
   console.log("Context: " + JSON.stringify(ctx));
-  console.log("All Vars: " +  JSON.stringify(process.env))
   
   
   var txt = JSON.stringify(request.event);
@@ -17,9 +15,9 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   var functionName = request.fun;
   var endpoint = process.env.TINYFAAS_ENDPOINT
   
-  console.log("txt: " + txt);
-  console.log("fnName: " + functionName);
-  console.log("endpoint: " + endpoint);
+  //console.log("txt: " + txt);
+  //console.log("fnName: " + functionName);
+  //console.log("endpoint: " + endpoint);
 
   try {  
     fetch(`${endpoint}/${functionName}/call`, {
@@ -35,9 +33,6 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
 	  console.log(e);
   }
   
-  console.log("Called function " + functionName);
-  
-  //Respond ok  
   return {
     statusCode: 200,
     headers: {
