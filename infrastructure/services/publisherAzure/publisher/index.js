@@ -5,7 +5,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   //null -> include all attributes; 2 -> format using 2 spaces
   console.log("Request: \n" + JSON.stringify(request));
   console.log("Context: \n" + JSON.stringify(ctx));
-  console.log("All Vars:" +  JSON.stringify(process.env));
+  //console.log("All Vars:" +  JSON.stringify(process.env));
   
   var txt = JSON.stringify(request.event);
   if (txt.length == 0) {
@@ -21,7 +21,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   var idx = -1;
   
   for (let i = 0; i < endpoints.length; i++) {
-    console.log(str(i) + ": " endpoints[i]  + ": " + keys[i])
+    console.log(i.toString() + ": " + endpoints[i]  + ": " + keys[i])
 	if (endpoints[i].startsWith("https://" + functionName + ".")) {
 		idx = i;
 	}	
@@ -29,7 +29,8 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
 
   console.log("txt: " + txt);
   console.log("fnName: " + functionName);
-  console.log("endpoint: " + endpoint);
+  console.log("endpoint: " + endpoints[idx]);
+  console.log("key: " + keys[idx]);
   
   const client = new EventGridPublisherClient(
     endpoints[idx],
@@ -39,11 +40,13 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   
   await client.send([
   {
-    eventType: "Azure.Sdk.SampleEvent",
+    eventType: "Azure.SDK.Samples.CustomEvent",
     subject: functionName,
     dataVersion: "1.0",
     data: {
-      event: txt
+      event: txt,
+	  contextId: contextId,
+	  xPair: xPair
     }
   }
   ]);  

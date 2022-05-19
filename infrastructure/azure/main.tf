@@ -123,7 +123,6 @@ resource "azurerm_eventgrid_topic" "fn_topic" {
   name                = each.key
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  local_auth_enabled  = false
 
   tags = {
     environment = "Production"
@@ -134,6 +133,7 @@ output "topic_access_keys" {
   value = values(azurerm_eventgrid_topic.fn_topic)[*].primary_access_key
   sensitive = true
 }
+
 output "topic_endpoints" {
   value = values(azurerm_eventgrid_topic.fn_topic)[*].endpoint
 }
