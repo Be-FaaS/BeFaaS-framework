@@ -1,8 +1,9 @@
 config:
   target: ' '
   phases:
-    - duration: 900
-      arrivalRate: 14.1
+  #Constant load for 5 sec, 1 flows per second
+    - duration: 5
+      arrivalRate: 1
   variables:
     speed:
       - 10
@@ -12,33 +13,30 @@ config:
 
 
 scenarios:
-#  - flow:
-#      - post:
-#          url: '{{ getlightphasecalculation }}/call'
-#          json:
-#          beforeRequest: 'beforeRequest'
-#          afterResponse: 'afterResponse'
-#    name: 'getlightphasecalculation'
   - flow:
     - post:
-        url: '{{ trafficsensorfilter }}/call'
+        url: '{{ publisherAws }}/call'
         json:
-          carDirection:
-            plate: 'OD DI 98231'
-            direction: 4
-            speed: {{ speed }}
+          fun: 'trafficsensorfilter'
+          event: 
+            carDirection:
+              plate: 'OD DI 98231'
+              direction: 4
+              speed: {{ speed }}
         beforeRequest: 'beforeRequest'
         afterResponse: 'afterResponse'
     name: 'trafficSensorFilter'
     weight: 100
   - flow:
     - post:
-        url: '{{ weathersensorfilter }}/call'
+        url: '{{ publisherAws }}/call'
         json:
-          temperature: 10.0
-          humidity: 50.0
-          wind: 5.0
-          rain: false
+          fun: 'weathersensorfilter'
+          event: 
+            temperature: 10.0
+            humidity: 50.0
+            wind: 5.0
+            rain: false          
         beforeRequest: 'beforeRequest'
         afterResponse: 'afterResponse'
     name: 'weathersensorfilter'
@@ -52,4 +50,4 @@ scenarios:
         beforeRequest: 'emergencyEveryTwoMinutesFiveSecondsEach'
         afterResponse: 'afterResponse'
     name: 'objectrecognition'
-    weight: 40
+    weight: 1

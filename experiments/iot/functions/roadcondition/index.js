@@ -43,7 +43,7 @@ function calculateRoadCondition (temperature, humidity, wind, rain) {
  *
  * Response: { }
  */
-module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
+module.exports = lib.serverless.msgHandler(async (event, ctx) => {
   const { temperature, humidity, wind, rain } = event
 
   const condition = calculateRoadCondition(temperature, humidity, wind, rain)

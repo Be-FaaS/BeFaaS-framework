@@ -9,9 +9,10 @@ bit order: 0b[red][yellow][green]
 }
 */
 
-module.exports = lib.serverless.rpcHandler(
+module.exports = lib.serverless.msgHandler(
   { db: 'redis' },
   async (event, ctx) => {
+	console.log("event in movementplan: " + JSON.stringify(event));
     const dbObjects = await ctx.db.get('movementplan:cars')
     let cars = (dbObjects || {}).cars || []
     if (event.objects) {
@@ -27,6 +28,6 @@ module.exports = lib.serverless.rpcHandler(
       plan: cars
     }
     await ctx.call('setlightphasecalculation', res)
-    return res
+    return {}
   }
 )

@@ -20,8 +20,13 @@ const lib = require('@befaas/lib')
  *   }
  * }
  */
-module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
+module.exports = lib.serverless.msgHandler(async (event, ctx) => {
+  console.log("event in trafficsensorfilter: " + JSON.stringify(event));
+  console.log("ctx in trafficsensorfilter: " + JSON.stringify(ctx));
+	
   const { carDirection } = event
+  
+  console.log("carDirection is: " + JSON.stringify(carDirection));
 
   if (typeof carDirection.direction !== 'number') return {}
   carDirection.direction |= 0
@@ -37,6 +42,9 @@ module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
   )
     return {}
 
-  await ctx.call('movementplan', { carDirection })
-  return { carDirection }
+  await ctx.lib.call('publisher', {
+	fun: 'movementplan',
+	event: { carDirection }
+  })
+  return {}
 })

@@ -50,7 +50,7 @@ function checkRain (rain) {
  *
  * Response: { }
  */
-module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
+module.exports = lib.serverless.msgHandler(async (event, ctx) => {
   const { temperature, humidity, wind, rain } = event
 
   if (!checkTemperature(temperature)) {
@@ -68,12 +68,15 @@ module.exports = lib.serverless.rpcHandler(async (event, ctx) => {
   if (!checkRain(rain)) {
     return { error: 'Invalid rain.' }
   }
-
-  await ctx.call('roadcondition', {
-    temperature: temperature,
-    humidity: humidity,
-    wind: wind,
-    rain: rain
+  
+  await ctx.lib.call('publisher', {
+	fun: 'roadcondition',
+	event: { 
+	  temperature: temperature,
+      humidity: humidity,
+      wind: wind,
+      rain: rain
+	}
   })
   return {}
 })

@@ -1,6 +1,7 @@
 {
   "services": {
-    "redisGoogle": {},
+    "redisAws": {},
+	"publisherAws": {},
 	"workload": {
       "config": "./workload.yml"
     }
@@ -8,36 +9,40 @@
   "program": {
     "functions": {
       "trafficsensorfilter": {
-        "provider": "tinyfaas",
+        "provider": "aws",
+		"call": "async",
         "calls": ["movementplan"]
       },
       "weathersensorfilter": {
-        "provider": "google",
+        "provider": "aws",
+		"call": "async",
         "calls": ["roadcondition"]
       },
       "roadcondition": {
-        "provider": "google",
+        "provider": "aws",
+		"call": "async",
         "calls": ["setlightphasecalculation"]
       },
       "emergencydetection": {
-        "provider": "tinyfaas",
+        "provider": "aws",
         "calls": ["setlightphasecalculation"]
       },
       "trafficstatistics": {
-        "provider": "google"
+        "provider": "aws"
       },
       "setlightphasecalculation": {
-        "provider": "google"
+        "provider": "aws"
       },
       "getlightphasecalculation": {
-        "provider": "google"
+        "provider": "aws"
       },
       "objectrecognition": {
-        "provider": "tinyfaas",
+        "provider": "aws",
         "calls": ["trafficstatistics", "movementplan", "emergencydetection"]
       },
       "movementplan": {
-        "provider": "tinyfaas",
+        "provider": "aws",
+		"call": "async",
         "calls": ["setlightphasecalculation"]
       }
     }

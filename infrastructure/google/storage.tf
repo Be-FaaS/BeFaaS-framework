@@ -1,5 +1,6 @@
 resource "google_storage_bucket" "bucket" {
   name          = local.project_name
+  location      = "EU"
   force_destroy = true
 }
 

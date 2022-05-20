@@ -1,5 +1,6 @@
 resource "google_storage_bucket" "pub_bucket" {
   name          = "${local.project_name}-publisher"
+  location      = "EU"
   force_destroy = true
 }
 
