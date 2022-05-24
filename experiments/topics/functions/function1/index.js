@@ -25,7 +25,7 @@ module.exports = lib.serverless.msgHandler(async (event, ctx) => {
 	console.log("ctx: " + JSON.stringify(ctx));	
 	listPrimes(110);	
 	console.log("Found 110 primes");	
-	var result = await ctx.lib.call('publisher', {
+	var result = await ctx.call('publisher', {
 		fun: 'function2',
 		event: {
 			name: 'Schokolade',

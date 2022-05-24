@@ -42,7 +42,7 @@ module.exports = lib.serverless.msgHandler(async (event, ctx) => {
   )
     return {}
 
-  await ctx.lib.call('publisher', {
+  await ctx.call('publisher', {
 	fun: 'movementplan',
 	event: { carDirection }
   })

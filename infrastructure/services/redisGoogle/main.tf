@@ -59,7 +59,7 @@ resource "google_compute_firewall" "redis_firewall" {
       "6379" # Redis
     ]
   }
-  
+
   source_ranges = ["0.0.0.0/0"]
 }
 
