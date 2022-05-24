@@ -31,13 +31,13 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   
   console.log("Msg: " + JSON.stringify(msg))
   
-  await sns.publish(msg, function(err, data) {
-    if (err) console.log(err, err.stack)
-    else {
-      console.log(`Message ${msg.Message} sent to the topic ${msg.TargetArn}`);
-      console.log("MessageID is " + data.MessageId);
-	}
-  }).promise();
+  try {
+	msgPromise = await sns.publish(msg).promise()
+	console.log(`Message ${msg.Message} sent to the topic ${msg.TopicArn}`);
+    console.log("MessageID is " + msgPromise.MessageId);
+  } catch (err) {
+	console.error(err, err.stack);
+  }
   
   return {
     statusCode: 200,
