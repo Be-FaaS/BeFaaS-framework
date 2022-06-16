@@ -2,11 +2,48 @@
 config:
   target: ' '
   phases:
-    #Constant load for 10 sec, 1 flows per second
-    - duration: 10
+    #Constant load for 5 sec, 1 flows per second
+    - duration: 5
       arrivalRate: 1
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
   defaults:
+
+  variables:
+    model:
+      - 'A'
+      - 'B'
+      - 'C'
+    length:
+      - 150
+      - 200
+      - 250
+    height:
+      - 40
+      - 50
+      - 55
+      - 60
+    width:
+      - 80
+      - 90
+      - 100
+      - 160
+    type:
+      - 'walnut'
+      - 'oak'
+      - 'beech'
+      - 'birch'
+    color:
+      - 'alabaster'
+      - 'olive'
+      - 'coral'
+      - 'navy'
+      - 'lemon'
+    hardness:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
 
 scenarios:
   # Just send a sofa order
@@ -16,14 +53,14 @@ scenarios:
           json:
             fun: 'orderSupplies'
             event:
-              order: 'some random string/number'
-              model: 'Cx'
-              length: 123
-              height: 123
-              width: 541
-              type: 'oak'
-              color: 'alabaster'
-              hardness: 2
+              order: 'order-{{ $randomString() }}'
+              model: { { model } }
+              length: { { length } }
+              height: { { height } }
+              width: { { width } }
+              type: { { type } }
+              color: { { color } }
+              hardness: { { hardness } }
 
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
