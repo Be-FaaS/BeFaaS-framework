@@ -19,6 +19,30 @@
         "provider": "azure",
         "call": "async",
         "calls": ["panelProduction"]
+      },
+      "cushionOrder": {
+        "provider": "aws",
+        "call": "async",
+        "calls": ["cushionProduction"]
+      },
+      "panelProduction": {
+        "provider": "azure",
+        "call": "async",
+        "calls": ["billing"]
+      },
+      "cushionProduction": {
+        "provider": "aws",
+        "call": "async",
+        "calls": ["billing"]
+      },
+      "billing": {
+        "provider": "google",
+        "call": "async",
+        "calls": ["payment"]
+      },
+      "payment": {
+        "provider": "google",
+        "call": "async"
       }
     }
   }
