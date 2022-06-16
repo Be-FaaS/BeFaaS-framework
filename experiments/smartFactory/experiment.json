@@ -1,0 +1,25 @@
+{
+  "services": {
+    "publisherGoogle": {},
+    "publisherAws": {},
+    "publisherAzure": {},
+    "redisGoogle": {},
+    "workload": {
+      "config": "./workload.yml"
+    }
+  },
+  "program": {
+    "functions": {
+      "orderSupplies": {
+        "provider": "google",
+        "call": "async",
+        "calls": ["panelOrder", "cushionOrder"]
+      },
+      "panelOrder": {
+        "provider": "azure",
+        "call": "async",
+        "calls": ["panelProduction"]
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+# Constant workload for the smart factory FaaS benchmark.
+config:
+  target: ' '
+  phases:
+    #Constant load for 10 sec, 1 flows per second
+    - duration: 10
+      arrivalRate: 1
+  processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
+  defaults:
+
+scenarios:
+  # Just send a sofa order
+  - flow:
+      - post:
+          url: '{{ publisherGoogle }}/call'
+          json:
+            fun: 'orderSupplies'
+            event:
+              order: 'some random string/number'
+              model: 'Cx'
+              length: 123
+              height: 123
+              width: 541
+              type: 'oak'
+              color: 'alabaster'
+              hardness: 2
+
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+    name: 'send a sofa order'
+    weight: 100
