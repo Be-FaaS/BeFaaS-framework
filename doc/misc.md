@@ -41,7 +41,7 @@ curl --header "Content-Type: application/json" --header "X-Context: 112244" --he
 
 curl --header "Content-Type: application/json" --header "X-Context: 123456" --header "X-Pair: 123-456" --request POST --data '{"event":{"carDirection":{"plate":"OD DI 98231", "direction":4, "speed":10}}, "fun":"trafficsensorfilter"}' https://xb3b4huvz6.execute-api.eu-central-1.amazonaws.com/dev/publisher/call
 
-
+curl --header "Content-Type: application/json" --header "X-Context: 123456" --header "X-Pair: 123-456" --request POST --data '{"event":{"order":"order_123456", "model":"B", "length":150, "height":50, "width":100, "type":"oak", "color":"coral", "hardness":2}, "fun":"orderSupplies"}' https://europe-west3-befaas.cloudfunctions.net/publisher/call
 
 
 

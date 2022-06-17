@@ -1,7 +1,7 @@
 config:
   target: ' '
   phases:
-  #Constant load for 5 sec, 1 flows per second
+    #Constant load for 5 sec, 1 flows per second
     - duration: 5
       arrivalRate: 1
   variables:
@@ -11,43 +11,42 @@ config:
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
   defaults:
 
-
 scenarios:
   - flow:
-    - post:
-        url: '{{ publisherAws }}/call'
-        json:
-          fun: 'trafficsensorfilter'
-          event: 
-            carDirection:
-              plate: 'OD DI 98231'
-              direction: 4
-              speed: {{ speed }}
-        beforeRequest: 'beforeRequest'
-        afterResponse: 'afterResponse'
+      - post:
+          url: '{{ publisherAws }}/call'
+          json:
+            fun: 'trafficsensorfilter'
+            event:
+              carDirection:
+                plate: 'OD DI 98231'
+                direction: 4
+                speed: '{{ speed }}'
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
     name: 'trafficSensorFilter'
     weight: 100
   - flow:
-    - post:
-        url: '{{ publisherAws }}/call'
-        json:
-          fun: 'weathersensorfilter'
-          event: 
-            temperature: 10.0
-            humidity: 50.0
-            wind: 5.0
-            rain: false          
-        beforeRequest: 'beforeRequest'
-        afterResponse: 'afterResponse'
+      - post:
+          url: '{{ publisherAws }}/call'
+          json:
+            fun: 'weathersensorfilter'
+            event:
+              temperature: 10.0
+              humidity: 50.0
+              wind: 5.0
+              rain: false
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
     name: 'weathersensorfilter'
     weight: 1
   - flow:
-    - post:
-        url: '{{ objectrecognition }}'
-        formData:
-          image: "placeholder"
+      - post:
+          url: '{{ objectrecognition }}'
+          formData:
+            image: 'placeholder'
 
-        beforeRequest: 'emergencyEveryTwoMinutesFiveSecondsEach'
-        afterResponse: 'afterResponse'
+          beforeRequest: 'emergencyEveryTwoMinutesFiveSecondsEach'
+          afterResponse: 'afterResponse'
     name: 'objectrecognition'
     weight: 1

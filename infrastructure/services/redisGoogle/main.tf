@@ -23,7 +23,7 @@ resource "google_compute_instance" "redis" {
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-1604-xenial-v20201111a"
+      image = "ubuntu-1804-bionic-v20220610"
     }
   }
 
@@ -34,18 +34,16 @@ resource "google_compute_instance" "redis" {
     }
   }
 
-  metadata = {
-    startup-script = <<SCRIPT
-curl -sSL https://get.docker.com/ | sh
-# --name -> name Container befaas-redis 
-# -d -> run detachted
-# -p 6379:6379 -> expose port 
-# -v redisData:/data -> share /data directory with redisData folder on host
-# Set redis.conf values:
-# --appendonly yes -> persistent storage
-sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass "${random_string.redispass.result}"
-SCRIPT
-  }
+  metadata_startup_script = <<SCRIPT
+    curl -sSL https://get.docker.com/ | sh > installDocker.log
+    # --name -> name Container befaas-redis
+    # -d -> run detachted
+    # -p 6379:6379 -> expose port
+    # -v redisData:/data -> share /data directory with redisData folder on host
+    # Set redis.conf values:
+    # --appendonly yes -> persistent storage
+    sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass "${random_string.redispass.result}"
+    SCRIPT
 }
 
 resource "google_compute_firewall" "redis_firewall" {

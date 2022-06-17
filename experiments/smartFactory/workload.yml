@@ -54,13 +54,13 @@ scenarios:
             fun: 'orderSupplies'
             event:
               order: 'order-{{ $randomString() }}'
-              model: { { model } }
-              length: { { length } }
-              height: { { height } }
-              width: { { width } }
-              type: { { type } }
-              color: { { color } }
-              hardness: { { hardness } }
+              model: '{{ model }}'
+              length: '{{ length }}'
+              height: '{{ height }}'
+              width: '{{ width }}'
+              type: '{{ type }}'
+              color: '{{ color }}'
+              hardness: '{{ hardness }}'
 
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
