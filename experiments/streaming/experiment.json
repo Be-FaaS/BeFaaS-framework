@@ -1,0 +1,33 @@
+{
+  "services": {
+    "redisGoogle": {},
+    "workload": {
+      "config": "./workload.yml"
+    }
+  },
+  "program": {
+    "functions": {
+      "addVideo": {
+        "provider": "google"
+      },
+      "authDevice": {
+        "provider": "google"
+      },
+      "getUserMeta": {
+        "provider": "google"
+      },
+      "getVideos": {
+        "provider": "google"
+      },
+      "patchUserMeta": {
+        "provider": "google"
+      },
+      "registerDevice": {
+        "provider": "google"
+      },
+      "registerUser": {
+        "provider": "google"
+      }
+    }
+  }
+}

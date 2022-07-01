@@ -1,0 +1,22 @@
+# Load workload for streaming use case
+config:
+  target: ' '
+  phases:
+    #Constant load for 5 sec, 1 flows per second
+    - duration: 5
+      arrivalRate: 1
+  processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
+  defaults:
+
+scenarios:
+  - flow:
+      - post:
+          url: '{{ addVideo }}/call'
+          json:
+            title: '{{ $randomString() }}'
+            author: '{{ $randomString() }}'
+            duration: 5400.0
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+    name: 'addVideo'
+    weight: 1
