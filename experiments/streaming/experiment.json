@@ -1,6 +1,6 @@
 {
   "services": {
-    "redisGoogle": {},
+    "redisAws": {},
     "workload": {
       "config": "./workload.yml"
     }
@@ -8,25 +8,25 @@
   "program": {
     "functions": {
       "addVideo": {
-        "provider": "google"
+        "provider": "aws"
       },
       "authDevice": {
-        "provider": "google"
+        "provider": "aws"
       },
       "getUserMeta": {
-        "provider": "google"
+        "provider": "aws"
       },
       "getVideos": {
-        "provider": "google"
+        "provider": "aws"
       },
       "patchUserMeta": {
-        "provider": "google"
+        "provider": "aws"
       },
       "registerDevice": {
-        "provider": "google"
+        "provider": "aws"
       },
       "registerUser": {
-        "provider": "google"
+        "provider": "aws"
       }
     }
   }
