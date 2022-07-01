@@ -2,6 +2,8 @@ const lib = require('@befaas/lib')
 
 module.exports = lib.serverless.router({ db: 'redis' }, async router => {
   router.post('/', async (ctx, next) => {
+    console.log('ctx: ' + JSON.stringify(ctx))
+
     const video = ctx.request.body
 
     if (video.title && video.author && video.duration) {
