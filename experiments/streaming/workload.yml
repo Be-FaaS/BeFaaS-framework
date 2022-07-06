@@ -11,7 +11,7 @@ config:
 scenarios:
   - flow:
       - post:
-          url: '{{ addVideo }}/call'
+          url: '{{ addVideo }}'
           json:
             title: '{{ $randomString() }}'
             author: '{{ $randomString() }}'
