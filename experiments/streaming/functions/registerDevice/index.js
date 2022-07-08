@@ -3,6 +3,7 @@ const lib = require('@befaas/lib')
 module.exports = lib.serverless.router({ db: 'redis' }, async router => {
   router.post('/', async (ctx, next) => {
     const device = ctx.request.body
+    console.log('Device: ' + JSON.stringify(device))
 
     if (device.username && device.password && device.deviceName) {
       device.deviceId = lib.helper.generateRandomID()
