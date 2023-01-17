@@ -25,7 +25,7 @@ locals {
 
 data "aws_ami" "bitnami_redis" {
   most_recent = true
-  name_regex  = "^bitnami-redis-6.0.16-\\d-linux-debian-11-x86_64-hvm-ebs-nami$"
+  name_regex  = "^bitnami-redis-6.0.16-\\d-linux-debian-10-x86_64-hvm-ebs-nami$"
   owners      = ["979382823631"]
 }
 
