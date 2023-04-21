@@ -22,21 +22,20 @@ locals {
   ssh_private_key = data.terraform_remote_state.vpc.outputs.ssh_private_key
 }
 
-
-data "aws_ami" "bitnami_redis" {
-  most_recent = true
-  name_regex  = "^bitnami-redis-6.0.16-\\d-linux-debian-10-x86_64-hvm-ebs-nami$"
-  owners      = ["979382823631"]
-}
-
 resource "random_string" "redispass" {
   length  = 8
   special = false
   upper   = false
 }
 
+data "aws_ami" "ubuntu_bionic" {
+  most_recent = true
+  name_regex  = "^ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-\\d+$"
+  owners      = ["099720109477"]
+}
+
 resource "aws_instance" "redis" {
-  ami                                  = data.aws_ami.bitnami_redis.id
+  ami                                  = data.aws_ami.ubuntu_bionic.id
   instance_type                        = "t3a.medium"
   associate_public_ip_address          = true
   subnet_id                            = local.default_subnet
@@ -51,17 +50,15 @@ resource "aws_instance" "redis" {
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
-      user        = "bitnami"
+      user        = "ubuntu"
       host        = self.public_ip
       private_key = local.ssh_private_key
       agent       = false
     }
 
     inline = [
-      "sleep 30",
-      "grep -o 'requirepass .*' /opt/bitnami/redis/etc/redis.conf | sed 's/requirepass //' > /tmp/redispass",
-      "sudo sed -i \"s/$(cat /tmp/redispass)/${random_string.redispass.result}/\" /opt/bitnami/redis/etc/redis.conf",
-      "sudo /opt/bitnami/ctlscript.sh restart redis"
+      "curl -sSL https://get.docker.com/ | sh > installDocker.log",
+      "sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass ${random_string.redispass.result}"
     ]
   }
 }
