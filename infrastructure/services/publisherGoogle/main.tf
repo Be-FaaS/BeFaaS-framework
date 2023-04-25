@@ -24,7 +24,7 @@ locals {
 
 resource "google_cloudfunctions_function" "publisherGoogle" {
   name                = "publisher"
-  runtime             = "nodejs10"
+  runtime             = "nodejs16"
   entry_point         = var.entry_point
   timeout             = var.timeout
   available_memory_mb = var.memory_size

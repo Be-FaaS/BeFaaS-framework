@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \
@@ -15,9 +15,9 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # install node
-RUN curl -SLO https://nodejs.org/dist/v12.18.2/node-v12.18.2-linux-x64.tar.xz \
-    && tar xJf node-v12.18.2-linux-x64.tar.xz -C /usr/local --strip-components=1 --no-same-owner \
-    && rm node-v12.18.2-linux-x64.tar.xz \
+RUN curl -SLO https://nodejs.org/dist/v16.9.0/node-v16.9.0-linux-x64.tar.xz \
+    && tar xJf node-v16.9.0-linux-x64.tar.xz -C /usr/local --strip-components=1 --no-same-owner \
+    && rm node-v16.9.0-linux-x64.tar.xz \
     && node --version \
     && npm --version
 
@@ -29,8 +29,8 @@ RUN curl -SLO https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip \
     && aws --version
 
 # install gcloud
-RUN curl -SLO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-301.0.0-linux-x86_64.tar.gz \
-    && tar zxvf google-cloud-sdk-301.0.0-linux-x86_64.tar.gz google-cloud-sdk \
+RUN curl -SLO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-427.0.0-linux-x86_64.tar.gz \
+    && tar zxvf google-cloud-sdk-427.0.0-linux-x86_64.tar.gz google-cloud-sdk \
     && ./google-cloud-sdk/install.sh
 
 ENV PATH="/google-cloud-sdk/bin:${PATH}"
@@ -42,10 +42,10 @@ RUN curl -SL https://aka.ms/InstallAzureCLIDeb | bash \
     && az --version
 
 # install go
-RUN curl -SLO https://golang.org/dl/go1.14.6.linux-amd64.tar.gz \
-    && tar xvf go1.14.6.linux-amd64.tar.gz \
+RUN curl -SLO https://golang.org/dl/go1.20.3.linux-amd64.tar.gz \
+    && tar xvf go1.20.3.linux-amd64.tar.gz \
     && mv go /usr/local \
-    && rm go1.14.6.linux-amd64.tar.gz
+    && rm go1.20.3.linux-amd64.tar.gz
 
 ENV PATH="/usr/local/go/bin:${PATH}"
 RUN go version
@@ -58,17 +58,17 @@ RUN curl -SLO https://github.com/apache/openwhisk-cli/releases/download/1.0.0/Op
     && wsk --help
 
 # install docker
-RUN curl -SLO https://download.docker.com/linux/static/stable/x86_64/docker-19.03.12.tgz \
-    && tar zxvf docker-19.03.12.tgz \
+RUN curl -SLO https://download.docker.com/linux/static/stable/x86_64/docker-23.0.4.tgz \
+    && tar zxvf docker-23.0.4.tgz \
     && mv docker/docker /usr/local/bin/ \
-    && rm -rf docker docker-19.03.12.tgz \
+    && rm -rf docker docker-23.0.4.tgz \
     && docker -v
 
 # install terraform
-RUN curl -SLO https://releases.hashicorp.com/terraform/1.1.9/terraform_1.1.9_linux_amd64.zip \
-    && unzip terraform_1.1.9_linux_amd64.zip \
+RUN curl -SLO https://releases.hashicorp.com/terraform/1.4.5/terraform_1.4.5_linux_amd64.zip \
+    && unzip terraform_1.4.5_linux_amd64.zip \
     && mv terraform /usr/local/bin/ \
-    && rm terraform_1.1.9_linux_amd64.zip \
+    && rm terraform_1.4.5_linux_amd64.zip \
     && terraform version
 
 # install faas-cli

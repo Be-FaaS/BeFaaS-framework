@@ -23,7 +23,7 @@ resource "google_compute_instance" "redis" {
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-1804-bionic-v20220610"
+      image = "ubuntu-2204-jammy-v20230421"
     }
   }
 

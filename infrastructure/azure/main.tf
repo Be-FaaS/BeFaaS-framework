@@ -48,8 +48,8 @@ resource "azurerm_storage_blob" "appcode" {
 data "azurerm_storage_account_sas" "sas" {
   connection_string = azurerm_storage_account.storage.primary_connection_string
   https_only        = true
-  start             = "2021-01-01"
-  expiry            = "2022-12-31"
+  start             = "2022-01-01"
+  expiry            = "2023-12-31"
   resource_types {
     object    = true
     container = false
@@ -106,7 +106,7 @@ resource "azurerm_function_app" "functions" {
     https_only                     = true
     IS_AZURE_FUNCTION_APP          = "true"
     FUNCTIONS_WORKER_RUNTIME       = "node"
-    WEBSITE_NODE_DEFAULT_VERSION   = "~12"
+    WEBSITE_NODE_DEFAULT_VERSION   = "~16"
     FUNCTION_APP_EDIT_MODE         = "readonly"
     SCM_DO_BUILD_DURING_DEPLOYMENT = true
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.ai.instrumentation_key

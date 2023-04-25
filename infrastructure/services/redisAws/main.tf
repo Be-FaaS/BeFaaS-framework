@@ -28,14 +28,14 @@ resource "random_string" "redispass" {
   upper   = false
 }
 
-data "aws_ami" "ubuntu_bionic" {
+data "aws_ami" "ubuntu_lts" {
   most_recent = true
-  name_regex  = "^ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-\\d+$"
+  name_regex  = "^ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-\\d+$"
   owners      = ["099720109477"]
 }
 
 resource "aws_instance" "redis" {
-  ami                                  = data.aws_ami.ubuntu_bionic.id
+  ami                                  = data.aws_ami.ubuntu_lts.id
   instance_type                        = "t3a.medium"
   associate_public_ip_address          = true
   subnet_id                            = local.default_subnet

@@ -81,7 +81,7 @@ resource "aws_iam_policy" "pub_policy" {
   policy = <<EOF
 {
   "Version": "2012-10-17",
-  "Statement": [  
+  "Statement": [
     {
       "Action": [
         "sns:Publish",
@@ -112,7 +112,7 @@ resource "aws_lambda_function" "publisherAWS" {
   s3_key    = aws_s3_bucket_object.lambda_publisher.key
 
   handler     = var.handler
-  runtime     = "nodejs12.x"
+  runtime     = "nodejs16.x"
   timeout     = var.timeout
   memory_size = var.memory_size
 
