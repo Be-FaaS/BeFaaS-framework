@@ -26,8 +26,8 @@ function getPricePerUnit (type) {
 }
 
 module.exports = lib.serverless.msgHandler(async (event, ctx) => {
-  console.log('event: ' + JSON.stringify(event))
-  console.log('ctx: ' + JSON.stringify(ctx))
+  // console.log('event: ' + JSON.stringify(event))
+  // console.log('ctx: ' + JSON.stringify(ctx))
 
   // Parse Event
   const { order, length, height, width, type, tag } = event

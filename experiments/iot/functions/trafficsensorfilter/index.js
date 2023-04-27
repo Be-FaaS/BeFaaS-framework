@@ -21,12 +21,12 @@ const lib = require('@befaas/lib')
  * }
  */
 module.exports = lib.serverless.msgHandler(async (event, ctx) => {
-  console.log("event in trafficsensorfilter: " + JSON.stringify(event));
-  console.log("ctx in trafficsensorfilter: " + JSON.stringify(ctx));
-	
+  // console.log("event in trafficsensorfilter: " + JSON.stringify(event));
+  // console.log("ctx in trafficsensorfilter: " + JSON.stringify(ctx));
+
   const { carDirection } = event
-  
-  console.log("carDirection is: " + JSON.stringify(carDirection));
+
+  // console.log("carDirection is: " + JSON.stringify(carDirection));
 
   if (typeof carDirection.direction !== 'number') return {}
   carDirection.direction |= 0

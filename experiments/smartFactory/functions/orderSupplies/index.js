@@ -7,8 +7,8 @@ function getRandomSizeValue (max) {
 module.exports = lib.serverless.msgHandler(
   { db: 'redis' },
   async (event, ctx) => {
-    console.log('event: ' + JSON.stringify(event))
-    console.log('ctx: ' + JSON.stringify(ctx))
+    // console.log('event: ' + JSON.stringify(event))
+    // console.log('ctx: ' + JSON.stringify(ctx))
 
     var noOfPanels = 0
     var noOfCushions = 0

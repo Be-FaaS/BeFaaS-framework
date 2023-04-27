@@ -2,10 +2,10 @@ const lib = require('@befaas/lib')
 const fetch = require('node-fetch')
 
 module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
-  console.log("Request: " + JSON.stringify(request));
-  console.log("Context: " + JSON.stringify(ctx));
-  
-  
+  // console.log("Request: " + JSON.stringify(request));
+  // console.log("Context: " + JSON.stringify(ctx));
+
+
   var txt = JSON.stringify(request.event);
   if (txt.length == 0) {
 	  txt = "no message"
@@ -14,12 +14,12 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   var xPair = ctx.xPair;
   var functionName = request.fun;
   var endpoint = process.env.TINYFAAS_ENDPOINT
-  
+
   //console.log("txt: " + txt);
   //console.log("fnName: " + functionName);
   //console.log("endpoint: " + endpoint);
 
-  try {  
+  try {
     fetch(`${endpoint}/${functionName}/call`, {
         method: 'post',
         body: JSON.stringify(request.event || {}),
@@ -32,7 +32,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   } catch (e) {
 	  console.log(e);
   }
-  
+
   return {
     statusCode: 200,
     headers: {
@@ -41,5 +41,5 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
     body: JSON.stringify({
       result: 'ok',
     }),
-  }  
+  }
 })

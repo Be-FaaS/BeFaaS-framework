@@ -45,14 +45,14 @@ function produce (material, fabric) {
     }
 
     var ms = fabricValue * materialValue * 500
-    console.log(`production will take ${ms} ms`)
+    // console.log(`production will take ${ms} ms`)
     setTimeout(resolve, ms)
   })
 }
 
 module.exports = lib.serverless.msgHandler(async (event, ctx) => {
-  console.log('event: ' + JSON.stringify(event))
-  console.log('ctx: ' + JSON.stringify(ctx))
+  // console.log('event: ' + JSON.stringify(event))
+  // console.log('ctx: ' + JSON.stringify(ctx))
 
   // Parse Event
   const {

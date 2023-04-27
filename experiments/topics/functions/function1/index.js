@@ -22,16 +22,16 @@ function isPrime( n ) {
 
 module.exports = lib.serverless.msgHandler(async (event, ctx) => {
 	console.log("event: " + JSON.stringify(event));
-	console.log("ctx: " + JSON.stringify(ctx));	
-	listPrimes(110);	
-	console.log("Found 110 primes");	
+	console.log("ctx: " + JSON.stringify(ctx));
+	listPrimes(110);
+	console.log("Found 110 primes");
 	var result = await ctx.call('publisher', {
 		fun: 'function2',
 		event: {
 			name: 'Schokolade',
 			zucker: 10
 		}
-    })	
+    })
 	console.log("Result from calling function2: " + JSON.stringify(result))
 	return {
 		statusCode: 200,
@@ -41,5 +41,5 @@ module.exports = lib.serverless.msgHandler(async (event, ctx) => {
 	body: JSON.stringify({
 		result: 'ok',
 	}),
-	}	
+	}
 });

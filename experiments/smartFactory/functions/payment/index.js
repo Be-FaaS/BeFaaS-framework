@@ -3,8 +3,8 @@ const lib = require('@befaas/lib')
 module.exports = lib.serverless.msgHandler(
   { db: 'redis' },
   async (event, ctx) => {
-    console.log('event: ' + JSON.stringify(event))
-    console.log('ctx: ' + JSON.stringify(ctx))
+    // console.log('event: ' + JSON.stringify(event))
+    // console.log('ctx: ' + JSON.stringify(ctx))
 
     // Parse event
     const { order, totalPrice } = event
