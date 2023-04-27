@@ -15,11 +15,13 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # install node
-RUN curl -SLO https://nodejs.org/dist/v16.13.0/node-v16.13.0-linux-x64.tar.xz \
-    && tar xJf node-v16.13.0-linux-x64.tar.xz -C /usr/local --strip-components=1 --no-same-owner \
-    && rm node-v16.13.0-linux-x64.tar.xz \
+RUN curl -SLO https://nodejs.org/dist/v16.14.0/node-v16.14.0-linux-x64.tar.xz \
+    && tar xJf node-v16.14.0-linux-x64.tar.xz -C /usr/local --strip-components=1 --no-same-owner \
+    && rm node-v16.14.0-linux-x64.tar.xz \
     && node --version \
     && npm --version
+
+RUN npm install -g npm@9.6.5
 
 # install awscli
 RUN curl -SLO https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip \
