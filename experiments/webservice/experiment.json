@@ -45,28 +45,28 @@
         "provider": "aws"
       },
       "shiporder": {
-        "provider": "google"
+        "provider": "aws"
       },
       "shipmentquote": {
-        "provider": "google"
+        "provider": "aws"
       },
       "payment": {
         "provider": "aws"
       },
       "listproducts": {
-        "provider": "azure"
+        "provider": "aws"
       },
       "getads": {
         "provider": "aws"
       },
       "getproduct": {
-        "provider": "google"
+        "provider": "aws"
       },
       "searchproducts": {
-        "provider": "google"
+        "provider": "aws"
       },
       "listrecommendations": {
-        "provider": "google"
+        "provider": "aws"
       },
       "cartkvstorage": {
         "provider": "aws"
