@@ -15,9 +15,9 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # install node
-RUN curl -SLO https://nodejs.org/dist/v16.14.0/node-v16.14.0-linux-x64.tar.xz \
-    && tar xJf node-v16.14.0-linux-x64.tar.xz -C /usr/local --strip-components=1 --no-same-owner \
-    && rm node-v16.14.0-linux-x64.tar.xz \
+RUN curl -SLO https://nodejs.org/dist/v16.15.0/node-v16.15.0-linux-x64.tar.xz \
+    && tar xJf node-v16.15.0-linux-x64.tar.xz -C /usr/local --strip-components=1 --no-same-owner \
+    && rm node-v16.15.0-linux-x64.tar.xz \
     && node --version \
     && npm --version
 
