@@ -9,7 +9,6 @@ config:
       - 10
       - 800
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
-  defaults:
 
 scenarios:
   - flow:

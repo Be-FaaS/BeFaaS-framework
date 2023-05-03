@@ -6,7 +6,6 @@ config:
     - duration: 10
       arrivalRate: 1
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
-  defaults:
 
 scenarios:
   - flow:

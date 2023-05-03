@@ -139,7 +139,7 @@ resource "azurerm_virtual_machine_extension" "redis_run_container" {
 
   protected_settings = <<PROT
   {
-    "commandToExecute": "curl -sSL https://get.docker.com/ | sh && sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass ${random_string.redispass.result}"
+    "commandToExecute": "sudo apt-get update && curl -sSL https://get.docker.com/ | sh && sudo docker run --name befaas-redis -v redisData:/data -p 6379:6379 -d redis redis-server --appendonly yes --requirepass ${random_string.redispass.result}"
   }
   PROT
 }

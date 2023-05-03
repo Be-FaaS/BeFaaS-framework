@@ -7,7 +7,6 @@ config:
       arrivalRate: 0
       rampTo: 20
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
-  defaults:
 
   payload:
     path: 'usernames.csv'

@@ -35,6 +35,7 @@ resource "google_compute_instance" "redis" {
   }
 
   metadata_startup_script = <<SCRIPT
+    sudo apt-get update
     curl -sSL https://get.docker.com/ | sh > installDocker.log
     # --name -> name Container befaas-redis
     # -d -> run detachted

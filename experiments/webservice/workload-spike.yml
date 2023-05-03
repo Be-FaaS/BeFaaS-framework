@@ -12,7 +12,6 @@ config:
     - duration: 300
       arrivalRate: 3.5
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
-  defaults:
 
   payload:
     path: 'usernames.csv'
