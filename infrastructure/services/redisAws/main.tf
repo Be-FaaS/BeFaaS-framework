@@ -65,5 +65,5 @@ resource "aws_instance" "redis" {
 }
 
 output "REDIS_ENDPOINT" {
-  value = "redis://user:${random_string.redispass.result}@${aws_instance.redis.public_ip}:6379"
+  value = "redis://default:${random_string.redispass.result}@${aws_instance.redis.public_ip}:6379"
 }

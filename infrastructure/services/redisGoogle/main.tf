@@ -63,5 +63,5 @@ resource "google_compute_firewall" "redis_firewall" {
 }
 
 output "REDIS_ENDPOINT" {
-  value = "redis://user:${random_string.redispass.result}@${google_compute_instance.redis.network_interface.0.access_config.0.nat_ip}:6379"
+  value = "redis://default:${random_string.redispass.result}@${google_compute_instance.redis.network_interface.0.access_config.0.nat_ip}:6379"
 }

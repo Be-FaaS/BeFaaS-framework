@@ -150,5 +150,5 @@ data "azurerm_public_ip" "redis_ip" {
 }
 
 output "REDIS_ENDPOINT" {
-  value = "redis://user:${random_string.redispass.result}@${data.azurerm_public_ip.redis_ip.ip_address}:6379"
+  value = "redis://default:${random_string.redispass.result}@${data.azurerm_public_ip.redis_ip.ip_address}:6379"
 }
