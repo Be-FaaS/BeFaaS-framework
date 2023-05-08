@@ -17,7 +17,7 @@ locals {
 resource "google_cloudfunctions_function" "fn" {
   for_each            = local.fns
   name                = each.key
-  runtime             = "nodejs16"
+  runtime             = "nodejs18"
   entry_point         = var.entry_point
   timeout             = var.timeout
   available_memory_mb = var.memory_size

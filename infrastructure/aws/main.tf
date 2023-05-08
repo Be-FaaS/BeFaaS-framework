@@ -75,7 +75,7 @@ resource "aws_lambda_function" "fn" {
   s3_key    = aws_s3_bucket_object.source[each.key].key
 
   handler     = var.handler
-  runtime     = "nodejs16.x"
+  runtime     = "nodejs18.x"
   timeout     = var.timeout
   memory_size = var.memory_size
 

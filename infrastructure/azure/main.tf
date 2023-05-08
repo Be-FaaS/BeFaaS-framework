@@ -98,7 +98,7 @@ resource "azurerm_function_app" "functions" {
   app_service_plan_id        = azurerm_service_plan.asp.id
   storage_account_name       = azurerm_storage_account.storage.name
   storage_account_access_key = azurerm_storage_account.storage.primary_access_key
-  version                    = "~3"
+  version                    = "~4"
 
   depends_on = [azurerm_eventgrid_topic.fn_topic]
 
@@ -106,7 +106,7 @@ resource "azurerm_function_app" "functions" {
     https_only                     = true
     IS_AZURE_FUNCTION_APP          = "true"
     FUNCTIONS_WORKER_RUNTIME       = "node"
-    WEBSITE_NODE_DEFAULT_VERSION   = "~16"
+    WEBSITE_NODE_DEFAULT_VERSION   = "~18"
     FUNCTION_APP_EDIT_MODE         = "readonly"
     SCM_DO_BUILD_DURING_DEPLOYMENT = true
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.ai.instrumentation_key
