@@ -11,25 +11,19 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
 
       await ctx.db.set(`user_${user.username}`, user)
 
-      return {
-        statusCode: 201,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          result: 'Created.'
-        })
-      }
+      ctx.type = 'application/json'
+      ctx.body = JSON.stringify({
+        result: 'Created.'
+      })
+      ctx.status = 201
+      return
     } else {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          error: 'name, username, or password field missing.'
-        })
-      }
+      ctx.type = 'application/json'
+      ctx.body = JSON.stringify({
+        error: 'name, username, or password field missing.'
+      })
+      ctx.status = 400
+      return
     }
   })
 })

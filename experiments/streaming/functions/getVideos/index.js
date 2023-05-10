@@ -14,36 +14,27 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
 
       if (device.authToken === request.authToken) {
         const videos = await ctx.db.get(`videos`)
-        return {
-          statusCode: 200,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            videos: videos
-          })
-        }
+        ctx.type = 'application/json'
+        ctx.body = JSON.stringify({
+          videos: videos
+        })
+        ctx.status = 200
+        return
       } else {
-        return {
-          statusCode: 401,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            error: 'Wrong authToken.'
-          })
-        }
+        ctx.type = 'application/json'
+        ctx.body = JSON.stringify({
+          error: 'Wrong authToken.'
+        })
+        ctx.status = 401
+        return
       }
     } else {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          error: 'username, deviceId, or authToken field missing.'
-        })
-      }
+      ctx.type = 'application/json'
+      ctx.body = JSON.stringify({
+        error: 'username, deviceId, or authToken field missing.'
+      })
+      ctx.status = 400
+      return
     }
   })
 })

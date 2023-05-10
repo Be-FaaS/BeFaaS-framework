@@ -49,49 +49,35 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
           })
 
           await ctx.db.set(`user_${device.username}`, user)
-
-          return {
-            statusCode: 200,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              result: 'ok'
-            })
-          }
+          ctx.type = 'application/json'
+          ctx.body = JSON.stringify({
+            result: 'ok'
+          })
+          ctx.status = 200
+          return
         } else {
-          return {
-            statusCode: 400,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              error:
-                'Invalid patch: videoID, watchedSeconds, or like field missing.'
-            })
-          }
+          ctx.type = 'application/json'
+          ctx.body = JSON.stringify({
+            error: 'Invalid patch: videoID, watchedSeconds, or like field missing.'
+          })
+          ctx.status = 400
+          return
         }
       } else {
-        return {
-          statusCode: 401,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            error: 'Wrong authToken.'
-          })
-        }
+        ctx.type = 'application/json'
+        ctx.body = JSON.stringify({
+          error: 'Wrong authToken.'
+        })
+        ctx.status = 401
+        return
       }
     } else {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          error: 'username, deviceId, or authToken field missing.'
-        })
-      }
+      ctx.type = 'application/json'
+      ctx.body = JSON.stringify({
+        error: 'username, deviceId, or authToken field missing.'
+      })
+      ctx.status = 400
+      return
     }
   })
 })

@@ -19,47 +19,35 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
 
           await ctx.db.set(`user_${user.username}`, user)
 
-          return {
-            statusCode: 201,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              result: 'Created.'
-            })
-          }
+          ctx.type = 'application/json'
+          ctx.body = JSON.stringify({
+            result: 'Created.'
+          })
+          ctx.status = 201
+          return
         } else {
-          return {
-            statusCode: 400,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              error: 'Already 3 devices registered.'
-            })
-          }
+          ctx.type = 'application/json'
+          ctx.body = JSON.stringify({
+            error: 'Already 3 devices registered.'
+          })
+          ctx.status = 400
+          return
         }
       } else {
-        return {
-          statusCode: 401,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            error: 'Wrong username and/or password.'
-          })
-        }
+        ctx.type = 'application/json'
+        ctx.body = JSON.stringify({
+          error: 'Wrong username and/or password.'
+        })
+        ctx.status = 401
+        return
       }
     } else {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          error: 'username, password, or deviceName field missing.'
-        })
-      }
+      ctx.type = 'application/json'
+      ctx.body = JSON.stringify({
+        error: 'username, deviceId, or authToken field missing.'
+      })
+      ctx.status = 400
+      return
     }
   })
 })

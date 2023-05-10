@@ -14,29 +14,28 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
       await ctx.db.set(`video_${video.videoId}`, video)
 
       var videos = await ctx.db.get(`videos`)
+	  
+	  if (!videos) {
+        videos = []
+      }
+	  
       videos.push(video.videoId)
       await ctx.db.set(`videos`, videos)
 
-      return {
-        statusCode: 201,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+      ctx.type = 'application/json'
+      ctx.body = JSON.stringify({
           result: 'Created.',
           videoId: video.videoId
         })
-      }
+      ctx.status = 201
+      return
     } else {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+      ctx.type = 'application/json'
+      ctx.body = JSON.stringify({
           error: 'title, author, or duration field missing.'
         })
-      }
+      ctx.status = 400
+      return
     }
   })
 })

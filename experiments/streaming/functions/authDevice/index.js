@@ -14,48 +14,36 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
         })
 
         if (device) {
-          return {
-            statusCode: 200,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              result: 'Authorized.',
-              authToken: device.authToken
-            })
-          }
+          ctx.type = 'application/json'
+          ctx.body = JSON.stringify({
+            result: 'Authorized.',
+            authToken: device.authToken
+          })
+          ctx.status = 200
+          return
         } else {
-          return {
-            statusCode: 404,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              error: 'DeviceId not found.'
-            })
-          }
+          ctx.type = 'application/json'
+          ctx.body = JSON.stringify({
+            error: 'DeviceId not found.'
+          })
+          ctx.status = 404
+          return
         }
       } else {
-        return {
-          statusCode: 401,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            error: 'Wrong username and/or password.'
-          })
-        }
+        ctx.type = 'application/json'
+        ctx.body = JSON.stringify({
+          error: 'Wrong username and/or password.'
+        })
+        ctx.status = 401
+        return
       }
     } else {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          error: 'username, password, or deviceId field missing.'
-        })
-      }
+      ctx.type = 'application/json'
+      ctx.body = JSON.stringify({
+        error: 'username, password, or deviceId field missing.'
+      })
+      ctx.status = 400
+      return
     }
   })
 })
