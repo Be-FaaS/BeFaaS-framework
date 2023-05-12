@@ -5,16 +5,15 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
     const device = ctx.request.body
     // console.log('Device: ' + JSON.stringify(device))
 
-    if (device.username && device.password && device.deviceName) {
-      device.deviceId = lib.helper.generateRandomID()
+    if (device.username && device.password && device.devicename && device.deviceid) {
       var user = await ctx.db.get(`user_${device.username}`)
 
       if (user.password === device.password) {
         if (user.devices.length < 3) {
           user.devices.push({
-            deviceName: device.deviceName,
-            deviceId: device.deviceId,
-            authToken: lib.helper.generateRandomID()
+            devicename: device.devicename,
+            deviceid: device.deviceid,
+            authtoken: lib.helper.generateRandomID()
           })
 
           await ctx.db.set(`user_${user.username}`, user)
@@ -44,7 +43,7 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
     } else {
       ctx.type = 'application/json'
       ctx.body = JSON.stringify({
-        error: 'username, deviceId, or authToken field missing.'
+        error: 'username, password, devicename, or deviceid field missing.'
       })
       ctx.status = 400
       return

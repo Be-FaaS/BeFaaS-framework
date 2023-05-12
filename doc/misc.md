@@ -47,5 +47,13 @@ curl --header "Content-Type: application/json" --header "X-Context: 123456" --he
 
 curl -X POST -d "{"subject": "Pudding", "data":{ "make": "Ducati", "model": "Monster"}}" https://function1.westeurope-1.eventgrid.azure.net/api/events
 
-curl --header "Content-Type: application/json" --header "X-Context: 123789456" --header "X-Pair: 555-456" --request POST --data '{"title": "Herr ringe", "author":"Blabla", "duration":4500}' https://ov41n3219b.execute-api.eu-central-1.amazonaws.com/dev/addVideo
+curl --header "Content-Type: application/json" --header "X-Context: 123789456" --header "X-Pair: 555-456" --request POST --data '{"title": "Herr ringe", "author":"Blabla", "duration":4500}'  https://ov41n3219b.execute-api.eu-central-1.amazonaws.com/dev/addVideo
+
+curl --header "Content-Type: application/json" --header "X-Context: 123789456" --header "X-Pair: 555-456" --request POST --data '{"name": "Martin", "username":"martin", "password":"geheim123"}' https://e3kfte23wg.execute-api.eu-central-1.amazonaws.com/dev/registerUser
+
+curl --header "Content-Type: application/json" --header "X-Context: 123789456" --header "X-Pair: 555-456" --request POST --data '{"deviceName": "Smartphone", "username":"martin", "password":"geheim123"}' https://e3kfte23wg.execute-api.eu-central-1.amazonaws.com/dev/registerDevice
+
+curl --header "Content-Type: application/json" --header "X-Context: 123789456" --header "X-Pair: 555-456" --request GET --data '{"deviceId": "Herr ringe", "username":"Blabla", "password":4500}' https://e3kfte23wg.execute-api.eu-central-1.amazonaws.com/dev/authDevice
+
+
 ```

@@ -5,20 +5,20 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
     const request = ctx.request.body
     // console.log('Request: ' + JSON.stringify(request))
 
-    if (request.username && request.deviceId && request.authToken) {
+    if (request.username && request.deviceid && request.authtoken) {
       var user = await ctx.db.get(`user_${request.username}`)
 
       const device = user.devices.find(function (value, index, array) {
-        return value.deviceId === request.deviceId
+        return value.deviceid === request.deviceid
       })
 
-      if (device.authToken === request.authToken) {
+      if (device.authtoken === request.authtoken) {
         if (request.videoId && request.watchedSeconds && request.like) {
           var liked = false
 
           // Remove old meta entry if there is one
           const idx = user.meta.findIndex(function (value, index, array) {
-            return value.videoId === request.videoId
+            return value.videoid === request.videoid
           })
           if (idx >= 0) {
             // There is an old one
@@ -33,18 +33,18 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
             // Add +1 like
             const video1 = await ctx.db.get(`video_${request.videoId}`)
             video1.likes = video1.likes + 1
-            await ctx.db.set(`video_${request.videoId}`, video1)
+            await ctx.db.set(`video_${request.videoid}`, video1)
           }
           if (request.like === false && liked === true) {
             // Remove -1 like
-            const video2 = await ctx.db.get(`video_${request.videoId}`)
+            const video2 = await ctx.db.get(`video_${request.videoid}`)
             video2.likes = video2.likes - 1
-            await ctx.db.set(`video_${request.videoId}`, video2)
+            await ctx.db.set(`video_${request.videoid}`, video2)
           }
 
           user.meta.push({
-            videoId: request.videoId,
-            watchedSeconds: request.watchedSeconds,
+            videoid: request.videoid,
+            watchedseconds: request.watchedseconds,
             like: request.like
           })
 
@@ -58,7 +58,7 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
         } else {
           ctx.type = 'application/json'
           ctx.body = JSON.stringify({
-            error: 'Invalid patch: videoID, watchedSeconds, or like field missing.'
+            error: 'Invalid patch: videoid, watchedseconds, or like field missing.'
           })
           ctx.status = 400
           return
@@ -66,7 +66,7 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
       } else {
         ctx.type = 'application/json'
         ctx.body = JSON.stringify({
-          error: 'Wrong authToken.'
+          error: 'Wrong authtoken.'
         })
         ctx.status = 401
         return
@@ -74,7 +74,7 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
     } else {
       ctx.type = 'application/json'
       ctx.body = JSON.stringify({
-        error: 'username, deviceId, or authToken field missing.'
+        error: 'username, deviceid, or authtoken field missing.'
       })
       ctx.status = 400
       return

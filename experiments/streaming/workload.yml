@@ -2,10 +2,65 @@
 config:
   target: ' '
   phases:
-    #Constant load for 5 sec, 1 flows per second
-    - duration: 5
+    #Constant load for 15min (900s), 3.5 flows per second
+    - duration: 10
+      arrivalRate: 2
+    - duration: 10
       arrivalRate: 1
+    - duration: 10
+      arrivalRate: 2
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
+
+  payload:
+    path: 'users.csv'
+    fields:
+      - 'username'
+      - 'name'
+      - 'password'
+      - 'devicename1'
+      - 'deviceid1'
+      - 'devicename2'
+      - 'deviceid2'
+    loadAll: true
+    name: users
+    skipHeader: true
+
+  variables:
+    liked:
+      - "True"
+      - "False"
+
+before:
+    flow:
+      - log: "Insert user data"
+      - loop:
+          - post:
+              url: '{{ registerUser }}'
+              json:
+                username: "{{ $loopElement.username }}"
+                password: "{{ $loopElement.password }}"
+                name: "{{ $loopElement.name }}"
+              beforeRequest: 'beforeRequest'
+              afterResponse: 'afterResponse'
+          - post:
+              url: '{{ registerDevice }}'
+              json:
+                username: "{{ $loopElement.username }}"
+                password: "{{ $loopElement.password }}"
+                devicename: "{{ $loopElement.devicename1 }}"
+                deviceid: "{{ $loopElement.deviced1 }}"
+              beforeRequest: 'beforeRequest'
+              afterResponse: 'afterResponse'
+          - post:
+              url: '{{ registerDevice }}'
+              json:
+                username: "{{ $loopElement.username }}"
+                password: "{{ $loopElement.password }}"
+                devicename: "{{ $loopElement.devicename2 }}"
+                deviceid: "{{ $loopElement.deviceid2 }}"
+              beforeRequest: 'beforeRequest'
+              afterResponse: 'afterResponse'
+        over: users
 
 scenarios:
   - flow:
@@ -14,8 +69,99 @@ scenarios:
           json:
             title: '{{ $randomString() }}'
             author: '{{ $randomString() }}'
-            duration: 5400.0
+            duration: '{{$randomNumber(5400,7200)}}'
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
     name: 'addVideo'
+    weight: 1
+  - flow:
+      - get:
+          url: '{{ authDevice }}'
+          json:
+            username: "{{ username }}"
+            password: "{{ password }}"
+            deviceid: "{{ deviceid1 }}"
+          capture:
+            json: "$.authtoken"
+            as: "token"
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ getVideos }}'
+          json:
+            username: "{{ username }}"
+            deviceid: "{{ deviceid1 }}"
+            authtoken: "{{ token }}"
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+    name: 'listVideos'
+    weight: 1
+  - flow:
+      - get:
+          url: '{{ authDevice }}'
+          json:
+            username: "{{ username }}"
+            password: "{{ password }}"
+            deviceid: "{{ deviceid2 }}"
+          capture:
+            json: "$.authtoken"
+            as: "token"
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ getUserMeta }}'
+          json:
+            username: "{{ username }}"
+            deviceid: "{{ deviceid2 }}"
+            authtoken: "{{ token }}"
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+    name: 'getMeta'
+    weight: 1
+  - flow:
+      - get:
+          url: '{{ authDevice }}'
+          json:
+            username: "{{ username }}"
+            password: "{{ password }}"
+            deviceid: "{{ deviceid1 }}"
+          capture:
+            json: "$.authtoken"
+            as: "token"
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ getVideos }}'
+          json:
+            username: "{{ username }}"
+            deviceid: "{{ deviceid1 }}"
+            authtoken: "{{ token }}"
+          capture:
+            json: "$.randomid"
+            as: "videoid"
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - get:
+          url: '{{ getUserMeta }}'
+          json:
+            username: "{{ username }}"
+            deviceid: "{{ deviceid1 }}"
+            authtoken: "{{ token }}"
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+      - patch:
+          url: '{{ patchUserMeta }}'
+          json:
+            username: "{{ username }}"
+            deviceid: "{{ deviceid1 }}"
+            authtoken: "{{ token }}"
+            videoid: "{{ videoid }}"
+            like: "{{ liked }"
+            watchedseconds: '{{$randomNumber(0,7200)}}'
+          capture:
+            json: "$.randomid"
+            as: "videoid"
+          beforeRequest: 'beforeRequest'
+          afterResponse: 'afterResponse'
+    name: 'patchMeta'
     weight: 1

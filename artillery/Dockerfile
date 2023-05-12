@@ -12,6 +12,7 @@ ADD run.sh ./
 ADD variables.json ./
 ADD workload.yml ./
 ADD usernames.csv ./
+ADD users.csv ./
 ADD image-ambulance.jpg ./
 ADD image-noambulance.jpg ./
 

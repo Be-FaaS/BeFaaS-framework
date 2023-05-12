@@ -8,24 +8,24 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
     // console.log('Video: ' + JSON.stringify(video))
 
     if (video.title && video.author && video.duration) {
-      video.videoId = lib.helper.generateRandomID()
+      video.videoid = lib.helper.generateRandomID()
       video.likes = 0
 
-      await ctx.db.set(`video_${video.videoId}`, video)
+      await ctx.db.set(`video_${video.videoid}`, video)
 
       var videos = await ctx.db.get(`videos`)
-	  
+
 	  if (!videos) {
         videos = []
       }
-	  
-      videos.push(video.videoId)
+
+      videos.push(video.videoid)
       await ctx.db.set(`videos`, videos)
 
       ctx.type = 'application/json'
       ctx.body = JSON.stringify({
           result: 'Created.',
-          videoId: video.videoId
+          videoid: video.videoid
         })
       ctx.status = 201
       return
