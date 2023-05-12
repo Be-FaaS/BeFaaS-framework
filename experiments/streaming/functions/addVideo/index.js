@@ -28,14 +28,12 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
           videoid: video.videoid
         })
       ctx.status = 201
-      return
     } else {
       ctx.type = 'application/json'
       ctx.body = JSON.stringify({
           error: 'title, author, or duration field missing.'
         })
       ctx.status = 400
-      return
     }
   })
 })

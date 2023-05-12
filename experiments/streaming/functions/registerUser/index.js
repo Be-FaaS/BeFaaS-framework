@@ -16,14 +16,12 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
         result: 'Created.'
       })
       ctx.status = 201
-      return
     } else {
       ctx.type = 'application/json'
       ctx.body = JSON.stringify({
         error: 'name, username, or password field missing.'
       })
       ctx.status = 400
-      return
     }
   })
 })

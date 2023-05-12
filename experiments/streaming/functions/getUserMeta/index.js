@@ -18,14 +18,12 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
           meta: user.meta
         })
         ctx.status = 200
-        return
       } else {
         ctx.type = 'application/json'
         ctx.body = JSON.stringify({
           error: 'Wrong authtoken.'
         })
         ctx.status = 401
-        return
       }
     } else {
       ctx.type = 'application/json'
@@ -33,7 +31,6 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
         error: 'username, deviceid, or authtoken field missing.'
       })
       ctx.status = 400
-      return
     }
   })
 })

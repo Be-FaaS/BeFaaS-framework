@@ -23,14 +23,12 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
             result: 'Created.'
           })
           ctx.status = 201
-          return
         } else {
           ctx.type = 'application/json'
           ctx.body = JSON.stringify({
             error: 'Already 3 devices registered.'
           })
           ctx.status = 400
-          return
         }
       } else {
         ctx.type = 'application/json'
@@ -38,7 +36,6 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
           error: 'Wrong username and/or password.'
         })
         ctx.status = 401
-        return
       }
     } else {
       ctx.type = 'application/json'
@@ -46,7 +43,6 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
         error: 'username, password, devicename, or deviceid field missing.'
       })
       ctx.status = 400
-      return
     }
   })
 })
