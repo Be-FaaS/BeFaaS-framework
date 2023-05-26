@@ -11,7 +11,7 @@ scenarios:
   # Just call publisher which sends events to awsfunction1
   - flow:
       - post:
-          url: '{{ publisherAzure }}/call'
+          url: '{{ publisherTinyfaas }}/call'
           json:
               fun: 'function1'
               event: 
