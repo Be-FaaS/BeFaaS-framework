@@ -2,7 +2,7 @@
 
 ## TinyFaaS Setup
 
-To install and start TinyFaaS, run thew following commands:
+To install and start TinyFaaS (on aws instances), run thew following commands:
 
 ```
 sudo yum install git -y
@@ -12,6 +12,19 @@ sudo service docker start
 git clone https://github.com/Be-FaaS/tinyFaaS.git
 cd tinyFaaS
 sudo make
+```
+
+To install and start TinyFaaS (on Raspian), run thew following commands:
+
+```
+sudo apt-get install git -y
+sudo apt-get install curl -y
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo service docker start
+git clone https://github.com/Be-FaaS/tinyFaaS.git
+cd tinyFaaS
+sudo make start
 ```
 
 ## Debug Redis entries
