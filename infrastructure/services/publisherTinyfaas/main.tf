@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     tinyfaas = {
-      source  = "example.com/be-faas/tinyfaas"
+      source = "example.com/be-faas/tinyfaas"
     }
   }
 }
