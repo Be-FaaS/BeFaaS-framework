@@ -1,6 +1,0 @@
-provider_installation {
-  dev_overrides {
-    "Be-FaaS/tinyfaas" = "terraform-provider-tinyfaas"
-  }
-  direct {}
-}

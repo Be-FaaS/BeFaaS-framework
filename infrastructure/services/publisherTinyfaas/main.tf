@@ -1,3 +1,13 @@
+terraform {
+  required_providers {
+    tinyfaas = {
+     source  = "example.com/be-faas/tinyfaas"
+    }
+  }
+}
+
+provider "tinyfaas" {}
+
 data "terraform_remote_state" "exp" {
   backend = "local"
 
