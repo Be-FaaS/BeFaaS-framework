@@ -46,6 +46,11 @@ Follow the next steps to (re-) run the paper experiments:
 		
 		#tinyFaaS:
 		TINYFAAS_ADDRESS=<Public Adress of your tinyFaaS instance>
+		export TINYFAAS_ADDRESS=141.23.28.204
+		# Management Port (default 8080)
+		export TINYFAAS_MPORT=60008
+		# Function Port (default 80)
+		export TINYFAAS_FPORT=60010
 		
 		#OPENFAAS:
 		export OPENFAAS_GATEWAY=http://<address of openfaas gateway>:8080
