@@ -13,7 +13,7 @@ config:
 
   payload:
     -
-      path: 'users.csv'
+      path: 'users_small.csv'
       fields:
         - 'username'
         - 'name'

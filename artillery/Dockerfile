@@ -13,6 +13,7 @@ ADD variables.json ./
 ADD workload.yml ./
 ADD usernames.csv ./
 ADD users.csv ./
+ADD users_small.csv ./
 ADD image-ambulance.jpg ./
 ADD image-noambulance.jpg ./
 
