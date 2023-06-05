@@ -11,7 +11,7 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
       const device = user.devices.find(e => e.deviceid === parseInt(request.deviceid));
 
       if (device.authtoken === request.authtoken) {
-        if (request.videoId && request.watchedSeconds && request.like) {
+        if (request.videoId && request.watchedseconds && request.like) {
           var liked = false
 
           // Remove old meta entry if there is one

@@ -179,7 +179,7 @@ scenarios:
             deviceid: '{{ s_deviceid1 }}'
             authtoken: '{{ token }}'
             videoid: '{{ videoid }}'
-            like: '{{ liked }'
+            like: '{{ liked }}'
             watchedseconds: '{{$randomNumber(0,7200)}}'
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
