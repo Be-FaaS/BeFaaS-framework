@@ -26,7 +26,7 @@ config:
       name: users
       skipHeader: true
     -
-      path: 'users.csv'
+      path: 'users_small.csv'
       fields:
         - 's_username'
         - 's_name'
@@ -158,7 +158,7 @@ scenarios:
             deviceid: '{{ s_deviceid1 }}'
             authtoken: '{{ token }}'
           capture:
-            json: '$.randomid'
+            json: '$.random'
             as: 'videoid'
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'

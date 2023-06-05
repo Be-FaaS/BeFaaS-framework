@@ -1,10 +1,9 @@
 const lib = require('@befaas/lib')
 
 module.exports = lib.serverless.router({ db: 'redis' }, async router => {
-  process.stdout.write('Pudding')
   router.post('/', async (ctx, next) => {
     const request = ctx.request.body
-    process.stdout.write('Request: ' + JSON.stringify(request) + "\n")
+    // process.stdout.write('Request: ' + JSON.stringify(request) + "\n")
 
     if (request.username && request.password && request.deviceid) {
       var user = await ctx.db.get(`user_${request.username}`)
@@ -13,7 +12,7 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
         const device = user.devices.find(e => e.deviceid === parseInt(request.deviceid));
 
         // Update authToken
-        process.stdout.write('Device is: ' + JSON.stringify(device) + "\n")
+        // process.stdout.write('Device is: ' + JSON.stringify(device) + "\n")
         device.authToken = lib.helper.generateRandomID()
         await ctx.db.set(`user_${user.username}`, user)
 
