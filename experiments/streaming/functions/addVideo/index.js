@@ -2,10 +2,10 @@ const lib = require('@befaas/lib')
 
 module.exports = lib.serverless.router({ db: 'redis' }, async router => {
   router.post('/', async (ctx, next) => {
-    // console.log('ctx: ' + JSON.stringify(ctx))
+    // process.stdout.write('ctx: ' + JSON.stringify(ctx) + '\n')
 
     const video = ctx.request.body
-    // console.log('Video: ' + JSON.stringify(video))
+    // process.stdout.write('Video: ' + JSON.stringify(video) + '\n')
 
     if (video.title && video.author && video.duration) {
       video.videoid = lib.helper.generateRandomID()

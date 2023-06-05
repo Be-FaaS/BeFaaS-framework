@@ -3,12 +3,12 @@ const lib = require('@befaas/lib')
 module.exports = lib.serverless.router({ db: 'redis' }, async router => {
   router.patch('/', async (ctx, next) => {
     const request = ctx.request.body
-    // console.log('Request: ' + JSON.stringify(request))
+    // process.stdout.write('Request: ' + JSON.stringify(request) + '\n')
 
     if (request.username && request.deviceid && request.authtoken) {
       var user = await ctx.db.get(`user_${request.username}`)
 
-      const device = user.devices.find(e => e.deviceid == request.deviceid);
+      const device = user.devices.find(e => e.deviceid === request.deviceid);
 
       if (device.authtoken === request.authtoken) {
         if (request.videoId && request.watchedSeconds && request.like) {
