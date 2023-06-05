@@ -8,9 +8,7 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
     if (request.username && request.deviceid && request.authtoken) {
       var user = await ctx.db.get(`user_${request.username}`)
 
-      const device = user.devices.find(function (value, index, array) {
-        return value.deviceid === request.deviceid
-      })
+      const device = user.devices.find(e => e.deviceid == request.deviceid);
 
       if (device.authtoken === request.authtoken) {
         if (request.videoId && request.watchedSeconds && request.like) {

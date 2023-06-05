@@ -70,6 +70,8 @@ curl --header "Content-Type: application/json" --header "X-Context: 123789456" -
 
 curl --header "Content-Type: application/json" --header "X-Context: 123456785" --header "X-Pair: 545-456" --request GET --data '{"deviceid": "811069503", "username":"sbrattellrp", "password":"iF7HkVvx8f"}' http://141.23.28.204:60010/authDevice
 
+curl --header "Content-Type: application/json" --header "X-Context: 123456785" --header "X-Pair: 545-456" --request GET --data '{"deviceid": "4624139607", "username":"jwalsh1", "password":"qo71qj"}' http://141.23.28.204:60010/authDevice
+
 
 curl --header "Content-Type: application/json" --header "X-Context: 123456" --header "X-Pair: 123-456" --request POST --data '{"event":{"name":"Pudding", "zucker":4}, "fun":"function1"}' http://141.23.28.204:80/publisher/call
 
