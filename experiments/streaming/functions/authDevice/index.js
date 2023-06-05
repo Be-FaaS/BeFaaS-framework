@@ -2,7 +2,7 @@ const lib = require('@befaas/lib')
 
 module.exports = lib.serverless.router({ db: 'redis' }, async router => {
   process.stdout.write('Pudding')
-  router.get('/', async (ctx, next) => {
+  router.post('/', async (ctx, next) => {
     const request = ctx.request.body
     process.stdout.write('Request: ' + JSON.stringify(request) + "\n")
 

@@ -89,7 +89,7 @@ scenarios:
     weight: 1
   - flow:
       - log: "will auth device at {{ authDevice }} with {{ s_username }}, {{ s_password}}, and {{ s_deviceid1 }}"
-      - get:
+      - post:
           url: '{{ authDevice }}'
           json:
             username: '{{ s_username }}'
@@ -100,8 +100,8 @@ scenarios:
             as: 'token'
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
-      - log: "will get videos with token {{ token }}"      
-      - get:
+      - log: "will get videos with token {{ token }}"
+      - post:
           url: '{{ getVideos }}'
           json:
             username: '{{ s_username }}'
@@ -114,7 +114,7 @@ scenarios:
     weight: 1
   - flow:
       - log: "will auth device at {{ authDevice }} with {{ s_username }}, {{ s_password}}, and {{ s_deviceid1 }}"
-      - get:
+      - post:
           url: '{{ authDevice }}'
           json:
             username: '{{ s_username }}'
@@ -126,7 +126,7 @@ scenarios:
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
       - log: "will get user meta with token {{ token }}"
-      - get:
+      - post:
           url: '{{ getUserMeta }}'
           json:
             username: '{{ s_username }}'
@@ -139,7 +139,7 @@ scenarios:
     weight: 1
   - flow:
       - log: "will auth device at {{ authDevice }} with {{ s_username }}, {{ s_password}}, and {{ s_deviceid1 }}"
-      - get:
+      - post:
           url: '{{ authDevice }}'
           json:
             username: '{{ s_username }}'
@@ -151,7 +151,7 @@ scenarios:
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
       - log: "will get videos with token {{ token }}"
-      - get:
+      - post:
           url: '{{ getVideos }}'
           json:
             username: '{{ s_username }}'
@@ -163,7 +163,7 @@ scenarios:
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
       - log: "will get user meta with token {{ token }}"
-      - get:
+      - post:
           url: '{{ getUserMeta }}'
           json:
             username: '{{ s_username }}'
