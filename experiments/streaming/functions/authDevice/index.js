@@ -7,7 +7,7 @@ module.exports = lib.serverless.router({ db: 'redis' }, async router => {
 
     if (request.username && request.password && request.deviceid) {
       var user = await ctx.db.get(`user_${request.username}`)
-      process.stdout.write('User is: ' + JSON.stringify(user) + "\n")
+      // process.stdout.write('User is: ' + JSON.stringify(user) + "\n")
       if (user.password === request.password) {
         const device = user.devices.find(e => e.deviceid === parseInt(request.deviceid));
 
