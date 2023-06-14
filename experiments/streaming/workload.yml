@@ -2,13 +2,13 @@
 config:
   target: ' '
   phases:
-    #Constant load for 15min (900s), 3.5 flows per second
-    - duration: 10
+    #Constant load for 3x5min (300s), 3.5 flows per second
+    - duration: 300
       arrivalRate: 2
-    - duration: 10
-      arrivalRate: 1
-    - duration: 10
-      arrivalRate: 2
+    - duration: 300
+      arrivalRate: 0.2
+    - duration: 300
+      arrivalRate: 10
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
 
   payload:

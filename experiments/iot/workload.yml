@@ -1,9 +1,9 @@
 config:
   target: ' '
   phases:
-    #Constant load for 5 sec, 1 flows per second
-    - duration: 5
-      arrivalRate: 1
+    #Constant load for 900 sec (15min), 14 flows per second (10 + 4)
+    - duration: 900
+      arrivalRate: 14
   variables:
     speed:
       - 10
@@ -48,4 +48,4 @@ scenarios:
           beforeRequest: 'emergencyEveryTwoMinutesFiveSecondsEach'
           afterResponse: 'afterResponse'
     name: 'objectrecognition'
-    weight: 1
+    weight: 40

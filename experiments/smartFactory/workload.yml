@@ -2,9 +2,9 @@
 config:
   target: ' '
   phases:
-    #Constant load for 5 sec, 1 flows per second
-    - duration: 5
-      arrivalRate: 1
+    #Constant load for 900 sec (15min), 1 flows per second
+    - duration: 900
+      arrivalRate: 0.2
   processor: '{{ $processEnvironment.PROCESSOR_DIR }}/logger.js'
 
   variables:
