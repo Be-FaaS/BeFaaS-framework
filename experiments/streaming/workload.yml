@@ -13,7 +13,7 @@ config:
 
   payload:
     -
-      path: 'users_small.csv'
+      path: 'users.csv'
       fields:
         - 'username'
         - 'name'
@@ -26,7 +26,7 @@ config:
       name: users
       skipHeader: true
     -
-      path: 'users_small.csv'
+      path: 'users.csv'
       fields:
         - 's_username'
         - 's_name'
