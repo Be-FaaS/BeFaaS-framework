@@ -8,25 +8,25 @@
   "program": {
     "functions": {
       "addVideo": {
-        "provider": "tinyfaas"
+        "provider": "aws"
       },
       "authDevice": {
-        "provider": "tinyfaas"
+        "provider": "aws"
       },
       "getUserMeta": {
-        "provider": "tinyfaas"
+        "provider": "aws"
       },
       "getVideos": {
-        "provider": "tinyfaas"
+        "provider": "aws"
       },
       "patchUserMeta": {
-        "provider": "tinyfaas"
+        "provider": "aws"
       },
       "registerDevice": {
-        "provider": "tinyfaas"
+        "provider": "aws"
       },
       "registerUser": {
-        "provider": "tinyfaas"
+        "provider": "aws"
       }
     }
   }
