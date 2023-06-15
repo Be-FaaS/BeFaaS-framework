@@ -171,8 +171,8 @@ scenarios:
             authtoken: '{{ token }}'
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
-      - log: "will patch user meta with token {{ token }}"
-      - patch:
+      - log: "will update user meta with token {{ token }}"
+      - post:
           url: '{{ patchUserMeta }}'
           json:
             username: '{{ s_username }}'
