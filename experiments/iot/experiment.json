@@ -2,6 +2,7 @@
   "services": {
     "redisAws": {},
 	"publisherAws": {},
+	"publisherTinyfaas": {},
 	"workload": {
       "config": "./workload.yml"
     }

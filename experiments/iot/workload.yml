@@ -13,7 +13,7 @@ config:
 scenarios:
   - flow:
       - post:
-          url: '{{ publisherAws }}/call'
+          url: '{{ publisherTinyfaas }}/call'
           json:
             fun: 'trafficsensorfilter'
             event:
