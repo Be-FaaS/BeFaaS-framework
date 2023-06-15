@@ -9,7 +9,7 @@
   "program": {
     "functions": {
       "trafficsensorfilter": {
-        "provider": "aws",
+        "provider": "tinyfaas",
 		"call": "async",
         "calls": ["movementplan"]
       },
@@ -24,7 +24,7 @@
         "calls": ["setlightphasecalculation"]
       },
       "emergencydetection": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["setlightphasecalculation"]
       },
       "trafficstatistics": {
@@ -37,11 +37,11 @@
         "provider": "aws"
       },
       "objectrecognition": {
-        "provider": "aws",
+        "provider": "tinyfaas",
         "calls": ["trafficstatistics", "movementplan", "emergencydetection"]
       },
       "movementplan": {
-        "provider": "aws",
+        "provider": "tinyfaas",
 		"call": "async",
         "calls": ["setlightphasecalculation"]
       }

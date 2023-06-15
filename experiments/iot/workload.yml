@@ -1,9 +1,9 @@
 config:
   target: ' '
   phases:
-    #Constant load for 900 sec (15min), 14 flows per second (10 + 4)
+    #Constant load for 900 sec (15min), 1 flow per second
     - duration: 900
-      arrivalRate: 14
+      arrivalRate: 1
   variables:
     speed:
       - 10
@@ -24,7 +24,7 @@ scenarios:
           beforeRequest: 'beforeRequest'
           afterResponse: 'afterResponse'
     name: 'trafficSensorFilter'
-    weight: 100
+    weight: 10
   - flow:
       - post:
           url: '{{ publisherAws }}/call'
@@ -48,4 +48,4 @@ scenarios:
           beforeRequest: 'emergencyEveryTwoMinutesFiveSecondsEach'
           afterResponse: 'afterResponse'
     name: 'objectrecognition'
-    weight: 40
+    weight: 10
