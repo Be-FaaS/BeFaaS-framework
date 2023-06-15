@@ -28,13 +28,13 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@befaas/lib": "^8.24.2",
-    "@koa/multer": "^3.0.2",
+    "@koa/multer": "3.0.0",
     "@google-cloud/pubsub": "^3.5.0",
     "@azure/eventgrid": "^4.11.0",
     "card-validator": "^8.1.1",
     "jimp": "^0.22.7",
     "lodash": "^4.17.21",
-    "multer": "^1.4.5-lts.1"
+    "multer": "1.4.2"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.36.1",
