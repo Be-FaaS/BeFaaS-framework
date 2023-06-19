@@ -27,7 +27,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@befaas/lib": "^8.24.2",
+    "@befaas/lib": "^8.24.3",
     "@koa/multer": "3.0.0",
     "@google-cloud/pubsub": "^3.5.0",
     "@azure/eventgrid": "^4.11.0",
