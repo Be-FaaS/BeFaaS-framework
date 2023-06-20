@@ -3,7 +3,7 @@
     "publisherGoogle": {},
     "publisherAws": {},
     "publisherAzure": {},
-    "redisGoogle": {},
+    "redisAws": {},
     "workload": {
       "config": "./workload.yml"
     }
@@ -11,7 +11,7 @@
   "program": {
     "functions": {
       "orderSupplies": {
-        "provider": "google",
+        "provider": "aws",
         "call": "async",
         "calls": ["panelOrder", "cushionOrder"]
       },
@@ -21,7 +21,7 @@
         "calls": ["panelProduction"]
       },
       "cushionOrder": {
-        "provider": "aws",
+        "provider": "google",
         "call": "async",
         "calls": ["cushionProduction"]
       },
@@ -31,17 +31,17 @@
         "calls": ["billing"]
       },
       "cushionProduction": {
-        "provider": "aws",
+        "provider": "google",
         "call": "async",
         "calls": ["billing"]
       },
       "billing": {
-        "provider": "google",
+        "provider": "aws",
         "call": "async",
         "calls": ["payment"]
       },
       "payment": {
-        "provider": "google",
+        "provider": "aws",
         "call": "async"
       }
     }

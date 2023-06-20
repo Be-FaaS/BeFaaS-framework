@@ -48,7 +48,7 @@ scenarios:
   # Just send a sofa order
   - flow:
       - post:
-          url: '{{ publisherGoogle }}/call'
+          url: '{{ publisherAws }}/call'
           json:
             fun: 'orderSupplies'
             event:
