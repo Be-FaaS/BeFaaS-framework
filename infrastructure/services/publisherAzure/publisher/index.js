@@ -2,8 +2,8 @@ const lib = require('@befaas/lib')
 const { EventGridPublisherClient, AzureKeyCredential } = require("@azure/eventgrid");
 
 module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
-  console.log("Request: " + JSON.stringify(request));
-  console.log("Context: " + JSON.stringify(ctx));
+  //console.log("Request: " + JSON.stringify(request));
+  //console.log("Context: " + JSON.stringify(ctx));
 
   var txt = JSON.stringify(request.event);
   if (txt.length == 0) {
@@ -20,16 +20,16 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   var idx = -1;
 
   for (let i = 0; i < endpoints.length; i++) {
-    console.log(i.toString() + ": " + endpoints[i]  + ": " + keys[i])
-	  if (endpoints[i].startsWith("https://" + functionName + ".")) {
+    //console.log(i.toString() + ": " + endpoints[i]  + ": " + keys[i])
+	  if (endpoints[i].startsWith("https://" + functionName.toLowerCase() + ".")) {
 		  idx = i;
 	  }
   }
 
-  console.log("txt: " + txt);
-  console.log("fnName: " + functionName);
-  console.log("endpoint: " + endpoints[idx]);
-  console.log("key: " + keys[idx]);
+  //console.log("txt: " + txt);
+  //console.log("fnName: " + functionName);
+  //console.log("endpoint: " + endpoints[idx]);
+  //console.log("key: " + keys[idx]);
 
   const client = new EventGridPublisherClient(
     endpoints[idx],
@@ -50,7 +50,7 @@ module.exports = lib.serverless.rpcHandler(async (request, ctx) => {
   }
   ]);
 
-  console.log("published.")
+  //console.log("published.")
 
   return {
     statusCode: 200,
